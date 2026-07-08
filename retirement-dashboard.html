@@ -224,13 +224,11 @@
   <div class="navpills">
     <a href="#s1">① 조직별 퇴직 현황</a>
     <a href="#s2">② 퇴직 상세 리스트</a>
-    <a href="#s3">③ 예측 대비 퇴직율</a>
-    <a href="#s4">④ 3개년 퇴직율 비교</a>
-    <a href="#s5">⑤ 퇴직유형별 현황</a>
-    <a href="#s6">⑥ 호칭별 현황</a>
-    <a href="#s7">⑦ 타사 이직처 현황</a>
-    <a href="#s8">⑧ 직무별 현황</a>
-    <a href="#s9">⑨ 3개년 조기퇴직율</a>
+    <a href="#s3">③ 퇴직유형별 현황</a>
+    <a href="#s4">④ 호칭별 현황</a>
+    <a href="#s5">⑤ 타사 이직처 현황</a>
+    <a href="#s6">⑥ 직무별 현황</a>
+    <a href="#s7">⑦ 3개년 조기퇴직율</a>
   </div>
 
   <!-- 전사 요약 -->
@@ -308,36 +306,7 @@
   <!-- ③④ -->
   <div class="two-col-panel">
     <div class="card" id="s3">
-      <div class="card-head"><h2><span class="num">3</span>퇴직 예측 대비 퇴직율</h2><span class="unit">2026년 연환산 기준</span></div>
-      <div class="card-desc">연간 목표 퇴직율(계획) 대비 현재까지의 연환산 실적 퇴직율입니다.</div>
-      <div class="meter-wrap">
-        <div class="meter-track">
-          <div class="meter-fill" style="width:85.3%;"></div>
-          <div class="meter-target" style="left:100%;" data-label="목표 9.5%"></div>
-        </div>
-        <div class="meter-labels"><span>실적 <b>8.1%</b></span><span>목표대비 <b style="color:var(--good);">-1.4%p 양호</b></span></div>
-      </div>
-      <div class="footnote">※ 연환산 실적 = 누적 퇴직인원 176명 ÷ 평균 재직인원 × (12/7). 목표는 연간 경영계획상 자연감소 목표치입니다.</div>
-    </div>
-
-    <div class="card" id="s4">
-      <div class="card-head"><h2><span class="num">4</span>3개년 퇴직율 비교</h2><span class="unit">단위: %</span></div>
-      <div class="grouped" style="gap:34px;">
-        <div class="grp"><div class="bars" style="width:36px;">
-          <div class="col" style="width:36px;height:74.6%;background:var(--brand);"><span class="v">11.2%</span></div></div><div class="xlabel">2024</div></div>
-        <div class="grp"><div class="bars" style="width:36px;">
-          <div class="col" style="width:36px;height:65.3%;background:var(--brand);"><span class="v">9.8%</span></div></div><div class="xlabel">2025</div></div>
-        <div class="grp"><div class="bars" style="width:36px;">
-          <div class="col" style="width:36px;height:54.0%;background:var(--brand);"><span class="v">8.1%</span></div></div><div class="xlabel">2026 (YTD 연환산)</div></div>
-      </div>
-      <div class="footnote">※ 막대 높이는 0~15% 눈금 기준입니다. 3개년 연속 하락 추세.</div>
-    </div>
-  </div>
-
-  <!-- ⑤⑥ -->
-  <div class="two-col-panel">
-    <div class="card" id="s5">
-      <div class="card-head"><h2><span class="num">5</span>퇴직유형별 퇴직자 현황</h2><span class="unit">누적 176건</span></div>
+      <div class="card-head"><h2><span class="num">3</span>퇴직유형별 퇴직자 현황</h2><span class="unit">누적 176건</span></div>
       <div class="donut-wrap" style="margin-bottom:16px;">
         <div class="donut" id="typeDonut">
           <div class="donut-center"><b>176</b><span>전체</span></div>
@@ -350,22 +319,22 @@
       <div class="barlist" id="typeBarlist"></div>
     </div>
 
-    <div class="card" id="s6">
-      <div class="card-head"><h2><span class="num">6</span>호칭별 퇴직자 현황</h2><span class="unit">누적 176건</span></div>
+    <div class="card" id="s4">
+      <div class="card-head"><h2><span class="num">4</span>호칭별 퇴직자 현황</h2><span class="unit">누적 176건</span></div>
       <div class="barlist" id="titleBarlist" style="margin-top:6px;"></div>
       <div class="footnote">※ 선임~책임Ⅱ 구간 퇴직 비중이 76.7%로 가장 높습니다.</div>
     </div>
   </div>
 
-  <!-- ⑦⑧ -->
+  <!-- ⑤⑥ -->
   <div class="two-col-panel">
-    <div class="card" id="s7">
-      <div class="card-head"><h2><span class="num">7</span>타사 전직자 이직처 현황</h2><span class="unit">자발·타사이직 61건</span></div>
+    <div class="card" id="s5">
+      <div class="card-head"><h2><span class="num">5</span>타사 전직자 이직처 현황</h2><span class="unit">자발·타사이직 61건</span></div>
       <div class="barlist" id="destBarlist"></div>
     </div>
 
-    <div class="card" id="s8">
-      <div class="card-head"><h2><span class="num">8</span>직무별 퇴직자 현황</h2><span class="unit">단위: 건</span></div>
+    <div class="card" id="s6">
+      <div class="card-head"><h2><span class="num">6</span>직무별 퇴직자 현황</h2><span class="unit">단위: 건</span></div>
       <table class="job">
         <thead><tr><th>직무구분</th><th>직무명</th><th style="text-align:right;">건수</th></tr></thead>
         <tbody id="jobBody"></tbody>
@@ -373,9 +342,9 @@
     </div>
   </div>
 
-  <!-- ⑨ -->
-  <div class="card" id="s9">
-    <div class="card-head"><h2><span class="num">9</span>3개년 신입/경력사원 조기퇴직율</h2><span class="unit">입사 후 1년 이내 퇴사 비중, 단위: %</span></div>
+  <!-- ⑦ -->
+  <div class="card" id="s7">
+    <div class="card-head"><h2><span class="num">7</span>3개년 신입/경력사원 조기퇴직율</h2><span class="unit">입사 후 1년 이내 퇴사 비중, 단위: %</span></div>
     <div class="legend">
       <div class="item"><span class="sw" style="background:var(--brand);"></span>신입</div>
       <div class="item"><span class="sw" style="background:var(--navy);"></span>경력</div>
