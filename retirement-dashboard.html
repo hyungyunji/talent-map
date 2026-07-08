@@ -35,15 +35,9 @@
   .wrap{max-width:1380px;margin:0 auto;padding:24px 20px 60px;}
 
   /* header */
-  .head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;}
+  .head{margin-bottom:16px;}
   .head h1{font-size:25px;margin:0;font-weight:800;}
   .head .sub{color:var(--text-muted);font-size:14px;margin-top:4px;font-weight:500;}
-  .head-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-  select.filter{appearance:none;border:1px solid var(--border);background:var(--surface);color:var(--text-primary);
-    padding:9px 32px 9px 13px;border-radius:9px;font-size:14px;font-weight:600;
-    background-image:linear-gradient(45deg,transparent 50%,var(--text-muted) 50%),linear-gradient(135deg,var(--text-muted) 50%,transparent 50%);
-    background-position:calc(100% - 16px) 16px,calc(100% - 11px) 16px;background-size:5px 5px;background-repeat:no-repeat;}
-
 
   /* card */
   .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
@@ -54,6 +48,13 @@
     background:var(--brand);color:var(--brand-ink);border-radius:6px;font-size:12.5px;font-weight:800;flex:none;}
   .card-head .unit{font-size:12.5px;color:var(--text-muted);font-weight:600;}
   .card-desc{font-size:13px;color:var(--text-muted);margin:-8px 0 14px;}
+
+  /* upload panel */
+  #uploadPanel{background:linear-gradient(180deg,var(--navy-50) 0%, var(--surface) 55%);}
+  .upload-btn{display:inline-flex;align-items:center;font-size:13px;font-weight:700;color:#fff;
+    background:var(--navy);padding:9px 16px;border-radius:8px;cursor:pointer;white-space:nowrap;}
+  .upload-btn:hover{opacity:.9;}
+  #uploadError{font-size:12.5px;color:var(--critical);margin-top:10px;font-weight:600;}
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
   .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
@@ -67,8 +68,11 @@
   .stat-value{font-size:34px;font-weight:800;letter-spacing:-0.5px;line-height:1;}
   .stat-value .u{font-size:15.5px;font-weight:700;color:var(--text-secondary);margin-left:2px;}
   .stat-delta{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;font-weight:700;margin-top:8px;}
-  .stat-delta.good{color:var(--good);} .stat-delta.bad{color:var(--critical);}
+  .stat-delta.good{color:var(--good);} .stat-delta.bad{color:var(--critical);} .stat-delta.flat{color:var(--text-muted);}
   .stat-vs{color:var(--text-muted);font-weight:600;}
+  .top-type-row{display:flex;justify-content:space-between;font-size:13px;font-weight:700;padding:5px 0;border-bottom:1px dashed var(--gridline);}
+  .top-type-row:last-child{border-bottom:none;}
+  .top-type-row span.n{color:var(--text-muted);font-weight:600;}
 
   .risk-row{display:flex;gap:10px;flex-wrap:wrap;}
   .risk-chip{flex:1 1 128px;background:var(--surface);border:1px solid var(--border);border-radius:10px;
@@ -85,17 +89,16 @@
   table.org thead th:not(:last-child){border-right:1px solid var(--gridline);}
   table.org td{padding:11px 10px;border-bottom:1px solid var(--gridline);vertical-align:middle;}
   table.org td:not(:last-child){border-right:1px solid var(--gridline);}
-  table.org tbody tr.org-row:last-of-type td{border-bottom:1px solid var(--gridline);}
   table.org td.name{font-weight:700;white-space:nowrap;}
   table.org td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
   tr.org-row{cursor:pointer;}
   tr.org-row td{background:var(--surface);}
-  tr.org-row:nth-of-type(4n+1) td, tr.org-row:nth-of-type(4n+2) td{}
   tr.org-row:hover td{background:var(--zebra);}
   .chev{display:inline-block;width:14px;color:var(--text-muted);font-size:11px;transition:transform .15s ease;}
   .chev.open{transform:rotate(90deg);color:var(--brand);}
   .delta-tag{font-weight:700;font-variant-numeric:tabular-nums;}
   .delta-tag.good{color:var(--good);} .delta-tag.bad{color:var(--critical);}
+  .empty-note{padding:16px;color:var(--text-muted);font-size:13px;text-align:center;}
 
   tr.roster-tr td{padding:0;border-bottom:1px solid var(--gridline);}
   .roster-panel{padding:12px 16px 16px 42px;background:var(--page);max-height:360px;overflow-y:auto;}
@@ -126,16 +129,6 @@
   .legend .item{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:var(--text-secondary);}
   .legend .sw{width:11px;height:11px;border-radius:3px;}
 
-  /* meter */
-  .meter-wrap{padding:6px 4px 2px;}
-  .meter-track{position:relative;height:22px;border-radius:6px;background:var(--gridline);overflow:visible;}
-  .meter-fill{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,var(--brand),var(--navy));}
-  .meter-target{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--text-primary);}
-  .meter-target::after{content:attr(data-label);position:absolute;top:-22px;left:50%;transform:translateX(-50%);
-    font-size:12px;font-weight:700;color:var(--text-primary);white-space:nowrap;}
-  .meter-labels{display:flex;justify-content:space-between;margin-top:10px;font-size:13px;color:var(--text-muted);font-weight:600;}
-  .meter-labels b{color:var(--text-primary);font-size:15px;}
-
   /* grouped bar chart */
   .grouped{display:flex;align-items:flex-end;gap:22px;height:190px;padding:6px 6px 0;border-bottom:1px solid var(--gridline);}
   .grp{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;height:100%;}
@@ -147,9 +140,7 @@
   /* donut */
   .donut-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
   .donut{width:146px;height:146px;border-radius:50%;flex:none;position:relative;}
-  .donut::after{content:"";position:absolute;inset:22px;border-radius:50%;background:var(--surface);
-    display:flex;align-items:center;justify-content:center;}
-  .donut-center{position:absolute;inset:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .donut-center{position:absolute;inset:22px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;}
   .donut-center b{font-size:23px;font-weight:800;}
   .donut-center span{font-size:12px;color:var(--text-muted);font-weight:600;}
   .donut-legend{display:flex;flex-direction:column;gap:10px;}
@@ -188,9 +179,6 @@
   table.detail tr.flash td{animation:flashHi 1.8s ease;}
   @keyframes flashHi{0%{background:var(--brand-50);}100%{background:transparent;}}
   .who b{font-size:15px;} .who .meta{color:var(--text-muted);font-size:12.5px;margin-top:2px;}
-  .tag{display:inline-block;font-size:12px;font-weight:800;padding:2px 8px;border-radius:999px;margin-top:6px;}
-  .tag.new{background:var(--navy-50);color:var(--navy);}
-  .tag.exp{background:var(--brand-50);color:var(--brand);}
   .hist{white-space:pre-line;color:var(--text-secondary);font-size:13px;}
   .flag-row{display:flex;gap:4px;flex-wrap:wrap;}
   .flag{font-size:11.5px;font-weight:800;padding:2px 7px;border-radius:5px;white-space:nowrap;}
@@ -209,50 +197,48 @@
 <div class="wrap">
 
   <div class="head">
-    <div>
-      <h1>퇴직 현황 대시보드</h1>
-      <div class="sub">기준월: 2026-07 · 최종 갱신: 2026-07-08 · 데이터: 샘플(Mock)</div>
+    <h1>퇴직 현황 대시보드</h1>
+    <div class="sub" id="headerSub">기준월: 2026-07 · 데이터: 샘플(Mock) (176건)</div>
+  </div>
+
+  <!-- 데이터 업로드 -->
+  <div class="card" id="uploadPanel">
+    <div class="card-head"><h2>데이터 업로드</h2><span class="unit" id="dataSourceLabel">현재: 샘플(Mock) 데이터</span></div>
+    <div class="card-desc">퇴직자 데이터 CSV(또는 TSV) 파일을 업로드하면 아래 대시보드 전체가 업로드한 데이터 기준으로 다시 계산됩니다. 필요한 핵심 컬럼: 부문, 이름, 호칭, 담당/팀, 입사일, 마지막재직일, 퇴직발령유형/사유/요약, 퇴직유형대분류/중분류, 핵심인재, AX역량보유여부, 이직처명 등. 파일은 UTF-8 인코딩이어야 합니다.</div>
+    <div class="filterbar" style="margin-bottom:0;">
+      <label class="upload-btn" for="csvFile">CSV 파일 선택</label>
+      <input type="file" id="csvFile" accept=".csv,.tsv,.txt" style="display:none;">
+      <button class="filter-reset" id="resetSample" type="button">샘플 데이터로 보기</button>
+      <button class="filter-reset" id="exportHtml" type="button" style="color:var(--navy);border-color:var(--navy-50);">공유용 HTML로 저장</button>
+      <span class="filter-count" id="uploadCount"></span>
     </div>
-    <div class="head-right">
-      <select class="filter" id="deptFilter"><option>부문 전체</option><option>Enterprise부문</option><option>NW부문</option><option>정보보안부문</option><option>CTO</option><option>Consumer부문</option></select>
-      <select class="filter"><option>기준월 2026-07</option><option>2026-06</option><option>2026-05</option></select>
-    </div>
+    <div id="uploadError" style="display:none;"></div>
   </div>
 
   <!-- 전사 요약 -->
   <div class="card" id="summary" style="background:linear-gradient(180deg,var(--brand-50) 0%, var(--surface) 60%);">
-    <div class="card-head"><h2>전사 퇴직 현황 요약</h2><span class="unit">기준월 2026-07 · 조직별 상세는 아래 ① 표를 확인하세요</span></div>
+    <div class="card-head"><h2>전사 퇴직 현황 요약</h2><span class="unit" id="summaryAsOf">조직별 상세는 아래 ① 표를 확인하세요</span></div>
     <div class="stat-grid">
       <div class="stat-tile">
-        <div class="stat-label">이번달(7월) 퇴직 인원</div>
-        <div class="stat-value">32<span class="u">명</span></div>
-        <div class="stat-delta good">▼ 22.0% <span class="stat-vs">전년동월 41명</span></div>
+        <div class="stat-label" id="sumThisMonthLabel">이번달(7월) 퇴직 인원</div>
+        <div class="stat-value" id="sumThisMonth">32<span class="u">명</span></div>
+        <div class="stat-delta good" id="sumThisMonthDelta">▼ 22.0% <span class="stat-vs">전년동월 41명</span></div>
       </div>
       <div class="stat-tile">
-        <div class="stat-label">누적(1~7월) 퇴직 인원</div>
-        <div class="stat-value">176<span class="u">명</span></div>
-        <div class="stat-delta good">▼ 13.3% <span class="stat-vs">전년누적 203명</span></div>
+        <div class="stat-label" id="sumYtdLabel">누적(1~7월) 퇴직 인원</div>
+        <div class="stat-value" id="sumYtd">176<span class="u">명</span></div>
+        <div class="stat-delta good" id="sumYtdDelta">▼ 13.3% <span class="stat-vs">전년누적 203명</span></div>
       </div>
       <div class="stat-tile">
-        <div class="stat-label">3개년 퇴직율 비교 <span style="font-weight:600;color:var(--text-muted);">(연환산 기준, %)</span></div>
-        <div class="grouped" style="height:104px;gap:20px;border-bottom:none;padding:20px 6px 0;">
-          <div class="grp"><div class="bars" style="height:60px;">
-            <div class="col" style="width:24px;height:74.6%;background:var(--gridline);"><span class="v" style="color:var(--text-muted);">11.2%</span></div>
-          </div><div class="xlabel" style="font-size:11.5px;margin-top:6px;">2024</div></div>
-          <div class="grp"><div class="bars" style="height:60px;">
-            <div class="col" style="width:24px;height:65.3%;background:var(--gridline);"><span class="v" style="color:var(--text-muted);">9.8%</span></div>
-          </div><div class="xlabel" style="font-size:11.5px;margin-top:6px;">2025</div></div>
-          <div class="grp"><div class="bars" style="height:60px;">
-            <div class="col" style="width:24px;height:54.0%;background:var(--brand);"><span class="v">8.1%</span></div>
-          </div><div class="xlabel" style="font-size:11.5px;margin-top:6px;">2026(YTD)</div></div>
-        </div>
+        <div class="stat-label">퇴직유형 TOP 3 <span style="font-weight:600;color:var(--text-muted);">(누적 기준)</span></div>
+        <div id="sumTopTypes"></div>
       </div>
     </div>
     <div class="risk-row" style="margin-top:14px;">
-      <div class="risk-chip"><span class="dot" style="background:var(--critical);"></span><span class="lbl">핵심인재</span><div class="val">9<span style="font-size:13px;">명</span></div><div class="pct">전체의 5.1%</div></div>
-      <div class="risk-chip"><span class="dot" style="background:var(--warning);"></span><span class="lbl">직책자</span><div class="val">14<span style="font-size:13px;">명</span></div><div class="pct">전체의 8.0%</div></div>
-      <div class="risk-chip"><span class="dot" style="background:var(--navy);"></span><span class="lbl">AX역량보유</span><div class="val">21<span style="font-size:13px;">명</span></div><div class="pct">전체의 11.9%</div></div>
-      <div class="risk-chip"><span class="dot" style="background:var(--brand);"></span><span class="lbl">조기퇴사(1년내)</span><div class="val">18<span style="font-size:13px;">명</span></div><div class="pct">전체의 10.2%</div></div>
+      <div class="risk-chip"><span class="dot" style="background:var(--critical);"></span><span class="lbl">핵심인재</span><div class="val" id="riskCoreVal">9명</div><div class="pct" id="riskCorePct">전체의 5.1%</div></div>
+      <div class="risk-chip"><span class="dot" style="background:var(--warning);"></span><span class="lbl">직책자</span><div class="val" id="riskLeadVal">14명</div><div class="pct" id="riskLeadPct">전체의 8.0%</div></div>
+      <div class="risk-chip"><span class="dot" style="background:var(--navy);"></span><span class="lbl">AX역량보유</span><div class="val" id="riskAxVal">21명</div><div class="pct" id="riskAxPct">전체의 11.9%</div></div>
+      <div class="risk-chip"><span class="dot" style="background:var(--brand);"></span><span class="lbl">조기퇴사(1년내)</span><div class="val" id="riskEarlyVal">18명</div><div class="pct" id="riskEarlyPct">전체의 10.2%</div></div>
     </div>
   </div>
 
@@ -283,7 +269,7 @@
     <div class="table-scroll">
       <table class="detail">
         <thead><tr>
-          <th>조직</th><th>인적사항 / 입사유형</th><th>발령내역</th><th>3개년 평가<br>('24/'23/'22)</th>
+          <th>조직</th><th>인적사항 / 입사유형</th><th>발령내역</th><th id="evalHeader">3개년 평가<br>('24/'23/'22)</th>
           <th>입사 전 경력 / 학력사항</th><th>핵심인재·직책·DX역량</th><th>퇴직사유 요약</th><th>퇴직사유 및 건의사항 상세</th>
         </tr></thead>
         <tbody id="detailBody"></tbody>
@@ -294,30 +280,30 @@
   <!-- ③④ -->
   <div class="two-col-panel">
     <div class="card" id="s3">
-      <div class="card-head"><h2><span class="num">3</span>퇴직유형별 퇴직자 현황</h2><span class="unit">누적 176건</span></div>
+      <div class="card-head"><h2><span class="num">3</span>퇴직유형별 퇴직자 현황</h2><span class="unit" id="typeUnit">누적 176건</span></div>
       <div class="donut-wrap" style="margin-bottom:16px;">
         <div class="donut" id="typeDonut">
-          <div class="donut-center"><b>176</b><span>전체</span></div>
+          <div class="donut-center"><b id="typeDonutTotal">176</b><span>전체</span></div>
         </div>
         <div class="donut-legend">
-          <div class="item"><span class="sw" style="background:var(--brand);"></span>자발 <span class="n">107명 · 60.8%</span></div>
-          <div class="item"><span class="sw" style="background:var(--navy);"></span>비자발 <span class="n">69명 · 39.2%</span></div>
+          <div class="item"><span class="sw" style="background:var(--brand);"></span>자발 <span class="n" id="typeVolLegend">107명 · 60.8%</span></div>
+          <div class="item"><span class="sw" style="background:var(--navy);"></span>비자발 <span class="n" id="typeInvolLegend">69명 · 39.2%</span></div>
         </div>
       </div>
       <div class="barlist" id="typeBarlist"></div>
     </div>
 
     <div class="card" id="s4">
-      <div class="card-head"><h2><span class="num">4</span>호칭별 퇴직자 현황</h2><span class="unit">누적 176건</span></div>
+      <div class="card-head"><h2><span class="num">4</span>호칭별 퇴직자 현황</h2><span class="unit" id="titleUnit">누적 176건</span></div>
       <div class="barlist" id="titleBarlist" style="margin-top:6px;"></div>
-      <div class="footnote">※ 선임~책임Ⅱ 구간 퇴직 비중이 76.7%로 가장 높습니다.</div>
+      <div class="footnote" id="titleFootnote"></div>
     </div>
   </div>
 
   <!-- ⑤⑥ -->
   <div class="two-col-panel">
     <div class="card" id="s5">
-      <div class="card-head"><h2><span class="num">5</span>타사 전직자 이직처 현황</h2><span class="unit">자발·타사이직 61건</span></div>
+      <div class="card-head"><h2><span class="num">5</span>타사 전직자 이직처 현황</h2><span class="unit" id="destUnit">자발·타사이직 61건</span></div>
       <div class="barlist" id="destBarlist"></div>
     </div>
 
@@ -332,43 +318,28 @@
 
   <!-- ⑦ -->
   <div class="card" id="s7">
-    <div class="card-head"><h2><span class="num">7</span>3개년 신입/경력사원 조기퇴직율</h2><span class="unit">입사 후 1년 이내 퇴사 비중, 단위: %</span></div>
-    <div class="legend">
+    <div class="card-head"><h2><span class="num">7</span>3개년 신입/경력사원 조기퇴직율</h2><span class="unit">근속 12개월 미만 조기퇴사 기준</span></div>
+    <div class="legend" id="s7Legend">
       <div class="item"><span class="sw" style="background:var(--brand);"></span>신입</div>
       <div class="item"><span class="sw" style="background:var(--navy);"></span>경력</div>
     </div>
-    <div class="grouped">
-      <div class="grp"><div class="bars">
-        <div class="col" style="height:45.3%;background:var(--brand);"><span class="v">6.8%</span></div>
-        <div class="col" style="height:74.7%;background:var(--navy);"><span class="v">11.2%</span></div>
-      </div><div class="xlabel">2023년 입사</div></div>
-      <div class="grp"><div class="bars">
-        <div class="col" style="height:56.0%;background:var(--brand);"><span class="v">8.4%</span></div>
-        <div class="col" style="height:90.0%;background:var(--navy);"><span class="v">13.5%</span></div>
-      </div><div class="xlabel">2024년 입사</div></div>
-      <div class="grp"><div class="bars">
-        <div class="col" style="height:47.3%;background:var(--brand);"><span class="v">7.1%</span></div>
-        <div class="col" style="height:84.0%;background:var(--navy);"><span class="v">12.6%</span></div>
-      </div><div class="xlabel">2025년 입사</div></div>
-    </div>
-    <div class="footnote">※ 경력사원 조기퇴직율이 신입사원 대비 지속적으로 높게(약 1.6~1.8배) 나타나고 있습니다.</div>
+    <div id="s7Body"></div>
+    <div class="footnote" id="s7Footnote"></div>
   </div>
 
-  <div class="footnote" style="text-align:center;">
+  <div class="footnote" style="text-align:center;" id="bottomFootnote">
     본 대시보드는 설계 확인용 샘플(Mock) 데이터로 구성되어 있습니다. 실제 인사 데이터 연동 시 동일한 구조로 자동 갱신됩니다.
   </div>
 </div>
 
 <script>
 (function(){
-  function bar(row){
-    var pct = Math.round(row.v/row.max*1000)/10;
-    return '<div class="bar-row"><div class="lbl">'+row.l+'</div>'+
-      '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+(row.c||'var(--brand)')+';"></div></div>'+
-      '<div class="val">'+row.v+'명<span class="pct">'+(row.p!==undefined?(' · '+row.p+'%'):'')+'</span></div></div>';
-  }
+  // ================= generic helpers =================
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function fmtMonth(d){ return d ? (d.getFullYear()+'-'+pad2(d.getMonth()+1)) : ''; }
+  function fmtFull(d){ return d ? (d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())) : '?'; }
 
-  // ---------- seeded RNG for reproducible mock rosters ----------
   function mulberry32(a){
     return function(){
       a |= 0; a = a + 0x6D2B79F5 | 0;
@@ -377,103 +348,463 @@
       return ((t ^ t >>> 14) >>> 0) / 4294967296;
     };
   }
-  var rnd = mulberry32(20260708);
-  function pick(arr){ return arr[Math.floor(rnd()*arr.length)]; }
-  function shuffle(arr){
+  function pick(rnd, arr){ return arr[Math.floor(rnd()*arr.length)]; }
+  function shuffle(rnd, arr){
     var a = arr.slice();
     for(var i=a.length-1;i>0;i--){ var j=Math.floor(rnd()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
     return a;
   }
-  function buildCountArray(counts){
+  function buildCountArray(rnd, counts){
     var out=[];
     counts.forEach(function(c){ for(var i=0;i<c[1];i++) out.push(c[0]); });
-    return shuffle(out);
+    return shuffle(rnd, out);
+  }
+  function groupCount(list, keyFn){
+    var map = {};
+    list.forEach(function(p){ var k=keyFn(p)||'기타'; map[k]=(map[k]||0)+1; });
+    return Object.keys(map).map(function(k){ return {key:k, label:k, count:map[k]}; })
+      .sort(function(a,b){ return b.count-a.count; });
   }
 
-  // ① org table
-  var orgs = [
-    ["Enterprise부문",9,12,47,55],
-    ["NW부문",6,8,33,38],
-    ["정보보안부문",5,6,27,30],
-    ["CTO",4,5,22,26],
-    ["Consumer부문",3,4,18,21],
-    ["법무실",1,2,6,8],
-    ["위기관리센터",1,1,5,6],
-    ["CISO",1,1,4,5],
-    ["CESO",1,1,4,5],
-    ["CFO/CRO",1,1,5,4],
-    ["윤리컴플라이언스실",0,0,2,2],
-    ["CX센터",0,0,2,2],
-    ["CHO",0,0,1,1]
-  ];
-
-  // ⑤/⑥ taxonomy reused to build individual rosters
-  var titleCounts = [['사원',12],['선임',58],['책임Ⅰ',41],['책임Ⅱ',37],['수석',22],['그룹장/임원',6]];
-  var reasonCounts = [['타사이직',61],['개인사업',15],['유학·학업',11],['가사·육아·건강',14],['기타',6],
-    ['희망퇴직',38],['전출',12],['정년퇴직',9],['계약만료',6],['직무재배치',4]];
-  var titlesGlobal = buildCountArray(titleCounts);
-  var reasonGlobal = buildCountArray(reasonCounts);
-  var coreGlobal = shuffle(Array(9).fill(true).concat(Array(167).fill(false)));
-  var leadGlobal = shuffle(Array(14).fill(true).concat(Array(162).fill(false)));
-  var axGlobal = shuffle(Array(21).fill(true).concat(Array(155).fill(false)));
-
-  var surnames = ['김','이','박','최','정','강','조','윤','장','임','한','오','서','신','권','황','안','송','전','홍','유','고','문','양','손','배'];
-  var syl1 = ['민','서','지','현','우','윤','수','영','호','태','아','연','하','율','찬','도','예','시','채','성','준','재','은','효'];
-  var syl2 = ['준','호','우','진','아','원','빈','율','희','현','서','민','영','수','경','은','린','재','훈','아'];
-
-  var teamsByOrg = {
-    "Enterprise부문": ["B2B솔루션담당 AX솔루션팀","법인영업담당 대기업영업팀","클라우드사업담당 클라우드플랫폼팀","스마트팩토리담당 스마트팩토리팀","공공사업담당 공공사업1팀"],
-    "NW부문": ["네트워크운영담당 코어망운영팀","네트워크운영담당 액세스망운영팀","네트워크기획담당 망설계팀","5G인프라담당 무선망운영팀"],
-    "정보보안부문": ["보안운영담당 SOC팀","보안기획담당 보안정책팀","정보보호담당 개인정보보호팀","침해대응담당 CERT팀"],
-    "CTO": ["AI플랫폼담당 AI Foundation팀","데이터플랫폼담당 빅데이터팀","서비스개발담당 플랫폼개발팀","클라우드인프라담당 인프라운영팀"],
-    "Consumer부문": ["Consumer기획담당 Consumer기획팀","홈사업그룹 광고사업팀","Consumer사업기획담당 STUDIO X+U TF","미디어사업담당 콘텐츠제휴팀"],
-    "법무실": ["법무담당 계약심사팀","법무담당 소송관리팀","컴플라이언스담당 내부통제팀"],
-    "위기관리센터": ["위기대응담당 이슈관리팀","리스크관리담당 리스크분석팀"],
-    "CISO": ["정보보안전략담당 보안전략팀","보안관제담당 관제운영팀"],
-    "CESO": ["ESG경영담당 지속가능경영팀","안전보건담당 산업안전팀"],
-    "CFO/CRO": ["재무기획담당 재무기획팀","리스크관리담당 신용리스크팀","회계담당 결산회계팀"],
-    "윤리컴플라이언스실": ["윤리경영담당 윤리경영팀"],
-    "CX센터": ["고객경험담당 CX전략팀"],
-    "CHO": ["인사담당 인재개발팀"]
-  };
-
-  var hireRanges = {'사원':[1,3],'선임':[2,7],'책임Ⅰ':[5,11],'책임Ⅱ':[8,15],'수석':[10,20],'그룹장/임원':[12,25]};
-  function hireInfoFor(title){
-    var r = hireRanges[title] || [2,10];
-    var tenure = r[0] + Math.floor(rnd()*(r[1]-r[0]+1));
-    return { hireYear: 2026 - tenure, hireType: (rnd() < 0.3 ? '신입' : '경력') };
-  }
-
-  var rosterByOrg = {};
-  var gi = 0;
-  orgs.forEach(function(o){
-    var name=o[0], cur=o[1], total=o[3];
-    var monthArr = [];
-    for(var i=0;i<cur;i++) monthArr.push(7);
-    for(var i=0;i<total-cur;i++) monthArr.push(1+Math.floor(rnd()*6));
-    monthArr = shuffle(monthArr);
-    var list = [];
-    for(var i=0;i<total;i++){
-      var title = titlesGlobal[gi];
-      var hi = hireInfoFor(title);
-      list.push({
-        name: pick(surnames)+pick(syl1)+pick(syl2),
-        org: name,
-        title: title,
-        team: pick(teamsByOrg[name] || ["조직운영팀"]),
-        month: monthArr[i],
-        reason: reasonGlobal[gi],
-        core: coreGlobal[gi],
-        lead: leadGlobal[gi],
-        ax: axGlobal[gi],
-        hireYear: hi.hireYear,
-        hireType: hi.hireType
-      });
-      gi++;
+  // ================= mock model =================
+  function buildMockModel(){
+    var rnd = mulberry32(20260708);
+    var orgsDef = [
+      ["Enterprise부문",9,12,47,55],["NW부문",6,8,33,38],["정보보안부문",5,6,27,30],["CTO",4,5,22,26],
+      ["Consumer부문",3,4,18,21],["법무실",1,2,6,8],["위기관리센터",1,1,5,6],["CISO",1,1,4,5],
+      ["CESO",1,1,4,5],["CFO/CRO",1,1,5,4],["윤리컴플라이언스실",0,0,2,2],["CX센터",0,0,2,2],["CHO",0,0,1,1]
+    ];
+    var titleCounts = [['사원',12],['선임',58],['책임Ⅰ',41],['책임Ⅱ',37],['수석',22],['그룹장/임원',6]];
+    var reasonCounts = [['타사이직',61],['개인사업',15],['유학·학업',11],['가사·육아·건강',14],['기타',6],
+      ['희망퇴직',38],['전출',12],['정년퇴직',9],['계약만료',6],['직무재배치',4]];
+    var titlesGlobal = buildCountArray(rnd, titleCounts);
+    var reasonGlobal = buildCountArray(rnd, reasonCounts);
+    var coreGlobal = shuffle(rnd, Array(9).fill(true).concat(Array(167).fill(false)));
+    var leadGlobal = shuffle(rnd, Array(14).fill(true).concat(Array(162).fill(false)));
+    var axGlobal = shuffle(rnd, Array(21).fill(true).concat(Array(155).fill(false)));
+    var earlyGlobal = shuffle(rnd, Array(18).fill(true).concat(Array(158).fill(false)));
+    var surnames = ['김','이','박','최','정','강','조','윤','장','임','한','오','서','신','권','황','안','송','전','홍','유','고','문','양','손','배'];
+    var syl1 = ['민','서','지','현','우','윤','수','영','호','태','아','연','하','율','찬','도','예','시','채','성','준','재','은','효'];
+    var syl2 = ['준','호','우','진','아','원','빈','율','희','현','서','민','영','수','경','은','린','재','훈','아'];
+    var teamsByOrg = {
+      "Enterprise부문": ["B2B솔루션담당 AX솔루션팀","법인영업담당 대기업영업팀","클라우드사업담당 클라우드플랫폼팀","스마트팩토리담당 스마트팩토리팀","공공사업담당 공공사업1팀"],
+      "NW부문": ["네트워크운영담당 코어망운영팀","네트워크운영담당 액세스망운영팀","네트워크기획담당 망설계팀","5G인프라담당 무선망운영팀"],
+      "정보보안부문": ["보안운영담당 SOC팀","보안기획담당 보안정책팀","정보보호담당 개인정보보호팀","침해대응담당 CERT팀"],
+      "CTO": ["AI플랫폼담당 AI Foundation팀","데이터플랫폼담당 빅데이터팀","서비스개발담당 플랫폼개발팀","클라우드인프라담당 인프라운영팀"],
+      "Consumer부문": ["Consumer기획담당 Consumer기획팀","홈사업그룹 광고사업팀","Consumer사업기획담당 STUDIO X+U TF","미디어사업담당 콘텐츠제휴팀"],
+      "법무실": ["법무담당 계약심사팀","법무담당 소송관리팀","컴플라이언스담당 내부통제팀"],
+      "위기관리센터": ["위기대응담당 이슈관리팀","리스크관리담당 리스크분석팀"],
+      "CISO": ["정보보안전략담당 보안전략팀","보안관제담당 관제운영팀"],
+      "CESO": ["ESG경영담당 지속가능경영팀","안전보건담당 산업안전팀"],
+      "CFO/CRO": ["재무기획담당 재무기획팀","리스크관리담당 신용리스크팀","회계담당 결산회계팀"],
+      "윤리컴플라이언스실": ["윤리경영담당 윤리경영팀"],
+      "CX센터": ["고객경험담당 CX전략팀"],
+      "CHO": ["인사담당 인재개발팀"]
+    };
+    var hireRanges = {'사원':[1,3],'선임':[2,7],'책임Ⅰ':[5,11],'책임Ⅱ':[8,15],'수석':[10,20],'그룹장/임원':[12,25]};
+    function hireInfoFor(title){
+      var r = hireRanges[title] || [2,10];
+      var tenure = r[0] + Math.floor(rnd()*(r[1]-r[0]+1));
+      return { hireYear: 2026 - tenure, hireType: (rnd() < 0.3 ? '신입' : '경력') };
     }
-    rosterByOrg[name] = list;
-  });
 
+    var orgs = [];
+    var gi = 0;
+    orgsDef.forEach(function(o){
+      var name=o[0], cur=o[1], prev=o[2], curY=o[3], prevY=o[4];
+      var monthArr = [];
+      for(var i=0;i<cur;i++) monthArr.push(7);
+      for(var i=0;i<curY-cur;i++) monthArr.push(1+Math.floor(rnd()*6));
+      monthArr = shuffle(rnd, monthArr);
+      var roster = [];
+      for(var i=0;i<curY;i++){
+        var title = titlesGlobal[gi];
+        var hi = hireInfoFor(title);
+        roster.push({
+          name: pick(rnd, surnames)+pick(rnd, syl1)+pick(rnd, syl2), org:name, title:title,
+          team: pick(rnd, teamsByOrg[name] || ["조직운영팀"]), month: monthArr[i],
+          reason: reasonGlobal[gi], core: coreGlobal[gi], lead: leadGlobal[gi], ax: axGlobal[gi], early: earlyGlobal[gi],
+          hireYear: hi.hireYear, hireType: hi.hireType
+        });
+        gi++;
+      }
+      orgs.push({name:name, thisMonth:cur, lastMonth:prev, ytd:curY, lastYtd:prevY, roster:roster});
+    });
+
+    var details = [
+      { id:'detail-1', orgTop:'Consumer부문',
+        org:'Consumer부문<br>홈사업그룹<br>광고사업담당<br>광고사업팀',
+        who:'박준호 책임(8)', meta:'43세, 남 · 경력 10년 신입',
+        hist:"'25.01~'25.05  광고사업팀\n'24.01~'24.12  FAST사업팀\n'22.01~'23.12  미디어DX챕터\n'19.07~'21.12  서비스BP운영팀(Consumer부문)\n'18.01~'19.06  AIoT제휴상품2팀(스마트홈부문)\n'16.01~'17.12  FC전략팀(FC부문)\n'11.01~'15.12  디지털사이니지팀\n'10.10~'11.01  그룹영업2팀(BS본부)",
+        eval:'3.3<br><span style="color:var(--text-muted);font-weight:600;">(B/A/B)</span>',
+        edu:"이전 경력 없음\n'05.03~'09.02 서강대 정치외교(석)\n'00.03~'05.02 서강대 영미문화(학)",
+        core:false, lead:false, ax:false, early:false, reasonCat:'가사·육아·건강', hireYear:2010, hireType:'신입',
+        sum:'결혼/출산/육아/가족 돌봄 등의 개인사',
+        detail:'[퇴직 사유]\n- 배우자 주재원(호주) 장기 발령에 따른 퇴직\n : 휴직 가능여부에 대해 살펴보았으나 자녀가 없어 휴직 가능한 방법이 없었음.\n*퇴직발령 상세 : 일반퇴직(유학·학업)' },
+      { id:'detail-2', orgTop:'Consumer부문',
+        org:'Consumer부문<br>Consumer사업기획담당<br>Consumer기획팀',
+        who:'배상진 선임(6)', meta:'39세, 남 · 경력 입사(2015)',
+        hist:"'15.09~'25.12  Consumer기획담당 Consumer기획팀\n총 근속 123개월",
+        eval:'2.9<br><span style="color:var(--text-muted);font-weight:600;">(B/B/C)</span>',
+        edu:"이전 경력 없음\n고려대 정치외교학(학)",
+        core:false, lead:false, ax:false, early:false, reasonCat:'전출', hireYear:2015, hireType:'경력',
+        sum:'전출 (지주사 전출)',
+        detail:'[퇴직 사유]\n- 그룹 지주사 조직개편에 따른 인력 전출\n*퇴직발령 상세 : 전출 &gt; 지주사전출' },
+      { id:'detail-3', orgTop:'Consumer부문',
+        org:'Consumer부문<br>Consumer기획담당<br>STUDIO X+U TF',
+        who:'이미영 책임Ⅱ(13)', meta:'51세, 여 · 경력 입사(2022)',
+        hist:"'22.12~'26.01  Consumer기획담당 STUDIO X+U TF\n총 근속 37개월",
+        eval:'3.1<br><span style="color:var(--text-muted);font-weight:600;">(B/A/B)</span>',
+        edu:"미디어로그\n서울과학기술대학교 산업공학과(학)",
+        core:false, lead:false, ax:false, early:false, reasonCat:'희망퇴직', hireYear:2022, hireType:'경력',
+        sum:'희망퇴직',
+        detail:'[퇴직 사유]\n- 조직 개편에 따른 희망퇴직 신청 및 승인\n*퇴직발령 상세 : 희망퇴직' },
+      { id:'detail-4', orgTop:'CTO',
+        org:'CTO<br>AI플랫폼담당<br>AI Foundation팀',
+        who:'정하늘 수석(17)', meta:'46세, 남 · 경력 입사(2016)',
+        hist:"'21.01~'26.06  AI플랫폼담당 AI Foundation팀\n'16.03~'20.12  데이터플랫폼담당 빅데이터팀",
+        eval:'4.0<br><span style="color:var(--text-muted);font-weight:600;">(S/A/A)</span>',
+        edu:"삼성SDS AI연구소 (4년)\nKAIST 전산학(석)",
+        core:true, lead:false, ax:true, early:false, reasonCat:'타사이직', hireYear:2016, hireType:'경력', destCompany:'IT/플랫폼 대기업',
+        sum:'타사이직 (보상/처우)',
+        detail:'[퇴직 사유]\n- 경쟁사 대비 낮은 보상 수준 및 AI조직 리더 포지션 제안 수락\n- 잔류 조건으로 보상 재협상 시도했으나 예산 제약으로 성사되지 않음\n*이직처 : IT/플랫폼 대기업' },
+      { id:'detail-5', orgTop:'정보보안부문',
+        org:'정보보안부문<br>보안운영담당<br>SOC팀',
+        who:'한소민 사원(1)', meta:'27세, 여 · 신입 입사(2025.11)',
+        hist:"'25.11~'26.07  보안운영담당 SOC팀\n총 근속 8개월",
+        eval:'평가이력 없음<br><span style="color:var(--text-muted);font-weight:600;">(입사 1년 미만)</span>',
+        edu:"이전 경력 없음\n이화여대 정보보호학과(학)",
+        core:false, lead:false, ax:false, early:true, reasonCat:'기타', hireYear:2025, hireType:'신입',
+        sum:'직무 미스매치 (조기퇴사)',
+        detail:'[퇴직 사유]\n- 채용 시 기대했던 정책기획 업무 대신 24시간 교대 모니터링 업무에 배치되어 적응에 어려움을 겪음\n*퇴직발령 상세 : 일반퇴직(직무부적응)' },
+      { id:'detail-6', orgTop:'법무실',
+        org:'법무실<br>법무담당<br>계약심사팀',
+        who:'최영수 수석(28)', meta:'60세, 남 · 경력 입사(1998)',
+        hist:"'05.01~'26.06  법무담당 계약심사팀\n'98.03~'04.12  법무팀",
+        eval:'3.5<br><span style="color:var(--text-muted);font-weight:600;">(A/B/A)</span>',
+        edu:"이전 경력 없음\n서울대 법학(학)",
+        core:false, lead:false, ax:false, early:false, reasonCat:'정년퇴직', hireYear:1998, hireType:'경력',
+        sum:'정년퇴직',
+        detail:'[퇴직 사유]\n- 만 60세 정년 도래에 따른 정년퇴직\n- 후임자 계약심사 업무 인수인계 완료\n*퇴직발령 상세 : 정년퇴직' },
+      { id:'detail-7', orgTop:'NW부문',
+        org:'NW부문<br>네트워크운영담당<br>코어망운영팀',
+        who:'강민재 책임Ⅰ(10)', meta:'38세, 남 · 신입 입사(2016)',
+        hist:"'19.01~'26.05  네트워크운영담당 코어망운영팀\n'16.01~'18.12  네트워크운영담당 액세스망운영팀",
+        eval:'3.0<br><span style="color:var(--text-muted);font-weight:600;">(B/B/B)</span>',
+        edu:"이전 경력 없음\n한양대 전자공학(학)",
+        core:false, lead:false, ax:false, early:false, reasonCat:'개인사업', hireYear:2016, hireType:'신입',
+        sum:'개인사업 준비',
+        detail:'[퇴직 사유]\n- 네트워크 유지보수 스타트업 창업을 위한 자진 퇴사\n*퇴직발령 상세 : 일반퇴직(개인사업)' },
+      { id:'detail-8', orgTop:'Enterprise부문',
+        org:'Enterprise부문<br>B2B솔루션담당<br>AX솔루션팀(팀장)',
+        who:'오지훈 책임Ⅱ(15)', meta:'44세, 남 · 경력 입사(2019)',
+        hist:"'23.03~'26.06  B2B솔루션담당 AX솔루션팀장\n'19.01~'23.02  B2B솔루션담당 스마트팩토리팀",
+        eval:'3.8<br><span style="color:var(--text-muted);font-weight:600;">(A/A/B)</span>',
+        edu:"글로벌 IT컨설팅펌 (6년)\n연세대 산업공학(학)",
+        core:true, lead:true, ax:true, early:false, reasonCat:'타사이직', hireYear:2019, hireType:'경력', destCompany:'컨설팅펌',
+        sum:'타사이직 (커리어 성장)',
+        detail:'[퇴직 사유]\n- 글로벌 컨설팅펌 AI Transformation 담당 파트너급 포지션 제안 수락\n- 리텐션 면담 진행했으나 본인 커리어 방향성에 따른 확고한 이직 의사 확인\n*이직처 : 컨설팅펌' }
+    ];
+
+    var dateLabelByDetailId = {'detail-1':'2025-05','detail-2':'2025-12','detail-3':'2026-01','detail-4':'2026-06',
+      'detail-5':'2026-07','detail-6':'2026-06','detail-7':'2026-05','detail-8':'2026-06'};
+    function orgByName(name){ for(var i=0;i<orgs.length;i++){ if(orgs[i].name===name) return orgs[i]; } return null; }
+    function rebalanceCategory(attr, removedVal, linkedVal){
+      if(removedVal === linkedVal) return;
+      outer:
+      for(var oi=0; oi<orgs.length; oi++){
+        var otherList = orgs[oi].roster;
+        for(var k=0;k<otherList.length;k++){
+          if(!otherList[k].linked && otherList[k][attr] === linkedVal){
+            otherList[k][attr] = removedVal;
+            break outer;
+          }
+        }
+      }
+    }
+    details.forEach(function(d){
+      var org = orgByName(d.orgTop);
+      if(!org || org.roster.length===0) return;
+      var list = org.roster;
+      var removed = list.pop();
+      rebalanceCategory('reason', removed.reason, d.reasonCat);
+      rebalanceCategory('core', removed.core, d.core);
+      rebalanceCategory('lead', removed.lead, d.lead);
+      rebalanceCategory('ax', removed.ax, d.ax);
+      rebalanceCategory('early', removed.early, d.early);
+      var titleMatch = d.who.match(/([가-힣Ⅰ-Ⅴ]+)\(/);
+      list.push({
+        name: d.who.split(' ')[0], org: d.orgTop,
+        title: titleMatch ? titleMatch[1] : d.who.split(' ')[1],
+        team: d.org.split('<br>').pop(),
+        dateLabel: dateLabelByDetailId[d.id], reason: d.reasonCat,
+        core: d.core, lead: d.lead, ax: d.ax, early: d.early,
+        hireYear: d.hireYear, hireType: d.hireType, destCompany: d.destCompany,
+        linked: true, detailId: d.id
+      });
+    });
+
+    var allPeople = [];
+    orgs.forEach(function(o){ o.roster.forEach(function(p){ allPeople.push(p); }); });
+
+    var destPool = [];
+    [['경쟁 통신사',14],['IT/플랫폼 대기업',10],['스타트업',9],['컨설팅펌',6],['금융권',6],['공공기관/공기업',5],['기타',9]]
+      .forEach(function(c){ for(var i=0;i<c[1];i++) destPool.push(c[0]); });
+    destPool = shuffle(rnd, destPool);
+    var dpi = 0;
+    allPeople.forEach(function(p){
+      if(p.reason === '타사이직' && !p.destCompany){ p.destCompany = destPool[dpi] || '기타'; dpi++; }
+    });
+
+    var voluntaryKeys = ['타사이직','개인사업','유학·학업','가사·육아·건강','기타'];
+    var involuntaryKeys = ['희망퇴직','전출','정년퇴직','계약만료','직무재배치'];
+    var voluntary = groupCount(allPeople.filter(function(p){ return voluntaryKeys.indexOf(p.reason)>=0; }), function(p){ return p.reason; });
+    var involuntary = groupCount(allPeople.filter(function(p){ return involuntaryKeys.indexOf(p.reason)>=0; }), function(p){ return p.reason; });
+
+    return {
+      meta:{ mode:'mock', sourceLabel:'샘플(Mock)', asOfLabel:'2026-07', curYear:2026, curMonth:7,
+        count: allPeople.length, detailUnitLabel: details.length+'건 (표본 상세) · 전체 '+allPeople.length+'건 중' },
+      summary:{ thisMonth:32, lastMonth:41, ytd:176, lastYtd:203 },
+      orgs: orgs,
+      allPeople: allPeople,
+      typeBreakdown:{ voluntaryTotal: voluntary.reduce(function(s,x){return s+x.count;},0),
+        involuntaryTotal: involuntary.reduce(function(s,x){return s+x.count;},0), voluntary:voluntary, involuntary:involuntary },
+      titleBreakdown: groupCount(allPeople, function(p){ return p.title; }),
+      destBreakdown: groupCount(allPeople.filter(function(p){ return p.destCompany; }), function(p){ return p.destCompany; }),
+      jobBreakdown: [
+        {group:"경영지원",label:"경영관리",count:15},{group:"경영지원",label:"재무/회계",count:9},
+        {group:"경영지원",label:"인사",count:7},{group:"경영지원",label:"HRM",count:5},
+        {group:"영업",label:"B2B영업",count:22},{group:"영업",label:"B2C영업",count:18},
+        {group:"기술",label:"네트워크엔지니어링",count:24},{group:"기술",label:"서비스개발",count:19},{group:"기술",label:"정보보안",count:12},
+        {group:"마케팅",label:"브랜드/마케팅",count:10},{group:"콘텐츠",label:"콘텐츠기획/서비스",count:14},
+        {group:"CS",label:"고객경험(CX)",count:11},{group:"기타",label:"기타",count:10}
+      ],
+      earlyAttrition:{ type:'rate', cohorts:[
+        {label:'2023년 입사', newHireRate:6.8, expRate:11.2},
+        {label:'2024년 입사', newHireRate:8.4, expRate:13.5},
+        {label:'2025년 입사', newHireRate:7.1, expRate:12.6}
+      ], footnote:'※ 경력사원 조기퇴직율이 신입사원 대비 지속적으로 높게(약 1.6~1.8배) 나타나고 있습니다.' },
+      details: details.map(function(d){ return { id:d.id, orgTop:d.orgTop, org:d.org, who:d.who, meta:d.meta,
+        hist:d.hist, eval:d.eval, edu:d.edu, core:d.core, lead:d.lead, ax:d.ax, reasonCat:d.reasonCat, sum:d.sum, detail:d.detail }; })
+    };
+  }
+
+  // ================= CSV parsing =================
+  function detectDelimiter(line){
+    var commas = (line.match(/,/g)||[]).length;
+    var tabs = (line.match(/\t/g)||[]).length;
+    return tabs > commas ? '\t' : ',';
+  }
+  function parseDelimited(text){
+    text = text.replace(/^﻿/, '').replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+    var delim = detectDelimiter((text.split('\n')[0]||''));
+    var rows = [], row = [], field = '', inQuotes = false;
+    for(var i=0;i<text.length;i++){
+      var c = text[i];
+      if(inQuotes){
+        if(c === '"'){ if(text[i+1] === '"'){ field += '"'; i++; } else { inQuotes = false; } }
+        else { field += c; }
+      } else {
+        if(c === '"'){ inQuotes = true; }
+        else if(c === delim){ row.push(field); field=''; }
+        else if(c === '\n'){ row.push(field); rows.push(row); row=[]; field=''; }
+        else { field += c; }
+      }
+    }
+    if(field.length || row.length){ row.push(field); rows.push(row); }
+    return rows.filter(function(r){ return !(r.length===1 && r[0].trim()===''); });
+  }
+  function normHeader(s){ return String(s==null?'':s).replace(/\s+/g,'').trim(); }
+  var FIELD_ALIASES = {
+    empId:['통합사번','사번'], name:['이름','성명'], divisionRaw:['부문정리'], division:['부문'],
+    group:['그룹'], dept:['담당'], team:['팀'], title:['호칭'], titleSummary:['호칭요약'],
+    position:['직책'], job:['직무'], jobConverted:['직무(변환)','직무변환'],
+    hireDateRaw:['입사일'], lastActiveDateRaw:['마지막재직일','퇴직일'], tenureMonthsRaw:['근무개월수','근속개월수'],
+    retireOrderType:['퇴직발령유형'], retireOrderReason:['퇴직발령사유'], retireOrderSummary:['퇴직발령요약'],
+    retireTypeMajorRaw:['퇴직유형대분류'], retireTypeMidRaw:['퇴직유형중분류'], retireTypeMinorRaw:['퇴직유형소분류'], retireTypeReportRaw:['퇴직유형보고분류'],
+    destName:['이직처명'], destMajorRaw:['이직처대분류'], destMidRaw:['이직처중분류'],
+    coreTalentRaw:['핵심인재'], axRaw:['AX역량보유여부','AX역량보유'],
+    birthDateRaw:['생년월일'], gender:['성별'], education:['최종학력'], university:['대학'], major:['전공'],
+    prevCompany:['이전직장'], voluntarySummary:['자발퇴직자면담결과요약'], voluntaryDetail:['자발퇴직자면담결과상세']
+  };
+  function buildHeaderIndex(headerRow){
+    var norm = headerRow.map(normHeader);
+    var idx = {};
+    Object.keys(FIELD_ALIASES).forEach(function(key){
+      var aliases = FIELD_ALIASES[key].map(normHeader);
+      for(var i=0;i<norm.length;i++){ if(aliases.indexOf(norm[i])>=0){ idx[key]=i; break; } }
+    });
+    return idx;
+  }
+  function cellAt(idx,key,arr){ var i=idx[key]; return (i==null || i>=arr.length) ? '' : String(arr[i]==null?'':arr[i]).trim(); }
+  function stripNum(s){ return String(s||'').replace(/^\s*\d+\.\s*/,'').trim(); }
+  function truthy(s){ return ['1','Y','y','예','O','o','TRUE','true','참'].indexOf(String(s==null?'':s).trim())>=0; }
+  function parseDateLoose(s){
+    s = String(s==null?'':s).trim();
+    if(!s) return null;
+    var m = s.match(/^(\d{4})[-.\/](\d{1,2})[-.\/](\d{1,2})/);
+    if(m) return new Date(Number(m[1]), Number(m[2])-1, Number(m[3]));
+    var t = Date.parse(s);
+    return isNaN(t) ? null : new Date(t);
+  }
+  function monthsBetween(d1,d2){ return (d2.getFullYear()-d1.getFullYear())*12 + (d2.getMonth()-d1.getMonth()); }
+  function mapRow(idx, arr){
+    var g = function(k){ return cellAt(idx,k,arr); };
+    var tenureRaw = g('tenureMonthsRaw');
+    var tenureMonths = tenureRaw ? parseInt(tenureRaw.replace(/[^0-9]/g,''),10) : null;
+    if(tenureMonths!=null && isNaN(tenureMonths)) tenureMonths = null;
+    return {
+      name:g('name'), empId:g('empId'), division: stripNum(g('division')) || stripNum(g('divisionRaw')),
+      group:g('group'), dept:g('dept'), team:g('team'), title:g('title'), titleSummary: g('titleSummary')||g('title'),
+      position:g('position'), job:g('job'), jobConverted: g('jobConverted')||g('job'),
+      hireDate: parseDateLoose(g('hireDateRaw')), lastActiveDate: parseDateLoose(g('lastActiveDateRaw')),
+      tenureMonths: tenureMonths,
+      retireOrderType:g('retireOrderType'), retireOrderReason:g('retireOrderReason'), retireOrderSummary:g('retireOrderSummary'),
+      retireTypeMajor: stripNum(g('retireTypeMajorRaw')), retireTypeMid: stripNum(g('retireTypeMidRaw')),
+      retireTypeMinor: stripNum(g('retireTypeMinorRaw')), retireTypeReport: stripNum(g('retireTypeReportRaw')),
+      destName:g('destName'), destMajor: stripNum(g('destMajorRaw')), destMid: stripNum(g('destMidRaw')),
+      coreTalent: truthy(g('coreTalentRaw')), axCapability: truthy(g('axRaw')),
+      birthDate: parseDateLoose(g('birthDateRaw')), gender:g('gender'), education:g('education'),
+      university:g('university'), major:g('major'), prevCompany:g('prevCompany'),
+      voluntarySummary:g('voluntarySummary'), voluntaryDetail:g('voluntaryDetail')
+    };
+  }
+  var INVOL_KEYWORDS = ['희망퇴직','전출','정년','계약만료','직무재배치','해고','권고사직'];
+  function guessMajor(r){
+    if(r.retireTypeMajor){
+      if(r.retireTypeMajor.indexOf('비자발')>=0) return '비자발';
+      if(r.retireTypeMajor.indexOf('자발')>=0) return '자발';
+    }
+    var probe = r.retireTypeMid || r.retireTypeReport || r.retireOrderType || '';
+    for(var i=0;i<INVOL_KEYWORDS.length;i++){ if(probe.indexOf(INVOL_KEYWORDS[i])>=0) return '비자발'; }
+    return '자발';
+  }
+
+  function buildModelFromRecords(records, fileName){
+    var valid = records.filter(function(r){ return r.name && r.lastActiveDate; });
+    if(valid.length===0){
+      return { error:'유효한 이름과 "마지막재직일" 날짜를 가진 행을 찾지 못했습니다. 헤더의 컬럼명과 날짜 형식(YYYY-MM-DD)을 확인해주세요.' };
+    }
+    var maxDate = valid.reduce(function(m,r){ return r.lastActiveDate>m? r.lastActiveDate:m; }, valid[0].lastActiveDate);
+    var curYear = maxDate.getFullYear(), curMonth = maxDate.getMonth()+1;
+
+    var orgMap = {};
+    function ensureOrg(name){ if(!orgMap[name]) orgMap[name]={name:name, thisMonth:0,lastMonth:0,ytd:0,lastYtd:0, roster:[]}; return orgMap[name]; }
+    valid.forEach(function(r){
+      var o = ensureOrg(r.division || '미분류');
+      var d = r.lastActiveDate, yr=d.getFullYear(), mo=d.getMonth()+1;
+      if(yr===curYear && mo<=curMonth) o.ytd++;
+      if(yr===curYear-1 && mo<=curMonth) o.lastYtd++;
+      if(yr===curYear && mo===curMonth) o.thisMonth++;
+      if(yr===curYear-1 && mo===curMonth) o.lastMonth++;
+    });
+    var orgs = Object.keys(orgMap).map(function(k){ return orgMap[k]; }).sort(function(a,b){ return b.ytd-a.ytd; });
+
+    var ytdRows = valid.filter(function(r){ var d=r.lastActiveDate; return d.getFullYear()===curYear && (d.getMonth()+1)<=curMonth; });
+
+    var allPeople = ytdRows.map(function(r, i){
+      var reason = r.retireTypeMid || r.retireTypeReport || r.retireOrderType || '기타';
+      var lead = !!(r.position && r.position!=='0' && r.position.trim()!=='');
+      var tenureMo = r.tenureMonths!=null ? r.tenureMonths : (r.hireDate ? monthsBetween(r.hireDate, r.lastActiveDate) : null);
+      return {
+        id:'row-'+i, detailId:'row-'+i, linked:true,
+        name:r.name, org: r.division || '미분류', title: r.titleSummary || r.title || '-',
+        team: [r.dept, r.team].filter(function(x){return x && x!=='0';}).join(' ') || '-',
+        job:r.job, jobConverted:r.jobConverted,
+        dateLabel: fmtMonth(r.lastActiveDate), reason: reason, major: guessMajor(r),
+        core: r.coreTalent, lead: lead, ax: r.axCapability,
+        hireYear: r.hireDate ? r.hireDate.getFullYear() : null, hireType:'-',
+        destCompany: (reason.indexOf('이직')>=0) ? (r.destMajor || r.destName || null) : null,
+        tenureMonths: tenureMo, early: tenureMo!=null && tenureMo<12,
+        raw:r
+      };
+    });
+    var peopleByOrg = {};
+    allPeople.forEach(function(p){ (peopleByOrg[p.org] = peopleByOrg[p.org] || []).push(p); });
+    orgs.forEach(function(o){ o.roster = peopleByOrg[o.name] || []; });
+
+    var voluntaryPeople = allPeople.filter(function(p){ return p.major==='자발'; });
+    var involuntaryPeople = allPeople.filter(function(p){ return p.major==='비자발'; });
+
+    var jobMap = {};
+    allPeople.forEach(function(p){
+      var key = (p.job||'미기재')+'|'+(p.jobConverted||p.job||'미기재');
+      jobMap[key] = (jobMap[key]||0)+1;
+    });
+    var jobBreakdown = Object.keys(jobMap).map(function(k){
+      var parts = k.split('|'); return {group:parts[0], label:parts[1], count:jobMap[k]};
+    }).sort(function(a,b){ return b.count-a.count; });
+
+    var cohortMap = {};
+    valid.forEach(function(r){
+      if(!r.hireDate) return;
+      var hy = r.hireDate.getFullYear();
+      var tenureMo = r.tenureMonths!=null ? r.tenureMonths : monthsBetween(r.hireDate, r.lastActiveDate);
+      if(tenureMo==null || isNaN(tenureMo)) return;
+      if(!cohortMap[hy]) cohortMap[hy] = {total:0, early:0};
+      cohortMap[hy].total++;
+      if(tenureMo<12) cohortMap[hy].early++;
+    });
+    var cohortYears = Object.keys(cohortMap).map(Number).sort(function(a,b){ return b-a; }).slice(0,3).sort(function(a,b){ return a-b; });
+    var earlyAttrition = cohortYears.length ? {
+      type:'count',
+      cohorts: cohortYears.map(function(y){ return {label:y+'년 입사', count:cohortMap[y].early, total:cohortMap[y].total}; }),
+      footnote:'※ 업로드 데이터는 퇴직자 기록만 포함하므로, 전체 입사자 대비 비율(%)이 아닌 "해당 연도 입사 후 퇴직한 인원 중 근속 12개월 미만 조기퇴사자 수"를 표시합니다. 전체 입사자 대비 정확한 조기퇴직율 산출에는 입사자 전체 데이터가 추가로 필요합니다.'
+    } : { type:'unavailable' };
+
+    var details = allPeople.slice(0, 300).map(function(p){
+      var r = p.raw;
+      var age = r.birthDate ? (curYear - r.birthDate.getFullYear()) : null;
+      var orgParts = [r.division, r.group, r.dept, r.team].filter(function(x){ return x && x!=='0'; });
+      var eduLines = [];
+      eduLines.push((r.prevCompany && r.prevCompany!=='0') ? esc(r.prevCompany) : '이전 경력 없음');
+      var line2 = [r.university, r.major].filter(Boolean).map(esc).join(' ');
+      if(r.education) line2 += (line2?' ':'') + '(' + esc(r.education) + ')';
+      if(line2) eduLines.push(line2);
+      var tenureLabel = p.tenureMonths!=null ? (Math.floor(p.tenureMonths/12)+'년 '+(p.tenureMonths%12)+'개월') : '-';
+      var histLines = [ fmtFull(r.hireDate)+' ~ '+fmtFull(r.lastActiveDate), esc(p.team) ];
+      if(p.tenureMonths!=null) histLines.push('총 근속 '+p.tenureMonths+'개월');
+      function blankish(v){ v = String(v==null?'':v).trim(); return !v || v==='0'; }
+      var reasonDetailLines = [];
+      if(!blankish(r.voluntaryDetail)) reasonDetailLines.push(esc(r.voluntaryDetail));
+      else if(!blankish(r.retireOrderReason)) reasonDetailLines.push(esc(r.retireOrderReason));
+      if(!blankish(r.retireOrderType)) reasonDetailLines.push('*퇴직발령유형 : '+esc(r.retireOrderType));
+      return {
+        id:p.id, orgTop:p.org, org: orgParts.map(esc).join('<br>') || esc(p.org),
+        who: esc(p.name)+' '+esc(p.title), meta: (age? age+'세, ':'') + esc(r.gender||'') + (p.hireYear? (' · 입사 '+p.hireYear) : ''),
+        hist: histLines.join('\n'), eval: tenureLabel + '<br><span style="color:var(--text-muted);font-weight:600;">(재직기간)</span>',
+        edu: eduLines.join('\n'), core:p.core, lead:p.lead, ax:p.ax, reasonCat: esc(p.reason),
+        sum: esc(!blankish(r.retireOrderSummary) ? r.retireOrderSummary : (!blankish(r.voluntarySummary) ? r.voluntarySummary : p.reason || '-')),
+        detail: reasonDetailLines.length ? reasonDetailLines.join('\n') : '상세 사유가 입력되지 않았습니다.'
+      };
+    });
+
+    return {
+      meta:{ mode:'csv', sourceLabel:'업로드 CSV: '+esc(fileName), asOfLabel: curYear+'-'+pad2(curMonth), curYear:curYear, curMonth:curMonth,
+        count: allPeople.length, detailUnitLabel: details.length + (allPeople.length>300 ? '건 (상위 300건 표시) · 전체 '+allPeople.length+'건 중' : '건 전체 상세') },
+      summary:{ thisMonth: valid.filter(function(r){ var d=r.lastActiveDate; return d.getFullYear()===curYear && (d.getMonth()+1)===curMonth; }).length,
+        lastMonth: valid.filter(function(r){ var d=r.lastActiveDate; return d.getFullYear()===curYear-1 && (d.getMonth()+1)===curMonth; }).length,
+        ytd: ytdRows.length,
+        lastYtd: valid.filter(function(r){ var d=r.lastActiveDate; return d.getFullYear()===curYear-1 && (d.getMonth()+1)<=curMonth; }).length },
+      orgs: orgs, allPeople: allPeople,
+      typeBreakdown:{ voluntaryTotal: voluntaryPeople.length, involuntaryTotal: involuntaryPeople.length,
+        voluntary: groupCount(voluntaryPeople, function(p){ return p.reason; }),
+        involuntary: groupCount(involuntaryPeople, function(p){ return p.reason; }) },
+      titleBreakdown: groupCount(allPeople, function(p){ return p.title; }),
+      destBreakdown: groupCount(allPeople.filter(function(p){ return p.destCompany; }), function(p){ return p.destCompany; }),
+      jobBreakdown: jobBreakdown,
+      earlyAttrition: earlyAttrition,
+      details: details
+    };
+  }
+
+  // ================= shared render pieces =================
+  function barItemHtml(label, value, max, color, pct){
+    var w = max>0 ? Math.round(value/max*1000)/10 : 0;
+    return '<div class="bar-row"><div class="lbl">'+esc(label)+'</div>'+
+      '<div class="bar-track"><div class="bar-fill" style="width:'+w+'%;background:'+color+';"></div></div>'+
+      '<div class="val">'+value+'명'+(pct!=null?'<span class="pct"> · '+pct+'%</span>':'')+'</div></div>';
+  }
   function rosterFlags(p){
     var out=[];
     if(p.core) out.push('<span class="flag core">핵심</span>');
@@ -482,56 +813,71 @@
     if(!p.core && !p.lead && !p.ax) out.push('<span style="color:var(--text-muted);font-size:12px;">-</span>');
     return '<div class="roster-flags">'+out.join('')+'</div>';
   }
-
-  function renderRosterPanel(orgName, total){
-    var list = rosterByOrg[orgName] || [];
-    if(list.length===0){
+  function orgRosterPanelHtml(org){
+    if(org.roster.length===0){
       return '<div class="roster-panel"><span style="color:var(--text-muted);font-size:13px;">누적 퇴직자가 없습니다.</span></div>';
     }
-    var rowsHtml = list.map(function(p){
+    var rows = org.roster.map(function(p){
       var nameCls = p.linked ? 'roster-name linked' : 'roster-name';
       var nameAttr = p.linked ? ' onclick="scrollToDetail(\''+p.detailId+'\')" title="상세 리스트에서 보기"' : '';
-      var dateLbl = p.dateLabel || ('2026-'+String(p.month).padStart(2,'0'));
-      return '<tr><td class="'+nameCls+'"'+nameAttr+'>'+p.name+(p.linked?' 🔍':'')+'</td>'+
-        '<td>'+p.title+'</td><td>'+p.team+'</td>'+
-        '<td>'+dateLbl+'</td>'+
-        '<td>'+p.reason+'</td><td>'+rosterFlags(p)+'</td></tr>';
+      var dateLbl = p.dateLabel || '-';
+      return '<tr><td class="'+nameCls+'"'+nameAttr+'>'+esc(p.name)+(p.linked?' 🔍':'')+'</td>'+
+        '<td>'+esc(p.title)+'</td><td>'+esc(p.team)+'</td><td>'+esc(dateLbl)+'</td>'+
+        '<td>'+esc(p.reason)+'</td><td>'+rosterFlags(p)+'</td></tr>';
     }).join('');
-    return '<div class="roster-panel">'+
-      '<div class="rp-head">'+orgName+' 누적 퇴직자 명단 · 총 '+total+'명</div>'+
+    return '<div class="roster-panel"><div class="rp-head">'+esc(org.name)+' 누적 퇴직자 명단 · 총 '+org.roster.length+'명</div>'+
       '<table class="roster"><thead><tr><th>이름</th><th>호칭</th><th>팀</th><th>퇴직월</th><th>퇴직유형</th><th>비고</th></tr></thead>'+
-      '<tbody>'+rowsHtml+'</tbody></table></div>';
+      '<tbody>'+rows+'</tbody></table></div>';
+  }
+  function typeRosterPanelHtml(model, key, label){
+    var people = model.allPeople.filter(function(p){ return p.reason===key; });
+    if(people.length===0) return '<div class="roster-panel"><span style="color:var(--text-muted);font-size:13px;">해당 유형의 퇴직자가 없습니다.</span></div>';
+    var rows = people.map(function(p){
+      var nameCls = p.linked ? 'roster-name linked' : 'roster-name';
+      var nameAttr = p.linked ? ' onclick="scrollToDetail(\''+p.detailId+'\')" title="상세 리스트에서 보기"' : '';
+      var dateLbl = p.dateLabel || '-';
+      var hireLbl = p.hireYear ? (p.hireYear+'년'+(p.hireType && p.hireType!=='-' ? ' ('+p.hireType+')' : '')) : '-';
+      return '<tr><td class="'+nameCls+'"'+nameAttr+'>'+esc(p.name)+(p.linked?' 🔍':'')+'</td>'+
+        '<td>'+esc(p.org)+'</td><td>'+esc(p.title)+'</td><td>'+esc(hireLbl)+'</td>'+
+        '<td>'+esc(dateLbl)+'</td><td>'+esc(p.destCompany||'-')+'</td></tr>';
+    }).join('');
+    return '<div class="roster-panel"><div class="rp-head">'+esc(label)+' 퇴직자 명단 · 총 '+people.length+'명</div>'+
+      '<table class="roster"><thead><tr><th>이름</th><th>조직</th><th>호칭</th><th>입사연도(유형)</th><th>퇴직월</th><th>이직처</th></tr></thead>'+
+      '<tbody>'+rows+'</tbody></table></div>';
+  }
+  function flagsBlock(core, lead, ax){
+    var out = [];
+    if(core) out.push('<span class="flag core">핵심인재</span>');
+    if(lead) out.push('<span class="flag lead">직책자</span>');
+    if(ax) out.push('<span class="flag ax">AX역량</span>');
+    if(!core && !lead && !ax) out.push('<span class="flag none">해당없음</span>');
+    return '<div class="flag-row">'+out.join('')+'</div>';
+  }
+  function pct1(n,d){ return d>0 ? Math.round(n/d*1000)/10 : 0; }
+  function deltaTag(cur, prev){
+    if(prev===0) return '<span class="delta-tag" style="color:var(--text-muted);">-</span>';
+    var d = Math.round((cur-prev)/prev*1000)/10;
+    if(d===0) return '<span class="delta-tag" style="color:var(--text-muted);">-</span>';
+    return '<span class="delta-tag '+(d<0?'good':'bad')+'">'+(d<0?'▼':'▲')+' '+Math.abs(d)+'%</span>';
   }
 
-  var maxM = Math.max.apply(null, orgs.map(function(o){return o[2];}));
-  var orgRowsHtml = orgs.map(function(o, idx){
-    var name=o[0], cur=o[1], prev=o[2], curY=o[3], prevY=o[4];
-    var d1 = prev===0 ? 0 : Math.round((cur-prev)/prev*1000)/10;
-    var d2 = prevY===0 ? 0 : Math.round((curY-prevY)/prevY*1000)/10;
-    function tag(d){ if(d===0) return '<span class="delta-tag" style="color:var(--text-muted);">-</span>';
-      return '<span class="delta-tag '+(d<0?'good':'bad')+'">'+(d<0?'▼':'▲')+' '+Math.abs(d)+'%</span>'; }
-    var head = '<tr class="org-row" onclick="toggleRoster('+idx+')">'+
-      '<td class="name"><span class="chev" id="chev-'+idx+'">▸</span>'+name+'</td>'+
-      '<td class="num">'+cur+'명</td>'+
-      '<td class="num">'+prev+'명</td>'+
-      '<td class="num">'+tag(d1)+'</td>'+
-      '<td class="num">'+curY+'명</td>'+
-      '<td class="num">'+prevY+'명</td>'+
-      '<td class="num">'+tag(d2)+'</td></tr>';
-    var roster = '<tr class="roster-tr" id="roster-'+idx+'" style="display:none;"><td colspan="7">'+
-      renderRosterPanel(name, curY)+'</td></tr>';
-    return head + roster;
-  });
-  document.getElementById('orgTableBody').innerHTML = orgRowsHtml.join('');
-
+  // ================= master render =================
   window.toggleRoster = function(idx){
     var row = document.getElementById('roster-'+idx);
     var chev = document.getElementById('chev-'+idx);
+    if(!row) return;
     var open = row.style.display !== 'none';
     row.style.display = open ? 'none' : '';
-    chev.classList.toggle('open', !open);
+    if(chev) chev.classList.toggle('open', !open);
   };
-
+  window.toggleTypeRoster = function(safeId){
+    var panel = document.getElementById('typeRoster_'+safeId);
+    var chev = document.getElementById('chevType_'+safeId);
+    if(!panel) return;
+    var open = panel.style.display !== 'none';
+    panel.style.display = open ? 'none' : '';
+    if(chev) chev.classList.toggle('open', !open);
+  };
   window.scrollToDetail = function(id){
     var el = document.getElementById(id);
     if(!el) return;
@@ -540,292 +886,174 @@
     setTimeout(function(){ el.classList.remove('flash'); }, 1800);
   };
 
-  document.getElementById('typeDonut').style.background =
-    'conic-gradient(var(--brand) 0 60.8%, var(--navy) 60.8% 100%)';
+  function safeKey(k){ return String(k).replace(/[^a-zA-Z0-9가-힣]/g,'_'); }
 
-  // ⑥ title
-  var titles = [
-    {l:'사원', v:12},{l:'선임', v:58},{l:'책임Ⅰ', v:41},{l:'책임Ⅱ', v:37},{l:'수석', v:22},{l:'그룹장/임원', v:6}
-  ];
-  var maxTitle = Math.max.apply(null, titles.map(function(x){return x.v;}));
-  document.getElementById('titleBarlist').innerHTML = titles.map(function(x){
-    return bar({l:x.l, v:x.v, max:maxTitle, p:Math.round(x.v/176*1000)/10});
-  }).join('');
+  function renderModel(model){
+    var m = model.meta, s = model.summary;
+    document.getElementById('headerSub').textContent = '기준월: '+m.asOfLabel+' · 데이터: '+m.sourceLabel+' ('+m.count+'건)';
+    document.getElementById('dataSourceLabel').textContent = '현재: '+m.sourceLabel;
+    document.getElementById('summaryAsOf').textContent = '기준월 '+m.asOfLabel+' · 조직별 상세는 아래 ① 표를 확인하세요';
+    document.getElementById('bottomFootnote').textContent = m.mode==='mock'
+      ? '본 대시보드는 설계 확인용 샘플(Mock) 데이터로 구성되어 있습니다. 실제 인사 데이터를 업로드하면 동일한 구조로 자동 갱신됩니다.'
+      : '본 대시보드는 업로드된 CSV 데이터('+esc(m.sourceLabel.replace('업로드 CSV: ',''))+') 기준으로 계산되었습니다.';
 
-  // ⑦ destinations
-  var dest = [
-    {l:'경쟁 통신사', v:14},{l:'IT/플랫폼 대기업', v:11},{l:'스타트업', v:9},
-    {l:'컨설팅펌', v:7},{l:'금융권', v:6},{l:'공공기관/공기업', v:5},{l:'기타', v:9}
-  ];
-  var maxDest = Math.max.apply(null, dest.map(function(x){return x.v;}));
-  document.getElementById('destBarlist').innerHTML = dest.map(function(x){
-    return bar({l:x.l, v:x.v, max:maxDest, p:Math.round(x.v/61*1000)/10, c:'var(--navy)'});
-  }).join('');
+    document.getElementById('sumThisMonthLabel').textContent = '이번달('+m.curMonth+'월) 퇴직 인원';
+    document.getElementById('sumThisMonth').innerHTML = s.thisMonth+'<span class="u">명</span>';
+    document.getElementById('sumThisMonthDelta').innerHTML = (function(){
+      if(s.lastMonth===0) return '<span class="stat-vs">전년동월 데이터 없음</span>';
+      var d = Math.round((s.thisMonth-s.lastMonth)/s.lastMonth*1000)/10;
+      var cls = d<0?'good':(d>0?'bad':'flat');
+      return (d<0?'▼':(d>0?'▲':'-'))+' '+Math.abs(d)+'% <span class="stat-vs">전년동월 '+s.lastMonth+'명</span>';
+    })();
+    document.getElementById('sumThisMonthDelta').className = 'stat-delta '+(s.lastMonth===0?'flat':(s.thisMonth<s.lastMonth?'good':'bad'));
+    document.getElementById('sumYtdLabel').textContent = '누적(1~'+m.curMonth+'월) 퇴직 인원';
+    document.getElementById('sumYtd').innerHTML = s.ytd+'<span class="u">명</span>';
+    document.getElementById('sumYtdDelta').innerHTML = (function(){
+      if(s.lastYtd===0) return '<span class="stat-vs">전년누적 데이터 없음</span>';
+      var d = Math.round((s.ytd-s.lastYtd)/s.lastYtd*1000)/10;
+      return (d<0?'▼':(d>0?'▲':'-'))+' '+Math.abs(d)+'% <span class="stat-vs">전년누적 '+s.lastYtd+'명</span>';
+    })();
+    document.getElementById('sumYtdDelta').className = 'stat-delta '+(s.lastYtd===0?'flat':(s.ytd<s.lastYtd?'good':'bad'));
 
-  // ⑧ job table
-  var jobs = [
-    ["경영지원","경영관리",15],["경영지원","재무/회계",9],["경영지원","인사",7],["경영지원","HRM",5],
-    ["영업","B2B영업",22],["영업","B2C영업",18],
-    ["기술","네트워크엔지니어링",24],["기술","서비스개발",19],["기술","정보보안",12],
-    ["마케팅","브랜드/마케팅",10],["콘텐츠","콘텐츠기획/서비스",14],
-    ["CS","고객경험(CX)",11],["기타","기타",10]
-  ];
-  document.getElementById('jobBody').innerHTML = jobs.map(function(j){
-    return '<tr><td class="grp">'+j[0]+'</td><td>'+j[1]+'</td><td class="n">'+j[2]+'</td></tr>';
-  }).join('');
+    var topTypes = model.typeBreakdown.voluntary.concat(model.typeBreakdown.involuntary).sort(function(a,b){return b.count-a.count;}).slice(0,3);
+    document.getElementById('sumTopTypes').innerHTML = topTypes.length ? topTypes.map(function(t){
+      return '<div class="top-type-row"><span>'+esc(t.label)+'</span><span class="n">'+t.count+'명 · '+pct1(t.count, m.count)+'%</span></div>';
+    }).join('') : '<div class="top-type-row"><span style="color:var(--text-muted);">데이터 없음</span></div>';
 
-  // ② detail rows
-  function flags(core, lead, ax){
-    var out = [];
-    if(core) out.push('<span class="flag core">핵심인재</span>');
-    if(lead) out.push('<span class="flag lead">직책자</span>');
-    if(ax) out.push('<span class="flag ax">AX역량</span>');
-    if(!core && !lead && !ax) out.push('<span class="flag none">해당없음</span>');
-    return '<div class="flag-row">'+out.join('')+'</div>';
-  }
-  var details = [
-    {
-      id:'detail-1', orgTop:'Consumer부문',
-      org:'Consumer부문<br>홈사업그룹<br>광고사업담당<br>광고사업팀',
-      who:'박준호 책임(8)', meta:'43세, 남 · 경력 10년 신입',
-      hist:"'25.01~'25.05  광고사업팀\n'24.01~'24.12  FAST사업팀\n'22.01~'23.12  미디어DX챕터\n'19.07~'21.12  서비스BP운영팀(Consumer부문)\n'18.01~'19.06  AIoT제휴상품2팀(스마트홈부문)\n'16.01~'17.12  FC전략팀(FC부문)\n'11.01~'15.12  디지털사이니지팀\n'10.10~'11.01  그룹영업2팀(BS본부)",
-      eval:'3.3<br><span style="color:var(--text-muted);font-weight:600;">(B/A/B)</span>',
-      edu:"이전 경력 없음\n'05.03~'09.02 서강대 정치외교(석)\n'00.03~'05.02 서강대 영미문화(학)",
-      core:false, lead:false, ax:false, reasonCat:'가사·육아·건강', hireYear:2010, hireType:'신입',
-      sum:'결혼/출산/육아/가족 돌봄 등의 개인사',
-      detail:'[퇴직 사유]\n- 배우자 주재원(호주) 장기 발령에 따른 퇴직\n : 휴직 가능여부에 대해 살펴보았으나 자녀가 없어 휴직 가능한 방법이 없었음.\n*퇴직발령 상세 : 일반퇴직(유학·학업)'
-    },
-    {
-      id:'detail-2', orgTop:'Consumer부문',
-      org:'Consumer부문<br>Consumer사업기획담당<br>Consumer기획팀',
-      who:'배상진 선임(6)', meta:'39세, 남 · 경력 입사(2015)',
-      hist:"'15.09~'25.12  Consumer기획담당 Consumer기획팀\n총 근속 123개월",
-      eval:'2.9<br><span style="color:var(--text-muted);font-weight:600;">(B/B/C)</span>',
-      edu:"이전 경력 없음\n고려대 정치외교학(학)",
-      core:false, lead:false, ax:false, reasonCat:'전출', hireYear:2015, hireType:'경력',
-      sum:'전출 (지주사 전출)',
-      detail:'[퇴직 사유]\n- 그룹 지주사 조직개편에 따른 인력 전출\n*퇴직발령 상세 : 전출 &gt; 지주사전출'
-    },
-    {
-      id:'detail-3', orgTop:'Consumer부문',
-      org:'Consumer부문<br>Consumer기획담당<br>STUDIO X+U TF',
-      who:'이미영 책임Ⅱ(13)', meta:'51세, 여 · 경력 입사(2022)',
-      hist:"'22.12~'26.01  Consumer기획담당 STUDIO X+U TF\n총 근속 37개월",
-      eval:'3.1<br><span style="color:var(--text-muted);font-weight:600;">(B/A/B)</span>',
-      edu:"미디어로그\n서울과학기술대학교 산업공학과(학)",
-      core:false, lead:false, ax:false, reasonCat:'희망퇴직', hireYear:2022, hireType:'경력',
-      sum:'희망퇴직',
-      detail:'[퇴직 사유]\n- 조직 개편에 따른 희망퇴직 신청 및 승인\n*퇴직발령 상세 : 희망퇴직'
-    },
-    {
-      id:'detail-4', orgTop:'CTO',
-      org:'CTO<br>AI플랫폼담당<br>AI Foundation팀',
-      who:'정하늘 수석(17)', meta:'46세, 남 · 경력 입사(2016)',
-      hist:"'21.01~'26.06  AI플랫폼담당 AI Foundation팀\n'16.03~'20.12  데이터플랫폼담당 빅데이터팀",
-      eval:'4.0<br><span style="color:var(--text-muted);font-weight:600;">(S/A/A)</span>',
-      edu:"삼성SDS AI연구소 (4년)\nKAIST 전산학(석)",
-      core:true, lead:false, ax:true, reasonCat:'타사이직', hireYear:2016, hireType:'경력', destCompany:'IT/플랫폼 대기업',
-      sum:'타사이직 (보상/처우)',
-      detail:'[퇴직 사유]\n- 경쟁사 대비 낮은 보상 수준 및 AI조직 리더 포지션 제안 수락\n- 잔류 조건으로 보상 재협상 시도했으나 예산 제약으로 성사되지 않음\n*이직처 : IT/플랫폼 대기업'
-    },
-    {
-      id:'detail-5', orgTop:'정보보안부문',
-      org:'정보보안부문<br>보안운영담당<br>SOC팀',
-      who:'한소민 사원(1)', meta:'27세, 여 · 신입 입사(2025.11)',
-      hist:"'25.11~'26.07  보안운영담당 SOC팀\n총 근속 8개월",
-      eval:'평가이력 없음<br><span style="color:var(--text-muted);font-weight:600;">(입사 1년 미만)</span>',
-      edu:"이전 경력 없음\n이화여대 정보보호학과(학)",
-      core:false, lead:false, ax:false, reasonCat:'기타', hireYear:2025, hireType:'신입',
-      sum:'직무 미스매치 (조기퇴사)',
-      detail:'[퇴직 사유]\n- 채용 시 기대했던 정책기획 업무 대신 24시간 교대 모니터링 업무에 배치되어 적응에 어려움을 겪음\n*퇴직발령 상세 : 일반퇴직(직무부적응)'
-    },
-    {
-      id:'detail-6', orgTop:'법무실',
-      org:'법무실<br>법무담당<br>계약심사팀',
-      who:'최영수 수석(28)', meta:'60세, 남 · 경력 입사(1998)',
-      hist:"'05.01~'26.06  법무담당 계약심사팀\n'98.03~'04.12  법무팀",
-      eval:'3.5<br><span style="color:var(--text-muted);font-weight:600;">(A/B/A)</span>',
-      edu:"이전 경력 없음\n서울대 법학(학)",
-      core:false, lead:false, ax:false, reasonCat:'정년퇴직', hireYear:1998, hireType:'경력',
-      sum:'정년퇴직',
-      detail:'[퇴직 사유]\n- 만 60세 정년 도래에 따른 정년퇴직\n- 후임자 계약심사 업무 인수인계 완료\n*퇴직발령 상세 : 정년퇴직'
-    },
-    {
-      id:'detail-7', orgTop:'NW부문',
-      org:'NW부문<br>네트워크운영담당<br>코어망운영팀',
-      who:'강민재 책임Ⅰ(10)', meta:'38세, 남 · 신입 입사(2016)',
-      hist:"'19.01~'26.05  네트워크운영담당 코어망운영팀\n'16.01~'18.12  네트워크운영담당 액세스망운영팀",
-      eval:'3.0<br><span style="color:var(--text-muted);font-weight:600;">(B/B/B)</span>',
-      edu:"이전 경력 없음\n한양대 전자공학(학)",
-      core:false, lead:false, ax:false, reasonCat:'개인사업', hireYear:2016, hireType:'신입',
-      sum:'개인사업 준비',
-      detail:'[퇴직 사유]\n- 네트워크 유지보수 스타트업 창업을 위한 자진 퇴사\n*퇴직발령 상세 : 일반퇴직(개인사업)'
-    },
-    {
-      id:'detail-8', orgTop:'Enterprise부문',
-      org:'Enterprise부문<br>B2B솔루션담당<br>AX솔루션팀(팀장)',
-      who:'오지훈 책임Ⅱ(15)', meta:'44세, 남 · 경력 입사(2019)',
-      hist:"'23.03~'26.06  B2B솔루션담당 AX솔루션팀장\n'19.01~'23.02  B2B솔루션담당 스마트팩토리팀",
-      eval:'3.8<br><span style="color:var(--text-muted);font-weight:600;">(A/A/B)</span>',
-      edu:"글로벌 IT컨설팅펌 (6년)\n연세대 산업공학(학)",
-      core:true, lead:true, ax:true, reasonCat:'타사이직', hireYear:2019, hireType:'경력', destCompany:'컨설팅펌',
-      sum:'타사이직 (커리어 성장)',
-      detail:'[퇴직 사유]\n- 글로벌 컨설팅펌 AI Transformation 담당 파트너급 포지션 제안 수락\n- 리텐션 면담 진행했으나 본인 커리어 방향성에 따른 확고한 이직 의사 확인\n*이직처 : 컨설팅펌'
+    var r = { core:0, lead:0, ax:0, early:0 };
+    model.allPeople.forEach(function(p){ if(p.core) r.core++; if(p.lead) r.lead++; if(p.ax) r.ax++; if(p.early) r.early++; });
+    document.getElementById('riskCoreVal').textContent = r.core+'명';
+    document.getElementById('riskCorePct').textContent = '전체의 '+pct1(r.core, m.count)+'%';
+    document.getElementById('riskLeadVal').textContent = r.lead+'명';
+    document.getElementById('riskLeadPct').textContent = '전체의 '+pct1(r.lead, m.count)+'%';
+    document.getElementById('riskAxVal').textContent = r.ax+'명';
+    document.getElementById('riskAxPct').textContent = '전체의 '+pct1(r.ax, m.count)+'%';
+    document.getElementById('riskEarlyVal').textContent = r.early+'명';
+    document.getElementById('riskEarlyPct').textContent = '전체의 '+pct1(r.early, m.count)+'%';
+
+    // ① org table
+    var orgBody = document.getElementById('orgTableBody');
+    if(model.orgs.length===0){
+      orgBody.innerHTML = '<tr><td colspan="7" class="empty-note">표시할 조직 데이터가 없습니다.</td></tr>';
+    } else {
+      orgBody.innerHTML = model.orgs.map(function(o, idx){
+        var head = '<tr class="org-row" onclick="toggleRoster('+idx+')">'+
+          '<td class="name"><span class="chev" id="chev-'+idx+'">▸</span>'+esc(o.name)+'</td>'+
+          '<td class="num">'+o.thisMonth+'명</td><td class="num">'+o.lastMonth+'명</td><td class="num">'+deltaTag(o.thisMonth,o.lastMonth)+'</td>'+
+          '<td class="num">'+o.ytd+'명</td><td class="num">'+o.lastYtd+'명</td><td class="num">'+deltaTag(o.ytd,o.lastYtd)+'</td></tr>';
+        var roster = '<tr class="roster-tr" id="roster-'+idx+'" style="display:none;"><td colspan="7">'+orgRosterPanelHtml(o)+'</td></tr>';
+        return head + roster;
+      }).join('');
     }
-  ];
 
-  // link the rich sample rows into their org roster, replacing one generated slot
-  var dateLabelByDetailId = {'detail-1':'2025-05','detail-2':'2025-12','detail-3':'2026-01','detail-4':'2026-06',
-    'detail-5':'2026-07','detail-6':'2026-06','detail-7':'2026-05','detail-8':'2026-06'};
-  details.forEach(function(d){
-    var list = rosterByOrg[d.orgTop];
-    if(!list || list.length===0) return;
-    var removed = list.pop();
-    // keep global category totals exact: relabel one other non-linked person
-    // (X<->Y) so the slot we freed up and the slot the linked person now
-    // occupies cancel out in the ⑤ type-breakdown counts.
-    if(removed.reason !== d.reasonCat){
-      outer:
-      for(var oi=0; oi<orgs.length; oi++){
-        var otherList = rosterByOrg[orgs[oi][0]];
-        if(!otherList) continue;
-        for(var k=0;k<otherList.length;k++){
-          if(!otherList[k].linked && otherList[k].reason === d.reasonCat){
-            otherList[k].reason = removed.reason;
-            break outer;
-          }
-        }
-      }
+    // ③ type breakdown
+    document.getElementById('typeUnit').textContent = '누적 '+m.count+'건';
+    document.getElementById('typeDonutTotal').textContent = m.count;
+    var vt = model.typeBreakdown.voluntaryTotal, it = model.typeBreakdown.involuntaryTotal, tt = vt+it;
+    var volPct = pct1(vt, tt), involPct = pct1(it, tt);
+    document.getElementById('typeVolLegend').textContent = vt+'명 · '+volPct+'%';
+    document.getElementById('typeInvolLegend').textContent = it+'명 · '+involPct+'%';
+    document.getElementById('typeDonut').style.background = tt>0
+      ? 'conic-gradient(var(--brand) 0 '+volPct+'%, var(--navy) '+volPct+'% 100%)'
+      : 'var(--gridline)';
+    var maxType = Math.max.apply(null, [1].concat(model.typeBreakdown.voluntary.concat(model.typeBreakdown.involuntary).map(function(x){return x.count;})));
+    function typeRowHtml(item, color){
+      var sid = safeKey(item.key);
+      var pctW = maxType>0 ? Math.round(item.count/maxType*1000)/10 : 0;
+      return '<div><div class="bar-row type-row" onclick="toggleTypeRoster(\''+sid+'\')">'+
+        '<div class="lbl"><span class="chev" id="chevType_'+sid+'">▸</span>'+esc(item.label)+'</div>'+
+        '<div class="bar-track"><div class="bar-fill" style="width:'+pctW+'%;background:'+color+';"></div></div>'+
+        '<div class="val">'+item.count+'명</div></div>'+
+        '<div id="typeRoster_'+sid+'" style="display:none;">'+typeRosterPanelHtml(model, item.key, item.label)+'</div></div>';
     }
-    var titleMatch = d.who.match(/([가-힣Ⅰ-Ⅴ]+)\(/);
-    list.push({
-      name: d.who.split(' ')[0],
-      org: d.orgTop,
-      title: titleMatch ? titleMatch[1] : d.who.split(' ')[1],
-      team: d.org.split('<br>').pop(),
-      dateLabel: dateLabelByDetailId[d.id],
-      reason: d.reasonCat,
-      core: d.core, lead: d.lead, ax: d.ax,
-      hireYear: d.hireYear, hireType: d.hireType, destCompany: d.destCompany,
-      linked: true, detailId: d.id
+    var typeHtml = '';
+    if(model.typeBreakdown.voluntary.length){
+      typeHtml += '<div style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:2px;">자발 ('+vt+'명) · 항목을 클릭하면 명단이 표시됩니다</div>' +
+        model.typeBreakdown.voluntary.map(function(x){ return typeRowHtml(x, 'var(--brand)'); }).join('');
+    }
+    if(model.typeBreakdown.involuntary.length){
+      typeHtml += '<div style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin:10px 0 2px;">비자발 ('+it+'명)</div>' +
+        model.typeBreakdown.involuntary.map(function(x){ return typeRowHtml(x, 'var(--navy)'); }).join('');
+    }
+    document.getElementById('typeBarlist').innerHTML = typeHtml || '<div class="empty-note">퇴직유형 데이터가 없습니다.</div>';
+
+    // ④ title breakdown
+    document.getElementById('titleUnit').textContent = '누적 '+m.count+'건';
+    var maxTitle = Math.max.apply(null, [1].concat(model.titleBreakdown.map(function(x){return x.count;})));
+    document.getElementById('titleBarlist').innerHTML = model.titleBreakdown.length
+      ? model.titleBreakdown.map(function(x){ return barItemHtml(x.label, x.count, maxTitle, 'var(--brand)', pct1(x.count, m.count)); }).join('')
+      : '<div class="empty-note">호칭 데이터가 없습니다.</div>';
+    document.getElementById('titleFootnote').textContent = model.titleBreakdown.length
+      ? ('※ "'+model.titleBreakdown[0].label+'" 호칭 퇴직 비중이 '+pct1(model.titleBreakdown[0].count, m.count)+'%로 가장 높습니다.')
+      : '';
+
+    // ⑤ destinations
+    var destTotal = model.destBreakdown.reduce(function(s,x){return s+x.count;},0);
+    document.getElementById('destUnit').textContent = '타사이직 관련 '+destTotal+'건';
+    var maxDest = Math.max.apply(null, [1].concat(model.destBreakdown.map(function(x){return x.count;})));
+    document.getElementById('destBarlist').innerHTML = model.destBreakdown.length
+      ? model.destBreakdown.map(function(x){ return barItemHtml(x.label, x.count, maxDest, 'var(--navy)', pct1(x.count, destTotal)); }).join('')
+      : '<div class="empty-note">이직처 데이터가 없습니다.</div>';
+
+    // ⑥ job table
+    document.getElementById('jobBody').innerHTML = model.jobBreakdown.length
+      ? model.jobBreakdown.map(function(j){ return '<tr><td class="grp">'+esc(j.group)+'</td><td>'+esc(j.label)+'</td><td class="n">'+j.count+'</td></tr>'; }).join('')
+      : '<tr><td colspan="3" class="empty-note">직무 데이터가 없습니다.</td></tr>';
+
+    // ⑦ early attrition
+    var ea = model.earlyAttrition;
+    document.getElementById('s7Legend').style.display = (ea.type==='rate') ? '' : 'none';
+    if(ea.type==='unavailable'){
+      document.getElementById('s7Body').innerHTML = '<div class="empty-note">업로드된 데이터에 "입사일" 정보가 충분하지 않아 조기퇴직 현황을 계산할 수 없습니다.</div>';
+      document.getElementById('s7Footnote').textContent = '';
+    } else if(ea.type==='rate'){
+      var maxRate = Math.max.apply(null, ea.cohorts.map(function(c){ return Math.max(c.newHireRate,c.expRate); })) * 1.3;
+      document.getElementById('s7Body').innerHTML = '<div class="grouped">' + ea.cohorts.map(function(c){
+        return '<div class="grp"><div class="bars">'+
+          '<div class="col" style="height:'+(c.newHireRate/maxRate*100)+'%;background:var(--brand);"><span class="v">'+c.newHireRate+'%</span></div>'+
+          '<div class="col" style="height:'+(c.expRate/maxRate*100)+'%;background:var(--navy);"><span class="v">'+c.expRate+'%</span></div>'+
+          '</div><div class="xlabel">'+esc(c.label)+'</div></div>';
+      }).join('') + '</div>';
+      document.getElementById('s7Footnote').textContent = ea.footnote || '';
+    } else {
+      var maxCnt = Math.max.apply(null, [1].concat(ea.cohorts.map(function(c){ return c.count; }))) * 1.3;
+      document.getElementById('s7Body').innerHTML = '<div class="grouped">' + ea.cohorts.map(function(c){
+        return '<div class="grp"><div class="bars">'+
+          '<div class="col" style="height:'+(c.count/maxCnt*100)+'%;background:var(--brand);"><span class="v">'+c.count+'명</span></div>'+
+          '</div><div class="xlabel">'+esc(c.label)+' <span style="color:var(--text-muted);font-weight:600;">(퇴직자 '+c.total+'명 중)</span></div></div>';
+      }).join('') + '</div>';
+      document.getElementById('s7Footnote').textContent = ea.footnote || '';
+    }
+
+    // ② detail list
+    document.getElementById('evalHeader').innerHTML = m.mode==='mock' ? "3개년 평가<br>('24/'23/'22)" : '재직기간';
+    document.getElementById('detailUnit').textContent = m.detailUnitLabel;
+    document.getElementById('detailBody').innerHTML = model.details.length ? model.details.map(function(d){
+      return '<tr id="'+d.id+'" data-org="'+esc(d.orgTop)+'" data-core="'+(d.core?'Y':'N')+'" data-lead="'+(d.lead?'Y':'N')+'" data-ax="'+(d.ax?'Y':'N')+'" data-reason="'+esc(d.reasonCat)+'">'+
+        '<td>'+d.org+'</td>'+
+        '<td class="who"><b>'+d.who+'</b><div class="meta">'+d.meta+'</div></td>'+
+        '<td class="hist">'+d.hist+'</td>'+
+        '<td>'+d.eval+'</td>'+
+        '<td class="hist">'+d.edu+'</td>'+
+        '<td>'+flagsBlock(d.core,d.lead,d.ax)+'</td>'+
+        '<td class="reason-sum">'+d.sum+'</td>'+
+        '<td class="reason-detail hist">'+d.detail+'</td>'+
+        '</tr>';
+    }).join('') : '<tr><td colspan="8" class="empty-note">표시할 퇴직 상세 데이터가 없습니다.</td></tr>';
+
+    var fOrg = document.getElementById('fOrg'), fReason = document.getElementById('fReason');
+    fOrg.innerHTML = '<option value="">조직 전체</option>';
+    fReason.innerHTML = '<option value="">퇴직사유 전체</option>';
+    var orgOpts = [], reasonOpts = [];
+    model.details.forEach(function(d){
+      if(orgOpts.indexOf(d.orgTop)===-1) orgOpts.push(d.orgTop);
+      if(reasonOpts.indexOf(d.reasonCat)===-1) reasonOpts.push(d.reasonCat);
     });
-  });
-
-  // ⑤ type breakdown roster (needs rosterByOrg finalized, incl. linked people)
-  var allPeople = [];
-  orgs.forEach(function(o){ (rosterByOrg[o[0]] || []).forEach(function(p){ allPeople.push(p); }); });
-
-  var destPool = [];
-  [['경쟁 통신사',14],['IT/플랫폼 대기업',10],['스타트업',9],['컨설팅펌',6],['금융권',6],['공공기관/공기업',5],['기타',9]]
-    .forEach(function(c){ for(var i=0;i<c[1];i++) destPool.push(c[0]); });
-  destPool = shuffle(destPool);
-  var dpi = 0;
-  allPeople.forEach(function(p){
-    if(p.reason === '타사이직' && !p.destCompany){
-      p.destCompany = destPool[dpi] || '기타';
-      dpi++;
-    }
-  });
-
-  function typeRosterId(key){ return 'typeRoster_' + key.replace(/[^a-zA-Z0-9가-힣]/g,'_'); }
-  function renderTypeRosterPanel(key, label){
-    var people = allPeople.filter(function(p){ return p.reason === key; });
-    if(people.length===0){
-      return '<div class="roster-panel"><span style="color:var(--text-muted);font-size:13px;">해당 유형의 퇴직자가 없습니다.</span></div>';
-    }
-    var rowsHtml = people.map(function(p){
-      var nameCls = p.linked ? 'roster-name linked' : 'roster-name';
-      var nameAttr = p.linked ? ' onclick="scrollToDetail(\''+p.detailId+'\')" title="상세 리스트에서 보기"' : '';
-      var dateLbl = p.dateLabel || ('2026-'+String(p.month).padStart(2,'0'));
-      return '<tr><td class="'+nameCls+'"'+nameAttr+'>'+p.name+(p.linked?' 🔍':'')+'</td>'+
-        '<td>'+p.org+'</td><td>'+p.title+'</td>'+
-        '<td>'+p.hireYear+'년 ('+p.hireType+')</td>'+
-        '<td>'+dateLbl+'</td>'+
-        '<td>'+(p.destCompany || '-')+'</td></tr>';
-    }).join('');
-    return '<div class="roster-panel">'+
-      '<div class="rp-head">'+label+' 퇴직자 명단 · 총 '+people.length+'명</div>'+
-      '<table class="roster"><thead><tr><th>이름</th><th>조직</th><th>호칭</th><th>입사연도(유형)</th><th>퇴직월</th><th>이직처</th></tr></thead>'+
-      '<tbody>'+rowsHtml+'</tbody></table></div>';
+    fOrg.innerHTML += orgOpts.map(function(o){ return '<option value="'+esc(o)+'">'+esc(o)+'</option>'; }).join('');
+    fReason.innerHTML += reasonOpts.map(function(rr){ return '<option value="'+esc(rr)+'">'+esc(rr)+'</option>'; }).join('');
+    ['fCore','fLead','fAx'].forEach(function(id){ document.getElementById(id).value=''; });
+    applyFilters();
   }
-
-  window.toggleTypeRoster = function(key){
-    var id = typeRosterId(key);
-    var panel = document.getElementById(id);
-    var chev = document.getElementById('chev-'+id);
-    var open = panel.style.display !== 'none';
-    panel.style.display = open ? 'none' : '';
-    if(chev) chev.classList.toggle('open', !open);
-  };
-
-  function typeRow(item, max, color){
-    var pct = Math.round(item.v/max*1000)/10;
-    var id = typeRosterId(item.key);
-    return '<div>'+
-      '<div class="bar-row type-row" onclick="toggleTypeRoster(\''+item.key+'\')">'+
-        '<div class="lbl"><span class="chev" id="chev-'+id+'">▸</span>'+item.l+'</div>'+
-        '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+color+';"></div></div>'+
-        '<div class="val">'+item.v+'명</div>'+
-      '</div>'+
-      '<div id="'+id+'" style="display:none;">'+renderTypeRosterPanel(item.key, item.l)+'</div>'+
-    '</div>';
-  }
-  var voluntary = [
-    {l:'타사이직', v:61, key:'타사이직'},{l:'개인사업', v:15, key:'개인사업'},{l:'유학/학업', v:11, key:'유학·학업'},
-    {l:'가사·육아·건강', v:14, key:'가사·육아·건강'},{l:'기타(자발)', v:6, key:'기타'}
-  ];
-  var involuntary = [
-    {l:'희망퇴직', v:38, key:'희망퇴직'},{l:'전출(지주사)', v:12, key:'전출'},{l:'정년퇴직', v:9, key:'정년퇴직'},
-    {l:'계약만료', v:6, key:'계약만료'},{l:'직무재배치', v:4, key:'직무재배치'}
-  ];
-  var allType = voluntary.concat(involuntary);
-  var maxType = Math.max.apply(null, allType.map(function(x){return x.v;}));
-  var typeHtml = '<div style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:2px;">자발 (107명) · 항목을 클릭하면 명단이 표시됩니다</div>' +
-    voluntary.map(function(x){return typeRow(x, maxType, 'var(--brand)');}).join('') +
-    '<div style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin:10px 0 2px;">비자발 (69명)</div>' +
-    involuntary.map(function(x){return typeRow(x, maxType, 'var(--navy)');}).join('');
-  document.getElementById('typeBarlist').innerHTML = typeHtml;
-  // re-render org table now rosters include linked people
-  document.getElementById('orgTableBody').innerHTML = orgs.map(function(o, idx){
-    var name=o[0], cur=o[1], prev=o[2], curY=o[3], prevY=o[4];
-    var d1 = prev===0 ? 0 : Math.round((cur-prev)/prev*1000)/10;
-    var d2 = prevY===0 ? 0 : Math.round((curY-prevY)/prevY*1000)/10;
-    function tag(d){ if(d===0) return '<span class="delta-tag" style="color:var(--text-muted);">-</span>';
-      return '<span class="delta-tag '+(d<0?'good':'bad')+'">'+(d<0?'▼':'▲')+' '+Math.abs(d)+'%</span>'; }
-    var head = '<tr class="org-row" onclick="toggleRoster('+idx+')">'+
-      '<td class="name"><span class="chev" id="chev-'+idx+'">▸</span>'+name+'</td>'+
-      '<td class="num">'+cur+'명</td>'+
-      '<td class="num">'+prev+'명</td>'+
-      '<td class="num">'+tag(d1)+'</td>'+
-      '<td class="num">'+curY+'명</td>'+
-      '<td class="num">'+prevY+'명</td>'+
-      '<td class="num">'+tag(d2)+'</td></tr>';
-    var roster = '<tr class="roster-tr" id="roster-'+idx+'" style="display:none;"><td colspan="7">'+
-      renderRosterPanel(name, curY)+'</td></tr>';
-    return head + roster;
-  }).join('');
-
-  document.getElementById('detailBody').innerHTML = details.map(function(d){
-    return '<tr id="'+d.id+'" data-org="'+d.orgTop+'" data-core="'+(d.core?'Y':'N')+'" data-lead="'+(d.lead?'Y':'N')+'" data-ax="'+(d.ax?'Y':'N')+'" data-reason="'+d.reasonCat+'">'+
-      '<td>'+d.org+'</td>'+
-      '<td class="who"><b>'+d.who+'</b><div class="meta">'+d.meta+'</div></td>'+
-      '<td class="hist">'+d.hist+'</td>'+
-      '<td>'+d.eval+'</td>'+
-      '<td class="hist">'+d.edu+'</td>'+
-      '<td>'+flags(d.core,d.lead,d.ax)+'</td>'+
-      '<td class="reason-sum">'+d.sum+'</td>'+
-      '<td class="reason-detail hist">'+d.detail+'</td>'+
-      '</tr>';
-  }).join('');
-
-  // filters for detail list
-  var orgOptions = [];
-  details.forEach(function(d){ if(orgOptions.indexOf(d.orgTop)===-1) orgOptions.push(d.orgTop); });
-  document.getElementById('fOrg').innerHTML += orgOptions.map(function(o){return '<option value="'+o+'">'+o+'</option>';}).join('');
-
-  var reasonOptions = [];
-  details.forEach(function(d){ if(reasonOptions.indexOf(d.reasonCat)===-1) reasonOptions.push(d.reasonCat); });
-  document.getElementById('fReason').innerHTML += reasonOptions.map(function(r){return '<option value="'+r+'">'+r+'</option>';}).join('');
 
   function applyFilters(){
     var fo = document.getElementById('fOrg').value;
@@ -833,14 +1061,11 @@
     var fl = document.getElementById('fLead').value;
     var fa = document.getElementById('fAx').value;
     var fr = document.getElementById('fReason').value;
-    var rows = document.querySelectorAll('#detailBody tr');
+    var rows = document.querySelectorAll('#detailBody tr[id]');
     var shown = 0;
     rows.forEach(function(tr){
-      var ok = (!fo || tr.dataset.org===fo) &&
-        (!fc || tr.dataset.core===fc) &&
-        (!fl || tr.dataset.lead===fl) &&
-        (!fa || tr.dataset.ax===fa) &&
-        (!fr || tr.dataset.reason===fr);
+      var ok = (!fo || tr.dataset.org===fo) && (!fc || tr.dataset.core===fc) &&
+        (!fl || tr.dataset.lead===fl) && (!fa || tr.dataset.ax===fa) && (!fr || tr.dataset.reason===fr);
       tr.classList.toggle('hidden-row', !ok);
       if(ok) shown++;
     });
@@ -853,6 +1078,71 @@
     ['fOrg','fCore','fLead','fAx','fReason'].forEach(function(id){ document.getElementById(id).value=''; });
     applyFilters();
   });
-  applyFilters();
+
+  // ================= upload / export wiring =================
+  // In a file exported via "공유용 HTML로 저장", #uploadPanel has been
+  // stripped out — skip all upload wiring and the initial mock render so
+  // the exported snapshot's already-baked-in data stays exactly as shared.
+  if(!document.getElementById('uploadPanel')){ return; }
+
+  var currentModel = null;
+
+  document.getElementById('csvFile').addEventListener('change', function(e){
+    var file = e.target.files && e.target.files[0];
+    if(!file) return;
+    var errEl = document.getElementById('uploadError');
+    errEl.style.display = 'none';
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      try{
+        var rows = parseDelimited(String(ev.target.result));
+        if(rows.length < 2) throw new Error('데이터 행을 찾을 수 없습니다.');
+        var idx = buildHeaderIndex(rows[0]);
+        if(idx.division==null && idx.divisionRaw==null) throw new Error('헤더에서 "부문" 컬럼을 찾지 못했습니다.');
+        if(idx.lastActiveDateRaw==null) throw new Error('헤더에서 "마지막재직일" 컬럼을 찾지 못했습니다.');
+        if(idx.name==null) throw new Error('헤더에서 "이름" 컬럼을 찾지 못했습니다.');
+        var records = rows.slice(1).map(function(arr){ return mapRow(idx, arr); });
+        var model = buildModelFromRecords(records, file.name);
+        if(model.error) throw new Error(model.error);
+        currentModel = model;
+        renderModel(model);
+        document.getElementById('uploadCount').textContent = file.name + ' · ' + model.meta.count + '건 반영됨';
+      } catch(err){
+        errEl.textContent = '업로드 실패: ' + err.message;
+        errEl.style.display = '';
+      }
+    };
+    reader.onerror = function(){
+      errEl.textContent = '파일을 읽지 못했습니다. UTF-8로 저장된 CSV/TSV 파일인지 확인해주세요.';
+      errEl.style.display = '';
+    };
+    reader.readAsText(file, 'utf-8');
+  });
+
+  document.getElementById('resetSample').addEventListener('click', function(){
+    currentModel = buildMockModel();
+    renderModel(currentModel);
+    document.getElementById('uploadCount').textContent = '';
+    document.getElementById('uploadError').style.display = 'none';
+    document.getElementById('csvFile').value = '';
+  });
+
+  document.getElementById('exportHtml').addEventListener('click', function(){
+    var clone = document.documentElement.cloneNode(true);
+    var up = clone.querySelector('#uploadPanel');
+    if(up) up.remove();
+    var htmlStr = '<!doctype html>\n<html lang="ko">\n' + clone.outerHTML + '\n</html>';
+    var blob = new Blob([htmlStr], {type:'text/html;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    var today = new Date();
+    var stamp = today.getFullYear()+pad2(today.getMonth()+1)+pad2(today.getDate());
+    a.href = url; a.download = '퇴직현황_공유용_'+stamp+'.html';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+  });
+
+  currentModel = buildMockModel();
+  renderModel(currentModel);
 })();
 </script>
