@@ -1,0 +1,547 @@
+<meta charset="utf-8">
+<title>퇴직 현황 대시보드</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --brand:#e1057b; --brand-ink:#ffffff; --brand-50:#fce4f0; --brand-100:#f8c2de;
+    --navy:#3b3878; --navy-50:#e6e5f3;
+    --surface:#fcfcfb; --page:#f6f3f4;
+    --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#898781;
+    --gridline:#e1e0d9; --border:rgba(11,11,11,0.08);
+    --good:#0ca30c; --warning:#c9860a; --serious:#c15a34; --critical:#d03b3b;
+    --radius:14px;
+  }
+  :root[data-theme="dark"]{
+    --brand:#ef4fa0; --brand-ink:#1a1a19; --brand-50:#3a1830; --brand-100:#5a2244;
+    --navy:#8b87d6; --navy-50:#26244a;
+    --surface:#1e1e1d; --page:#101010;
+    --text-primary:#ffffff; --text-secondary:#c3c2b7; --text-muted:#8f8d86;
+    --gridline:#2c2c2a; --border:rgba(255,255,255,0.10);
+    --good:#2fbf2f; --warning:#fab219; --serious:#ec835a; --critical:#e66767;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --brand:#ef4fa0; --brand-ink:#1a1a19; --brand-50:#3a1830; --brand-100:#5a2244;
+      --navy:#8b87d6; --navy-50:#26244a;
+      --surface:#1e1e1d; --page:#101010;
+      --text-primary:#ffffff; --text-secondary:#c3c2b7; --text-muted:#8f8d86;
+      --gridline:#2c2c2a; --border:rgba(255,255,255,0.10);
+      --good:#2fbf2f; --warning:#fab219; --serious:#ec835a; --critical:#e66767;
+    }
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--page);color:var(--text-primary);
+    font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;}
+  .wrap{max-width:1320px;margin:0 auto;padding:24px 20px 60px;}
+
+  /* header */
+  .head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;}
+  .head h1{font-size:22px;margin:0;font-weight:800;}
+  .head .sub{color:var(--text-muted);font-size:12.5px;margin-top:4px;font-weight:500;}
+  .head-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  select.filter{appearance:none;border:1px solid var(--border);background:var(--surface);color:var(--text-primary);
+    padding:8px 30px 8px 12px;border-radius:9px;font-size:12.5px;font-weight:600;
+    background-image:linear-gradient(45deg,transparent 50%,var(--text-muted) 50%),linear-gradient(135deg,var(--text-muted) 50%,transparent 50%);
+    background-position:calc(100% - 16px) 15px,calc(100% - 11px) 15px;background-size:5px 5px;background-repeat:no-repeat;}
+
+  /* nav pills */
+  .navpills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
+  .navpills a{font-size:12px;font-weight:700;color:var(--text-secondary);text-decoration:none;
+    background:var(--surface);border:1px solid var(--border);padding:6px 12px;border-radius:999px;}
+  .navpills a:hover{color:var(--brand);border-color:var(--brand-100);}
+
+  /* card */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px 20px 20px;margin-bottom:16px;}
+  .card-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;gap:8px;flex-wrap:wrap;}
+  .card-head h2{font-size:15px;margin:0;font-weight:800;display:flex;align-items:center;gap:6px;}
+  .card-head h2 .num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
+    background:var(--brand);color:var(--brand-ink);border-radius:6px;font-size:11px;font-weight:800;flex:none;}
+  .card-head .unit{font-size:11px;color:var(--text-muted);font-weight:600;}
+  .card-desc{font-size:11.5px;color:var(--text-muted);margin:-8px 0 14px;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media (max-width:860px){.grid2,.grid3{grid-template-columns:1fr;}}
+
+  /* stat tiles */
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:14px;}
+  @media (max-width:860px){.stat-grid{grid-template-columns:1fr;}}
+  .stat-tile{background:var(--page);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+  .stat-label{font-size:12px;color:var(--text-secondary);font-weight:700;margin-bottom:8px;}
+  .stat-value{font-size:30px;font-weight:800;letter-spacing:-0.5px;line-height:1;}
+  .stat-value .u{font-size:14px;font-weight:700;color:var(--text-secondary);margin-left:2px;}
+  .stat-delta{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;margin-top:8px;}
+  .stat-delta.good{color:var(--good);} .stat-delta.bad{color:var(--critical);}
+  .stat-vs{color:var(--text-muted);font-weight:600;}
+
+  .risk-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .risk-chip{flex:1 1 110px;background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:10px 12px;min-width:110px;}
+  .risk-chip .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+  .risk-chip .lbl{font-size:11.5px;color:var(--text-secondary);font-weight:700;}
+  .risk-chip .val{font-size:20px;font-weight:800;margin-top:4px;}
+  .risk-chip .pct{font-size:11px;color:var(--text-muted);font-weight:600;}
+
+  /* org table */
+  table.org{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.org th{text-align:left;color:var(--text-muted);font-weight:700;font-size:11px;
+    padding:6px 8px;border-bottom:1px solid var(--gridline);}
+  table.org td{padding:8px 8px;border-bottom:1px solid var(--gridline);vertical-align:middle;}
+  table.org tr:last-child td{border-bottom:none;}
+  table.org td.name{font-weight:700;white-space:nowrap;}
+  table.org td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .bar-mini{position:relative;height:8px;border-radius:4px;background:var(--gridline);width:120px;overflow:hidden;}
+  .bar-mini > span{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--brand);}
+  .delta-tag{font-weight:700;font-variant-numeric:tabular-nums;}
+  .delta-tag.good{color:var(--good);} .delta-tag.bad{color:var(--critical);}
+
+  /* horizontal bar list */
+  .barlist{display:flex;flex-direction:column;gap:10px;}
+  .bar-row{display:grid;grid-template-columns:112px 1fr 74px;align-items:center;gap:10px;}
+  .bar-row .lbl{font-size:12px;font-weight:700;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .bar-track{position:relative;height:14px;border-radius:4px;background:var(--gridline);overflow:hidden;}
+  .bar-fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px 4px 4px 4px;background:var(--brand);}
+  .bar-row .val{font-size:12.5px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums;}
+  .bar-row .val .pct{color:var(--text-muted);font-weight:600;font-size:11px;margin-left:2px;}
+
+  /* legend */
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;}
+  .legend .item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--text-secondary);}
+  .legend .sw{width:10px;height:10px;border-radius:3px;}
+
+  /* meter */
+  .meter-wrap{padding:6px 4px 2px;}
+  .meter-track{position:relative;height:20px;border-radius:6px;background:var(--gridline);overflow:visible;}
+  .meter-fill{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,var(--brand),var(--navy));}
+  .meter-target{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--text-primary);}
+  .meter-target::after{content:attr(data-label);position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+    font-size:10.5px;font-weight:700;color:var(--text-primary);white-space:nowrap;}
+  .meter-labels{display:flex;justify-content:space-between;margin-top:10px;font-size:11.5px;color:var(--text-muted);font-weight:600;}
+  .meter-labels b{color:var(--text-primary);font-size:13px;}
+
+  /* grouped bar chart */
+  .grouped{display:flex;align-items:flex-end;gap:22px;height:190px;padding:6px 6px 0;border-bottom:1px solid var(--gridline);}
+  .grp{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;height:100%;}
+  .grp .bars{display:flex;align-items:flex-end;gap:6px;height:150px;}
+  .grp .col{width:22px;border-radius:4px 4px 0 0;position:relative;}
+  .grp .col .v{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;white-space:nowrap;}
+  .grp .xlabel{margin-top:8px;font-size:12px;font-weight:700;color:var(--text-secondary);}
+
+  /* donut */
+  .donut-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .donut{width:132px;height:132px;border-radius:50%;flex:none;position:relative;}
+  .donut::after{content:"";position:absolute;inset:20px;border-radius:50%;background:var(--surface);
+    display:flex;align-items:center;justify-content:center;}
+  .donut-center{position:absolute;inset:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .donut-center b{font-size:20px;font-weight:800;}
+  .donut-center span{font-size:10.5px;color:var(--text-muted);font-weight:600;}
+  .donut-legend{display:flex;flex-direction:column;gap:10px;}
+  .donut-legend .item{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;}
+  .donut-legend .sw{width:10px;height:10px;border-radius:3px;flex:none;}
+  .donut-legend .n{color:var(--text-muted);font-weight:600;margin-left:auto;padding-left:14px;}
+
+  /* job table */
+  table.job{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.job th{text-align:left;color:var(--text-muted);font-weight:700;font-size:11px;padding:6px 8px;border-bottom:1px solid var(--gridline);}
+  table.job td{padding:7px 8px;border-bottom:1px solid var(--gridline);}
+  table.job tr:last-child td{border-bottom:none;}
+  table.job td.n{text-align:right;font-weight:800;font-variant-numeric:tabular-nums;}
+  table.job td.grp{color:var(--text-muted);font-weight:600;}
+
+  /* detail table */
+  .table-scroll{overflow-x:auto;border:1px solid var(--gridline);border-radius:10px;}
+  table.detail{width:100%;border-collapse:collapse;min-width:1180px;font-size:12px;}
+  table.detail th{background:var(--page);color:var(--text-secondary);font-weight:800;font-size:11px;
+    text-align:left;padding:10px 12px;border-bottom:1px solid var(--gridline);white-space:nowrap;position:sticky;top:0;}
+  table.detail td{padding:12px 12px;border-bottom:1px solid var(--gridline);vertical-align:top;line-height:1.55;}
+  table.detail tr:last-child td{border-bottom:none;}
+  table.detail tr:hover td{background:var(--page);}
+  .who b{font-size:13px;} .who .meta{color:var(--text-muted);font-size:11px;margin-top:2px;}
+  .tag{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:999px;margin-top:6px;}
+  .tag.new{background:var(--navy-50);color:var(--navy);}
+  .tag.exp{background:var(--brand-50);color:var(--brand);}
+  .hist{white-space:pre-line;color:var(--text-secondary);font-size:11.5px;}
+  .flag-row{display:flex;gap:4px;flex-wrap:wrap;}
+  .flag{font-size:10px;font-weight:800;padding:2px 6px;border-radius:5px;white-space:nowrap;}
+  .flag.core{background:rgba(192,58,52,0.12);color:var(--critical);}
+  .flag.lead{background:rgba(201,134,10,0.14);color:var(--warning);}
+  .flag.ax{background:rgba(59,56,120,0.12);color:var(--navy);}
+  .flag.none{background:var(--gridline);color:var(--text-muted);}
+  .reason-sum{font-weight:800;}
+  .reason-detail{color:var(--text-secondary);font-size:11.5px;}
+
+  .footnote{font-size:11px;color:var(--text-muted);margin-top:14px;padding-top:12px;border-top:1px dashed var(--gridline);}
+  .two-col-panel{display:grid;grid-template-columns:1.15fr 0.85fr;gap:20px;}
+  @media (max-width:860px){.two-col-panel{grid-template-columns:1fr;}}
+</style>
+
+<div class="wrap">
+
+  <div class="head">
+    <div>
+      <h1>퇴직 현황 대시보드</h1>
+      <div class="sub">기준월: 2026-07 · 최종 갱신: 2026-07-08 · 데이터: 샘플(Mock)</div>
+    </div>
+    <div class="head-right">
+      <select class="filter" id="deptFilter"><option>부문 전체</option><option>Enterprise부문</option><option>NW부문</option><option>정보보안부문</option><option>CTO</option><option>Consumer부문</option></select>
+      <select class="filter"><option>기준월 2026-07</option><option>2026-06</option><option>2026-05</option></select>
+    </div>
+  </div>
+
+  <div class="navpills">
+    <a href="#s1">① 조직별 퇴직 현황</a>
+    <a href="#s2">② 퇴직 상세 리스트</a>
+    <a href="#s3">③ 예측 대비 퇴직율</a>
+    <a href="#s4">④ 3개년 퇴직율 비교</a>
+    <a href="#s5">⑤ 퇴직유형별 현황</a>
+    <a href="#s6">⑥ 호칭별 현황</a>
+    <a href="#s7">⑦ 타사 이직처 현황</a>
+    <a href="#s8">⑧ 직무별 현황</a>
+    <a href="#s9">⑨ 3개년 조기퇴직율</a>
+  </div>
+
+  <!-- ① 조직별 퇴직 현황 -->
+  <div class="card" id="s1">
+    <div class="card-head"><h2><span class="num">1</span>조직별 퇴직 현황</h2><span class="unit">단위: 명</span></div>
+
+    <div class="stat-grid">
+      <div class="stat-tile">
+        <div class="stat-label">이번달(7월) 퇴직 인원</div>
+        <div class="stat-value">32<span class="u">명</span></div>
+        <div class="stat-delta good">▼ 22.0% <span class="stat-vs">전년동월 41명</span></div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-label">누적(1~7월) 퇴직 인원</div>
+        <div class="stat-value">176<span class="u">명</span></div>
+        <div class="stat-delta good">▼ 13.3% <span class="stat-vs">전년누적 203명</span></div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-label">주요 인원 퇴직 현황 <span style="font-weight:600;color:var(--text-muted);">(누적, 중복포함)</span></div>
+        <div class="risk-row">
+          <div class="risk-chip"><span class="dot" style="background:var(--critical);"></span><span class="lbl">핵심인재</span><div class="val">9<span style="font-size:12px;">명</span></div><div class="pct">전체의 5.1%</div></div>
+          <div class="risk-chip"><span class="dot" style="background:var(--warning);"></span><span class="lbl">직책자</span><div class="val">14<span style="font-size:12px;">명</span></div><div class="pct">전체의 8.0%</div></div>
+          <div class="risk-chip"><span class="dot" style="background:var(--navy);"></span><span class="lbl">AX역량보유</span><div class="val">21<span style="font-size:12px;">명</span></div><div class="pct">전체의 11.9%</div></div>
+          <div class="risk-chip"><span class="dot" style="background:var(--brand);"></span><span class="lbl">조기퇴사(1년내)</span><div class="val">18<span style="font-size:12px;">명</span></div><div class="pct">전체의 10.2%</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;">
+      <table class="org" id="orgTable">
+        <thead><tr>
+          <th>부문</th><th>이번달</th><th style="min-width:130px;">이번달 vs 전년동월</th><th>전년동월</th><th>증감</th>
+          <th>누적(올해)</th><th>누적(전년)</th><th>증감</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ② 퇴직 상세 리스트 -->
+  <div class="card" id="s2">
+    <div class="card-head"><h2><span class="num">2</span>퇴직 상세 리스트</h2><span class="unit">최근 퇴직자 8건 · 전체 176건 중 표본</span></div>
+    <div class="table-scroll">
+      <table class="detail">
+        <thead><tr>
+          <th>조직</th><th>인적사항 / 입사유형</th><th>발령내역</th><th>3개년 평가<br>('24/'23/'22)</th>
+          <th>입사 전 경력 / 학력사항</th><th>핵심인재·직책·DX역량</th><th>퇴직사유 요약</th><th>퇴직사유 및 건의사항 상세</th>
+        </tr></thead>
+        <tbody id="detailBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ③④ -->
+  <div class="two-col-panel">
+    <div class="card" id="s3">
+      <div class="card-head"><h2><span class="num">3</span>퇴직 예측 대비 퇴직율</h2><span class="unit">2026년 연환산 기준</span></div>
+      <div class="card-desc">연간 목표 퇴직율(계획) 대비 현재까지의 연환산 실적 퇴직율입니다.</div>
+      <div class="meter-wrap">
+        <div class="meter-track">
+          <div class="meter-fill" style="width:85.3%;"></div>
+          <div class="meter-target" style="left:100%;" data-label="목표 9.5%"></div>
+        </div>
+        <div class="meter-labels"><span>실적 <b>8.1%</b></span><span>목표대비 <b style="color:var(--good);">-1.4%p 양호</b></span></div>
+      </div>
+      <div class="footnote">※ 연환산 실적 = 누적 퇴직인원 176명 ÷ 평균 재직인원 × (12/7). 목표는 연간 경영계획상 자연감소 목표치입니다.</div>
+    </div>
+
+    <div class="card" id="s4">
+      <div class="card-head"><h2><span class="num">4</span>3개년 퇴직율 비교</h2><span class="unit">단위: %</span></div>
+      <div class="grouped" style="gap:34px;">
+        <div class="grp"><div class="bars" style="width:36px;">
+          <div class="col" style="width:36px;height:74.6%;background:var(--brand);"><span class="v">11.2%</span></div></div><div class="xlabel">2024</div></div>
+        <div class="grp"><div class="bars" style="width:36px;">
+          <div class="col" style="width:36px;height:65.3%;background:var(--brand);"><span class="v">9.8%</span></div></div><div class="xlabel">2025</div></div>
+        <div class="grp"><div class="bars" style="width:36px;">
+          <div class="col" style="width:36px;height:54.0%;background:var(--brand);"><span class="v">8.1%</span></div></div><div class="xlabel">2026 (YTD 연환산)</div></div>
+      </div>
+      <div class="footnote">※ 막대 높이는 0~15% 눈금 기준입니다. 3개년 연속 하락 추세.</div>
+    </div>
+  </div>
+
+  <!-- ⑤⑥ -->
+  <div class="two-col-panel">
+    <div class="card" id="s5">
+      <div class="card-head"><h2><span class="num">5</span>퇴직유형별 퇴직자 현황</h2><span class="unit">누적 176건</span></div>
+      <div class="donut-wrap" style="margin-bottom:16px;">
+        <div class="donut" id="typeDonut">
+          <div class="donut-center"><b>176</b><span>전체</span></div>
+        </div>
+        <div class="donut-legend">
+          <div class="item"><span class="sw" style="background:var(--brand);"></span>자발 <span class="n">107명 · 60.8%</span></div>
+          <div class="item"><span class="sw" style="background:var(--navy);"></span>비자발 <span class="n">69명 · 39.2%</span></div>
+        </div>
+      </div>
+      <div class="barlist" id="typeBarlist"></div>
+    </div>
+
+    <div class="card" id="s6">
+      <div class="card-head"><h2><span class="num">6</span>호칭별 퇴직자 현황</h2><span class="unit">누적 176건</span></div>
+      <div class="barlist" id="titleBarlist" style="margin-top:6px;"></div>
+      <div class="footnote">※ 선임~책임Ⅱ 구간 퇴직 비중이 76.7%로 가장 높습니다.</div>
+    </div>
+  </div>
+
+  <!-- ⑦⑧ -->
+  <div class="two-col-panel">
+    <div class="card" id="s7">
+      <div class="card-head"><h2><span class="num">7</span>타사 전직자 이직처 현황</h2><span class="unit">자발·타사이직 61건</span></div>
+      <div class="barlist" id="destBarlist"></div>
+    </div>
+
+    <div class="card" id="s8">
+      <div class="card-head"><h2><span class="num">8</span>직무별 퇴직자 현황</h2><span class="unit">단위: 건</span></div>
+      <table class="job">
+        <thead><tr><th>직무구분</th><th>직무명</th><th style="text-align:right;">건수</th></tr></thead>
+        <tbody id="jobBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ⑨ -->
+  <div class="card" id="s9">
+    <div class="card-head"><h2><span class="num">9</span>3개년 신입/경력사원 조기퇴직율</h2><span class="unit">입사 후 1년 이내 퇴사 비중, 단위: %</span></div>
+    <div class="legend">
+      <div class="item"><span class="sw" style="background:var(--brand);"></span>신입</div>
+      <div class="item"><span class="sw" style="background:var(--navy);"></span>경력</div>
+    </div>
+    <div class="grouped">
+      <div class="grp"><div class="bars">
+        <div class="col" style="height:45.3%;background:var(--brand);"><span class="v">6.8%</span></div>
+        <div class="col" style="height:74.7%;background:var(--navy);"><span class="v">11.2%</span></div>
+      </div><div class="xlabel">2023년 입사</div></div>
+      <div class="grp"><div class="bars">
+        <div class="col" style="height:56.0%;background:var(--brand);"><span class="v">8.4%</span></div>
+        <div class="col" style="height:90.0%;background:var(--navy);"><span class="v">13.5%</span></div>
+      </div><div class="xlabel">2024년 입사</div></div>
+      <div class="grp"><div class="bars">
+        <div class="col" style="height:47.3%;background:var(--brand);"><span class="v">7.1%</span></div>
+        <div class="col" style="height:84.0%;background:var(--navy);"><span class="v">12.6%</span></div>
+      </div><div class="xlabel">2025년 입사</div></div>
+    </div>
+    <div class="footnote">※ 경력사원 조기퇴직율이 신입사원 대비 지속적으로 높게(약 1.6~1.8배) 나타나고 있습니다.</div>
+  </div>
+
+  <div class="footnote" style="text-align:center;">
+    본 대시보드는 설계 확인용 샘플(Mock) 데이터로 구성되어 있습니다. 실제 인사 데이터 연동 시 동일한 구조로 자동 갱신됩니다.
+  </div>
+</div>
+
+<script>
+(function(){
+  function bar(row){
+    var pct = Math.round(row.v/row.max*1000)/10;
+    return '<div class="bar-row"><div class="lbl">'+row.l+'</div>'+
+      '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+(row.c||'var(--brand)')+';"></div></div>'+
+      '<div class="val">'+row.v+'명<span class="pct">'+(row.p!==undefined?(' · '+row.p+'%'):'')+'</span></div></div>';
+  }
+
+  // ① org table
+  var orgs = [
+    ["Enterprise부문",9,12,47,55],
+    ["NW부문",6,8,33,38],
+    ["정보보안부문",5,6,27,30],
+    ["CTO",4,5,22,26],
+    ["Consumer부문",3,4,18,21],
+    ["법무실",1,2,6,8],
+    ["위기관리센터",1,1,5,6],
+    ["CISO",1,1,4,5],
+    ["CESO",1,1,4,5],
+    ["CFO/CRO",1,1,5,4],
+    ["윤리컴플라이언스실",0,0,2,2],
+    ["CX센터",0,0,2,2],
+    ["CHO",0,0,1,1]
+  ];
+  var maxM = Math.max.apply(null, orgs.map(function(o){return o[2];}));
+  var rows = orgs.map(function(o){
+    var name=o[0], cur=o[1], prev=o[2], curY=o[3], prevY=o[4];
+    var d1 = prev===0 ? 0 : Math.round((cur-prev)/prev*1000)/10;
+    var d2 = prevY===0 ? 0 : Math.round((curY-prevY)/prevY*1000)/10;
+    function tag(d){ if(d===0) return '<span class="delta-tag" style="color:var(--text-muted);">-</span>';
+      return '<span class="delta-tag '+(d<0?'good':'bad')+'">'+(d<0?'▼':'▲')+' '+Math.abs(d)+'%</span>'; }
+    return '<tr><td class="name">'+name+'</td>'+
+      '<td class="num">'+cur+'명</td>'+
+      '<td><div class="bar-mini"><span style="width:'+(prev===0?0:Math.round(cur/maxM*100))+'%;"></span></div></td>'+
+      '<td class="num">'+prev+'명</td>'+
+      '<td class="num">'+tag(d1)+'</td>'+
+      '<td class="num">'+curY+'명</td>'+
+      '<td class="num">'+prevY+'명</td>'+
+      '<td class="num">'+tag(d2)+'</td></tr>';
+  });
+  document.querySelector('#orgTable tbody').innerHTML = rows.join('');
+
+  // ⑤ type breakdown
+  var voluntary = [
+    {l:'타사이직', v:61},{l:'개인사업', v:15},{l:'유학/학업', v:11},{l:'가사·육아·건강', v:14},{l:'기타(자발)', v:6}
+  ];
+  var involuntary = [
+    {l:'희망퇴직', v:38},{l:'전출(지주사)', v:12},{l:'정년퇴직', v:9},{l:'계약만료', v:6},{l:'직무재배치', v:4}
+  ];
+  var allType = voluntary.concat(involuntary);
+  var maxType = Math.max.apply(null, allType.map(function(x){return x.v;}));
+  var typeHtml = '<div style="font-size:11px;font-weight:800;color:var(--text-muted);margin-bottom:2px;">자발 (107명)</div>' +
+    voluntary.map(function(x){return bar({l:x.l, v:x.v, max:maxType, c:'var(--brand)'});}).join('') +
+    '<div style="font-size:11px;font-weight:800;color:var(--text-muted);margin:10px 0 2px;">비자발 (69명)</div>' +
+    involuntary.map(function(x){return bar({l:x.l, v:x.v, max:maxType, c:'var(--navy)'});}).join('');
+  document.getElementById('typeBarlist').innerHTML = typeHtml;
+  document.getElementById('typeDonut').style.background =
+    'conic-gradient(var(--brand) 0 60.8%, var(--navy) 60.8% 100%)';
+
+  // ⑥ title
+  var titles = [
+    {l:'사원', v:12},{l:'선임', v:58},{l:'책임Ⅰ', v:41},{l:'책임Ⅱ', v:37},{l:'수석', v:22},{l:'그룹장/임원', v:6}
+  ];
+  var maxTitle = Math.max.apply(null, titles.map(function(x){return x.v;}));
+  document.getElementById('titleBarlist').innerHTML = titles.map(function(x){
+    return bar({l:x.l, v:x.v, max:maxTitle, p:Math.round(x.v/176*1000)/10});
+  }).join('');
+
+  // ⑦ destinations
+  var dest = [
+    {l:'경쟁 통신사', v:14},{l:'IT/플랫폼 대기업', v:11},{l:'스타트업', v:9},
+    {l:'컨설팅펌', v:7},{l:'금융권', v:6},{l:'공공기관/공기업', v:5},{l:'기타', v:9}
+  ];
+  var maxDest = Math.max.apply(null, dest.map(function(x){return x.v;}));
+  document.getElementById('destBarlist').innerHTML = dest.map(function(x){
+    return bar({l:x.l, v:x.v, max:maxDest, p:Math.round(x.v/61*1000)/10, c:'var(--navy)'});
+  }).join('');
+
+  // ⑧ job table
+  var jobs = [
+    ["경영지원","경영관리",15],["경영지원","재무/회계",9],["경영지원","인사",7],["경영지원","HRM",5],
+    ["영업","B2B영업",22],["영업","B2C영업",18],
+    ["기술","네트워크엔지니어링",24],["기술","서비스개발",19],["기술","정보보안",12],
+    ["마케팅","브랜드/마케팅",10],["콘텐츠","콘텐츠기획/서비스",14],
+    ["CS","고객경험(CX)",11],["기타","기타",10]
+  ];
+  document.getElementById('jobBody').innerHTML = jobs.map(function(j){
+    return '<tr><td class="grp">'+j[0]+'</td><td>'+j[1]+'</td><td class="n">'+j[2]+'</td></tr>';
+  }).join('');
+
+  // ② detail rows
+  function flags(core, lead, ax){
+    var out = [];
+    if(core) out.push('<span class="flag core">핵심인재</span>');
+    if(lead) out.push('<span class="flag lead">직책자</span>');
+    if(ax) out.push('<span class="flag ax">AX역량</span>');
+    if(!core && !lead && !ax) out.push('<span class="flag none">해당없음</span>');
+    return '<div class="flag-row">'+out.join('')+'</div>';
+  }
+  var details = [
+    {
+      org:'Consumer부문<br>홈사업그룹<br>광고사업담당<br>광고사업팀',
+      who:'박준호 책임(8)', meta:'43세, 남 · 경력 10년 신입',
+      hist:"'25.01~'25.05  광고사업팀\n'24.01~'24.12  FAST사업팀\n'22.01~'23.12  미디어DX챕터\n'19.07~'21.12  서비스BP운영팀(Consumer부문)\n'18.01~'19.06  AIoT제휴상품2팀(스마트홈부문)\n'16.01~'17.12  FC전략팀(FC부문)\n'11.01~'15.12  디지털사이니지팀\n'10.10~'11.01  그룹영업2팀(BS본부)",
+      eval:'3.3<br><span style="color:var(--text-muted);font-weight:600;">(B/A/B)</span>',
+      edu:"이전 경력 없음\n'05.03~'09.02 서강대 정치외교(석)\n'00.03~'05.02 서강대 영미문화(학)",
+      flags:flags(false,false,false),
+      sum:'결혼/출산/육아/가족 돌봄 등의 개인사',
+      detail:'[퇴직 사유]\n- 배우자 주재원(호주) 장기 발령에 따른 퇴직\n : 휴직 가능여부에 대해 살펴보았으나 자녀가 없어 휴직 가능한 방법이 없었음.\n*퇴직발령 상세 : 일반퇴직(유학·학업)'
+    },
+    {
+      org:'Consumer부문<br>Consumer사업기획담당<br>Consumer기획팀',
+      who:'배상진 선임(6)', meta:'39세, 남 · 경력 입사(2015)',
+      hist:"'15.09~'25.12  Consumer기획담당 Consumer기획팀\n총 근속 123개월",
+      eval:'2.9<br><span style="color:var(--text-muted);font-weight:600;">(B/B/C)</span>',
+      edu:"이전 경력 없음\n고려대 정치외교학(학)",
+      flags:flags(false,false,false),
+      sum:'전출 (지주사 전출)',
+      detail:'[퇴직 사유]\n- 그룹 지주사 조직개편에 따른 인력 전출\n*퇴직발령 상세 : 전출 &gt; 지주사전출'
+    },
+    {
+      org:'Consumer부문<br>Consumer기획담당<br>STUDIO X+U TF',
+      who:'이미영 책임Ⅱ(13)', meta:'51세, 여 · 경력 입사(2022)',
+      hist:"'22.12~'26.01  Consumer기획담당 STUDIO X+U TF\n총 근속 37개월",
+      eval:'3.1<br><span style="color:var(--text-muted);font-weight:600;">(B/A/B)</span>',
+      edu:"미디어로그\n서울과학기술대학교 산업공학과(학)",
+      flags:flags(false,false,false),
+      sum:'희망퇴직',
+      detail:'[퇴직 사유]\n- 조직 개편에 따른 희망퇴직 신청 및 승인\n*퇴직발령 상세 : 희망퇴직'
+    },
+    {
+      org:'CTO<br>AI플랫폼담당<br>AI Foundation팀',
+      who:'정하늘 수석(17)', meta:'46세, 남 · 경력 입사(2016)',
+      hist:"'21.01~'26.06  AI플랫폼담당 AI Foundation팀\n'16.03~'20.12  데이터플랫폼담당 빅데이터팀",
+      eval:'4.0<br><span style="color:var(--text-muted);font-weight:600;">(S/A/A)</span>',
+      edu:"삼성SDS AI연구소 (4년)\nKAIST 전산학(석)",
+      flags:flags(true,false,true),
+      sum:'타사이직 (보상/처우)',
+      detail:'[퇴직 사유]\n- 경쟁사 대비 낮은 보상 수준 및 AI조직 리더 포지션 제안 수락\n- 잔류 조건으로 보상 재협상 시도했으나 예산 제약으로 성사되지 않음\n*이직처 : IT/플랫폼 대기업'
+    },
+    {
+      org:'정보보안부문<br>보안운영담당<br>SOC팀',
+      who:'한소민 사원(1)', meta:'27세, 여 · 신입 입사(2025.11)',
+      hist:"'25.11~'26.07  보안운영담당 SOC팀\n총 근속 8개월",
+      eval:'평가이력 없음<br><span style="color:var(--text-muted);font-weight:600;">(입사 1년 미만)</span>',
+      edu:"이전 경력 없음\n이화여대 정보보호학과(학)",
+      flags:flags(false,false,false),
+      sum:'직무 미스매치 (조기퇴사)',
+      detail:'[퇴직 사유]\n- 채용 시 기대했던 정책기획 업무 대신 24시간 교대 모니터링 업무에 배치되어 적응에 어려움을 겪음\n*퇴직발령 상세 : 일반퇴직(직무부적응)'
+    },
+    {
+      org:'법무실<br>법무담당<br>계약심사팀',
+      who:'최영수 수석(28)', meta:'60세, 남 · 경력 입사(1998)',
+      hist:"'05.01~'26.06  법무담당 계약심사팀\n'98.03~'04.12  법무팀",
+      eval:'3.5<br><span style="color:var(--text-muted);font-weight:600;">(A/B/A)</span>',
+      edu:"이전 경력 없음\n서울대 법학(학)",
+      flags:flags(false,false,false),
+      sum:'정년퇴직',
+      detail:'[퇴직 사유]\n- 만 60세 정년 도래에 따른 정년퇴직\n- 후임자 계약심사 업무 인수인계 완료\n*퇴직발령 상세 : 정년퇴직'
+    },
+    {
+      org:'NW부문<br>네트워크운영담당<br>코어망운영팀',
+      who:'강민재 책임Ⅰ(10)', meta:'38세, 남 · 신입 입사(2016)',
+      hist:"'19.01~'26.05  네트워크운영담당 코어망운영팀\n'16.01~'18.12  네트워크운영담당 액세스망운영팀",
+      eval:'3.0<br><span style="color:var(--text-muted);font-weight:600;">(B/B/B)</span>',
+      edu:"이전 경력 없음\n한양대 전자공학(학)",
+      flags:flags(false,false,false),
+      sum:'개인사업 준비',
+      detail:'[퇴직 사유]\n- 네트워크 유지보수 스타트업 창업을 위한 자진 퇴사\n*퇴직발령 상세 : 일반퇴직(개인사업)'
+    },
+    {
+      org:'Enterprise부문<br>B2B솔루션담당<br>AX솔루션팀(팀장)',
+      who:'오지훈 책임Ⅱ(15)', meta:'44세, 남 · 경력 입사(2019)',
+      hist:"'23.03~'26.06  B2B솔루션담당 AX솔루션팀장\n'19.01~'23.02  B2B솔루션담당 스마트팩토리팀",
+      eval:'3.8<br><span style="color:var(--text-muted);font-weight:600;">(A/A/B)</span>',
+      edu:"글로벌 IT컨설팅펌 (6년)\n연세대 산업공학(학)",
+      flags:flags(true,true,true),
+      sum:'타사이직 (커리어 성장)',
+      detail:'[퇴직 사유]\n- 글로벌 컨설팅펌 AI Transformation 담당 파트너급 포지션 제안 수락\n- 리텐션 면담 진행했으나 본인 커리어 방향성에 따른 확고한 이직 의사 확인\n*이직처 : 컨설팅펌'
+    }
+  ];
+  document.getElementById('detailBody').innerHTML = details.map(function(d){
+    return '<tr>'+
+      '<td>'+d.org+'</td>'+
+      '<td class="who"><b>'+d.who+'</b><div class="meta">'+d.meta+'</div></td>'+
+      '<td class="hist">'+d.hist+'</td>'+
+      '<td>'+d.eval+'</td>'+
+      '<td class="hist">'+d.edu+'</td>'+
+      '<td>'+d.flags+'</td>'+
+      '<td class="reason-sum">'+d.sum+'</td>'+
+      '<td class="reason-detail hist">'+d.detail+'</td>'+
+      '</tr>';
+  }).join('');
+})();
+</script>
