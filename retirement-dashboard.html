@@ -5,7 +5,7 @@
   :root{
     --brand:#e1057b; --brand-ink:#ffffff; --brand-50:#fce4f0; --brand-100:#f8c2de;
     --navy:#3b3878; --navy-50:#e6e5f3;
-    --surface:#ffffff; --page:#fafafa;
+    --surface:#ffffff; --page:#fafafa; --zebra:rgba(11,11,11,0.025);
     --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#898781;
     --gridline:#e1e0d9; --border:rgba(11,11,11,0.08);
     --good:#0ca30c; --warning:#c9860a; --serious:#c15a34; --critical:#d03b3b;
@@ -14,7 +14,7 @@
   :root[data-theme="dark"]{
     --brand:#ef4fa0; --brand-ink:#1a1a19; --brand-50:#3a1830; --brand-100:#5a2244;
     --navy:#8b87d6; --navy-50:#26244a;
-    --surface:#1e1e1d; --page:#101010;
+    --surface:#1e1e1d; --page:#101010; --zebra:rgba(255,255,255,0.035);
     --text-primary:#ffffff; --text-secondary:#c3c2b7; --text-muted:#8f8d86;
     --gridline:#2c2c2a; --border:rgba(255,255,255,0.10);
     --good:#2fbf2f; --warning:#fab219; --serious:#ec835a; --critical:#e66767;
@@ -23,42 +23,42 @@
     :root:not([data-theme="light"]){
       --brand:#ef4fa0; --brand-ink:#1a1a19; --brand-50:#3a1830; --brand-100:#5a2244;
       --navy:#8b87d6; --navy-50:#26244a;
-      --surface:#1e1e1d; --page:#101010;
+      --surface:#1e1e1d; --page:#101010; --zebra:rgba(255,255,255,0.035);
       --text-primary:#ffffff; --text-secondary:#c3c2b7; --text-muted:#8f8d86;
       --gridline:#2c2c2a; --border:rgba(255,255,255,0.10);
       --good:#2fbf2f; --warning:#fab219; --serious:#ec835a; --critical:#e66767;
     }
   }
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--page);color:var(--text-primary);
+  body{margin:0;background:var(--page);color:var(--text-primary);line-height:1.4;
     font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;}
-  .wrap{max-width:1320px;margin:0 auto;padding:24px 20px 60px;}
+  .wrap{max-width:1380px;margin:0 auto;padding:24px 20px 60px;}
 
   /* header */
   .head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;}
-  .head h1{font-size:22px;margin:0;font-weight:800;}
-  .head .sub{color:var(--text-muted);font-size:12.5px;margin-top:4px;font-weight:500;}
+  .head h1{font-size:25px;margin:0;font-weight:800;}
+  .head .sub{color:var(--text-muted);font-size:14px;margin-top:4px;font-weight:500;}
   .head-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
   select.filter{appearance:none;border:1px solid var(--border);background:var(--surface);color:var(--text-primary);
-    padding:8px 30px 8px 12px;border-radius:9px;font-size:12.5px;font-weight:600;
+    padding:9px 32px 9px 13px;border-radius:9px;font-size:14px;font-weight:600;
     background-image:linear-gradient(45deg,transparent 50%,var(--text-muted) 50%),linear-gradient(135deg,var(--text-muted) 50%,transparent 50%);
-    background-position:calc(100% - 16px) 15px,calc(100% - 11px) 15px;background-size:5px 5px;background-repeat:no-repeat;}
+    background-position:calc(100% - 16px) 16px,calc(100% - 11px) 16px;background-size:5px 5px;background-repeat:no-repeat;}
 
   /* nav pills */
   .navpills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
-  .navpills a{font-size:12px;font-weight:700;color:var(--text-secondary);text-decoration:none;
-    background:var(--surface);border:1px solid var(--border);padding:6px 12px;border-radius:999px;}
+  .navpills a{font-size:13.5px;font-weight:700;color:var(--text-secondary);text-decoration:none;
+    background:var(--surface);border:1px solid var(--border);padding:7px 13px;border-radius:999px;}
   .navpills a:hover{color:var(--brand);border-color:var(--brand-100);}
 
   /* card */
   .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-    padding:18px 20px 20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(11,11,11,0.05);}
+    padding:20px 22px 22px;margin-bottom:16px;box-shadow:0 1px 3px rgba(11,11,11,0.05);}
   .card-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;gap:8px;flex-wrap:wrap;}
-  .card-head h2{font-size:15px;margin:0;font-weight:800;display:flex;align-items:center;gap:6px;}
-  .card-head h2 .num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
-    background:var(--brand);color:var(--brand-ink);border-radius:6px;font-size:11px;font-weight:800;flex:none;}
-  .card-head .unit{font-size:11px;color:var(--text-muted);font-weight:600;}
-  .card-desc{font-size:11.5px;color:var(--text-muted);margin:-8px 0 14px;}
+  .card-head h2{font-size:17px;margin:0;font-weight:800;display:flex;align-items:center;gap:7px;}
+  .card-head h2 .num{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;
+    background:var(--brand);color:var(--brand-ink);border-radius:6px;font-size:12.5px;font-weight:800;flex:none;}
+  .card-head .unit{font-size:12.5px;color:var(--text-muted);font-weight:600;}
+  .card-desc{font-size:13px;color:var(--text-muted);margin:-8px 0 14px;}
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
   .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
@@ -67,111 +67,143 @@
   /* stat tiles */
   .stat-grid{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:14px;}
   @media (max-width:860px){.stat-grid{grid-template-columns:1fr;}}
-  .stat-tile{background:var(--page);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
-  .stat-label{font-size:12px;color:var(--text-secondary);font-weight:700;margin-bottom:8px;}
-  .stat-value{font-size:30px;font-weight:800;letter-spacing:-0.5px;line-height:1;}
-  .stat-value .u{font-size:14px;font-weight:700;color:var(--text-secondary);margin-left:2px;}
-  .stat-delta{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;margin-top:8px;}
+  .stat-tile{background:var(--page);border:1px solid var(--border);border-radius:12px;padding:15px 17px;}
+  .stat-label{font-size:13.5px;color:var(--text-secondary);font-weight:700;margin-bottom:8px;}
+  .stat-value{font-size:34px;font-weight:800;letter-spacing:-0.5px;line-height:1;}
+  .stat-value .u{font-size:15.5px;font-weight:700;color:var(--text-secondary);margin-left:2px;}
+  .stat-delta{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;font-weight:700;margin-top:8px;}
   .stat-delta.good{color:var(--good);} .stat-delta.bad{color:var(--critical);}
   .stat-vs{color:var(--text-muted);font-weight:600;}
 
   .risk-row{display:flex;gap:10px;flex-wrap:wrap;}
-  .risk-chip{flex:1 1 110px;background:var(--surface);border:1px solid var(--border);border-radius:10px;
-    padding:10px 12px;min-width:110px;}
+  .risk-chip{flex:1 1 128px;background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:11px 13px;min-width:128px;}
   .risk-chip .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
-  .risk-chip .lbl{font-size:11.5px;color:var(--text-secondary);font-weight:700;}
-  .risk-chip .val{font-size:20px;font-weight:800;margin-top:4px;}
-  .risk-chip .pct{font-size:11px;color:var(--text-muted);font-weight:600;}
+  .risk-chip .lbl{font-size:13px;color:var(--text-secondary);font-weight:700;}
+  .risk-chip .val{font-size:23px;font-weight:800;margin-top:4px;}
+  .risk-chip .pct{font-size:12.5px;color:var(--text-muted);font-weight:600;}
 
   /* org table */
-  table.org{width:100%;border-collapse:collapse;font-size:12.5px;}
-  table.org th{text-align:left;color:var(--text-muted);font-weight:700;font-size:11px;
-    padding:6px 8px;border-bottom:1px solid var(--gridline);}
-  table.org td{padding:8px 8px;border-bottom:1px solid var(--gridline);vertical-align:middle;}
-  table.org tr:last-child td{border-bottom:none;}
+  table.org{width:100%;border-collapse:collapse;font-size:15px;}
+  table.org thead th{text-align:left;color:var(--text-secondary);font-weight:800;font-size:12.5px;
+    padding:9px 10px;border-bottom:2px solid var(--gridline);background:var(--page);white-space:nowrap;}
+  table.org thead th:not(:last-child){border-right:1px solid var(--gridline);}
+  table.org td{padding:11px 10px;border-bottom:1px solid var(--gridline);vertical-align:middle;}
+  table.org td:not(:last-child){border-right:1px solid var(--gridline);}
+  table.org tbody tr.org-row:last-of-type td{border-bottom:1px solid var(--gridline);}
   table.org td.name{font-weight:700;white-space:nowrap;}
   table.org td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
-  .bar-mini{position:relative;height:8px;border-radius:4px;background:var(--gridline);width:120px;overflow:hidden;}
-  .bar-mini > span{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--brand);}
+  tr.org-row{cursor:pointer;}
+  tr.org-row td{background:var(--surface);}
+  tr.org-row:nth-of-type(4n+1) td, tr.org-row:nth-of-type(4n+2) td{}
+  tr.org-row:hover td{background:var(--zebra);}
+  .chev{display:inline-block;width:14px;color:var(--text-muted);font-size:11px;transition:transform .15s ease;}
+  .chev.open{transform:rotate(90deg);color:var(--brand);}
   .delta-tag{font-weight:700;font-variant-numeric:tabular-nums;}
   .delta-tag.good{color:var(--good);} .delta-tag.bad{color:var(--critical);}
 
+  tr.roster-tr td{padding:0;border-bottom:1px solid var(--gridline);}
+  .roster-panel{padding:12px 16px 16px 42px;background:var(--page);max-height:360px;overflow-y:auto;}
+  .roster-panel .rp-head{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:8px;}
+  table.roster{width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.roster th{text-align:left;color:var(--text-muted);font-weight:700;font-size:12px;padding:5px 8px;border-bottom:1px solid var(--gridline);}
+  table.roster td{padding:6px 8px;border-bottom:1px solid var(--gridline);}
+  table.roster tr:last-child td{border-bottom:none;}
+  table.roster tr:hover td{background:var(--zebra);}
+  .roster-name{font-weight:700;}
+  .roster-name.linked{color:var(--brand);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+  .roster-flags{display:flex;gap:4px;flex-wrap:wrap;}
+
   /* horizontal bar list */
   .barlist{display:flex;flex-direction:column;gap:10px;}
-  .bar-row{display:grid;grid-template-columns:112px 1fr 74px;align-items:center;gap:10px;}
-  .bar-row .lbl{font-size:12px;font-weight:700;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .bar-track{position:relative;height:14px;border-radius:4px;background:var(--gridline);overflow:hidden;}
+  .bar-row{display:grid;grid-template-columns:130px 1fr 92px;align-items:center;gap:10px;}
+  .bar-row .lbl{font-size:13.5px;font-weight:700;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .bar-track{position:relative;height:16px;border-radius:4px;background:var(--gridline);overflow:hidden;}
   .bar-fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px 4px 4px 4px;background:var(--brand);}
-  .bar-row .val{font-size:12.5px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums;}
-  .bar-row .val .pct{color:var(--text-muted);font-weight:600;font-size:11px;margin-left:2px;}
+  .bar-row .val{font-size:14px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums;}
+  .bar-row .val .pct{color:var(--text-muted);font-weight:600;font-size:12.5px;margin-left:2px;}
 
   /* legend */
   .legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;}
-  .legend .item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--text-secondary);}
-  .legend .sw{width:10px;height:10px;border-radius:3px;}
+  .legend .item{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:var(--text-secondary);}
+  .legend .sw{width:11px;height:11px;border-radius:3px;}
 
   /* meter */
   .meter-wrap{padding:6px 4px 2px;}
-  .meter-track{position:relative;height:20px;border-radius:6px;background:var(--gridline);overflow:visible;}
+  .meter-track{position:relative;height:22px;border-radius:6px;background:var(--gridline);overflow:visible;}
   .meter-fill{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,var(--brand),var(--navy));}
   .meter-target{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--text-primary);}
-  .meter-target::after{content:attr(data-label);position:absolute;top:-20px;left:50%;transform:translateX(-50%);
-    font-size:10.5px;font-weight:700;color:var(--text-primary);white-space:nowrap;}
-  .meter-labels{display:flex;justify-content:space-between;margin-top:10px;font-size:11.5px;color:var(--text-muted);font-weight:600;}
-  .meter-labels b{color:var(--text-primary);font-size:13px;}
+  .meter-target::after{content:attr(data-label);position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+    font-size:12px;font-weight:700;color:var(--text-primary);white-space:nowrap;}
+  .meter-labels{display:flex;justify-content:space-between;margin-top:10px;font-size:13px;color:var(--text-muted);font-weight:600;}
+  .meter-labels b{color:var(--text-primary);font-size:15px;}
 
   /* grouped bar chart */
   .grouped{display:flex;align-items:flex-end;gap:22px;height:190px;padding:6px 6px 0;border-bottom:1px solid var(--gridline);}
   .grp{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;height:100%;}
   .grp .bars{display:flex;align-items:flex-end;gap:6px;height:150px;}
   .grp .col{width:22px;border-radius:4px 4px 0 0;position:relative;}
-  .grp .col .v{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;white-space:nowrap;}
-  .grp .xlabel{margin-top:8px;font-size:12px;font-weight:700;color:var(--text-secondary);}
+  .grp .col .v{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:12.5px;font-weight:800;white-space:nowrap;}
+  .grp .xlabel{margin-top:8px;font-size:13.5px;font-weight:700;color:var(--text-secondary);}
 
   /* donut */
   .donut-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
-  .donut{width:132px;height:132px;border-radius:50%;flex:none;position:relative;}
-  .donut::after{content:"";position:absolute;inset:20px;border-radius:50%;background:var(--surface);
+  .donut{width:146px;height:146px;border-radius:50%;flex:none;position:relative;}
+  .donut::after{content:"";position:absolute;inset:22px;border-radius:50%;background:var(--surface);
     display:flex;align-items:center;justify-content:center;}
-  .donut-center{position:absolute;inset:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-  .donut-center b{font-size:20px;font-weight:800;}
-  .donut-center span{font-size:10.5px;color:var(--text-muted);font-weight:600;}
+  .donut-center{position:absolute;inset:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .donut-center b{font-size:23px;font-weight:800;}
+  .donut-center span{font-size:12px;color:var(--text-muted);font-weight:600;}
   .donut-legend{display:flex;flex-direction:column;gap:10px;}
-  .donut-legend .item{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;}
-  .donut-legend .sw{width:10px;height:10px;border-radius:3px;flex:none;}
+  .donut-legend .item{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;}
+  .donut-legend .sw{width:11px;height:11px;border-radius:3px;flex:none;}
   .donut-legend .n{color:var(--text-muted);font-weight:600;margin-left:auto;padding-left:14px;}
 
   /* job table */
-  table.job{width:100%;border-collapse:collapse;font-size:12.5px;}
-  table.job th{text-align:left;color:var(--text-muted);font-weight:700;font-size:11px;padding:6px 8px;border-bottom:1px solid var(--gridline);}
-  table.job td{padding:7px 8px;border-bottom:1px solid var(--gridline);}
+  table.job{width:100%;border-collapse:collapse;font-size:14.5px;}
+  table.job th{text-align:left;color:var(--text-muted);font-weight:700;font-size:12.5px;padding:7px 8px;border-bottom:1px solid var(--gridline);}
+  table.job td{padding:8px 8px;border-bottom:1px solid var(--gridline);}
   table.job tr:last-child td{border-bottom:none;}
   table.job td.n{text-align:right;font-weight:800;font-variant-numeric:tabular-nums;}
   table.job td.grp{color:var(--text-muted);font-weight:600;}
 
+  /* filter bar */
+  .filterbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;}
+  .filterbar select{appearance:none;border:1px solid var(--border);background:var(--page);color:var(--text-primary);
+    padding:8px 28px 8px 11px;border-radius:8px;font-size:13px;font-weight:600;
+    background-image:linear-gradient(45deg,transparent 50%,var(--text-muted) 50%),linear-gradient(135deg,var(--text-muted) 50%,transparent 50%);
+    background-position:calc(100% - 14px) 14px,calc(100% - 9px) 14px;background-size:5px 5px;background-repeat:no-repeat;}
+  .filterbar select:focus{outline:2px solid var(--brand-100);}
+  .filter-reset{font-size:12.5px;font-weight:700;color:var(--brand);background:none;border:1px solid var(--brand-100);
+    padding:8px 12px;border-radius:8px;cursor:pointer;}
+  .filter-count{font-size:13px;color:var(--text-muted);font-weight:700;margin-left:auto;white-space:nowrap;}
+  tr.hidden-row{display:none;}
+
   /* detail table */
   .table-scroll{overflow-x:auto;border:1px solid var(--gridline);border-radius:10px;}
-  table.detail{width:100%;border-collapse:collapse;min-width:1180px;font-size:12px;}
-  table.detail th{background:var(--page);color:var(--text-secondary);font-weight:800;font-size:11px;
-    text-align:left;padding:10px 12px;border-bottom:1px solid var(--gridline);white-space:nowrap;position:sticky;top:0;}
-  table.detail td{padding:12px 12px;border-bottom:1px solid var(--gridline);vertical-align:top;line-height:1.55;}
+  table.detail{width:100%;border-collapse:collapse;min-width:1320px;font-size:14px;}
+  table.detail th{background:var(--page);color:var(--text-secondary);font-weight:800;font-size:12.5px;
+    text-align:left;padding:11px 13px;border-bottom:1px solid var(--gridline);white-space:nowrap;position:sticky;top:0;}
+  table.detail td{padding:13px 13px;border-bottom:1px solid var(--gridline);vertical-align:top;line-height:1.55;}
   table.detail tr:last-child td{border-bottom:none;}
   table.detail tr:hover td{background:var(--page);}
-  .who b{font-size:13px;} .who .meta{color:var(--text-muted);font-size:11px;margin-top:2px;}
-  .tag{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:999px;margin-top:6px;}
+  table.detail tr.flash td{animation:flashHi 1.8s ease;}
+  @keyframes flashHi{0%{background:var(--brand-50);}100%{background:transparent;}}
+  .who b{font-size:15px;} .who .meta{color:var(--text-muted);font-size:12.5px;margin-top:2px;}
+  .tag{display:inline-block;font-size:12px;font-weight:800;padding:2px 8px;border-radius:999px;margin-top:6px;}
   .tag.new{background:var(--navy-50);color:var(--navy);}
   .tag.exp{background:var(--brand-50);color:var(--brand);}
-  .hist{white-space:pre-line;color:var(--text-secondary);font-size:11.5px;}
+  .hist{white-space:pre-line;color:var(--text-secondary);font-size:13px;}
   .flag-row{display:flex;gap:4px;flex-wrap:wrap;}
-  .flag{font-size:10px;font-weight:800;padding:2px 6px;border-radius:5px;white-space:nowrap;}
+  .flag{font-size:11.5px;font-weight:800;padding:2px 7px;border-radius:5px;white-space:nowrap;}
   .flag.core{background:rgba(192,58,52,0.12);color:var(--critical);}
   .flag.lead{background:rgba(201,134,10,0.14);color:var(--warning);}
   .flag.ax{background:rgba(59,56,120,0.12);color:var(--navy);}
   .flag.none{background:var(--gridline);color:var(--text-muted);}
   .reason-sum{font-weight:800;}
-  .reason-detail{color:var(--text-secondary);font-size:11.5px;}
+  .reason-detail{color:var(--text-secondary);font-size:13px;}
 
-  .footnote{font-size:11px;color:var(--text-muted);margin-top:14px;padding-top:12px;border-top:1px dashed var(--gridline);}
+  .footnote{font-size:12.5px;color:var(--text-muted);margin-top:14px;padding-top:12px;border-top:1px dashed var(--gridline);}
   .two-col-panel{display:grid;grid-template-columns:1.15fr 0.85fr;gap:20px;}
   @media (max-width:860px){.two-col-panel{grid-template-columns:1fr;}}
 </style>
@@ -201,10 +233,9 @@
     <a href="#s9">⑨ 3개년 조기퇴직율</a>
   </div>
 
-  <!-- ① 조직별 퇴직 현황 -->
-  <div class="card" id="s1">
-    <div class="card-head"><h2><span class="num">1</span>조직별 퇴직 현황</h2><span class="unit">단위: 명</span></div>
-
+  <!-- 전사 요약 -->
+  <div class="card" id="summary" style="background:linear-gradient(180deg,var(--brand-50) 0%, var(--surface) 60%);">
+    <div class="card-head"><h2>전사 퇴직 현황 요약</h2><span class="unit">기준월 2026-07 · 조직별 상세는 아래 ① 표를 확인하세요</span></div>
     <div class="stat-grid">
       <div class="stat-tile">
         <div class="stat-label">이번달(7월) 퇴직 인원</div>
@@ -217,30 +248,52 @@
         <div class="stat-delta good">▼ 13.3% <span class="stat-vs">전년누적 203명</span></div>
       </div>
       <div class="stat-tile">
-        <div class="stat-label">주요 인원 퇴직 현황 <span style="font-weight:600;color:var(--text-muted);">(누적, 중복포함)</span></div>
-        <div class="risk-row">
-          <div class="risk-chip"><span class="dot" style="background:var(--critical);"></span><span class="lbl">핵심인재</span><div class="val">9<span style="font-size:12px;">명</span></div><div class="pct">전체의 5.1%</div></div>
-          <div class="risk-chip"><span class="dot" style="background:var(--warning);"></span><span class="lbl">직책자</span><div class="val">14<span style="font-size:12px;">명</span></div><div class="pct">전체의 8.0%</div></div>
-          <div class="risk-chip"><span class="dot" style="background:var(--navy);"></span><span class="lbl">AX역량보유</span><div class="val">21<span style="font-size:12px;">명</span></div><div class="pct">전체의 11.9%</div></div>
-          <div class="risk-chip"><span class="dot" style="background:var(--brand);"></span><span class="lbl">조기퇴사(1년내)</span><div class="val">18<span style="font-size:12px;">명</span></div><div class="pct">전체의 10.2%</div></div>
+        <div class="stat-label">3개년 퇴직율 비교 <span style="font-weight:600;color:var(--text-muted);">(연환산 기준, %)</span></div>
+        <div class="grouped" style="height:104px;gap:20px;border-bottom:none;padding:20px 6px 0;">
+          <div class="grp"><div class="bars" style="height:60px;">
+            <div class="col" style="width:24px;height:74.6%;background:var(--gridline);"><span class="v" style="color:var(--text-muted);">11.2%</span></div>
+          </div><div class="xlabel" style="font-size:11.5px;margin-top:6px;">2024</div></div>
+          <div class="grp"><div class="bars" style="height:60px;">
+            <div class="col" style="width:24px;height:65.3%;background:var(--gridline);"><span class="v" style="color:var(--text-muted);">9.8%</span></div>
+          </div><div class="xlabel" style="font-size:11.5px;margin-top:6px;">2025</div></div>
+          <div class="grp"><div class="bars" style="height:60px;">
+            <div class="col" style="width:24px;height:54.0%;background:var(--brand);"><span class="v">8.1%</span></div>
+          </div><div class="xlabel" style="font-size:11.5px;margin-top:6px;">2026(YTD)</div></div>
         </div>
       </div>
     </div>
-
-    <div style="margin-top:18px;">
-      <table class="org" id="orgTable">
-        <thead><tr>
-          <th>부문</th><th>이번달</th><th style="min-width:130px;">이번달 vs 전년동월</th><th>전년동월</th><th>증감</th>
-          <th>누적(올해)</th><th>누적(전년)</th><th>증감</th>
-        </tr></thead>
-        <tbody></tbody>
-      </table>
+    <div class="risk-row" style="margin-top:14px;">
+      <div class="risk-chip"><span class="dot" style="background:var(--critical);"></span><span class="lbl">핵심인재</span><div class="val">9<span style="font-size:13px;">명</span></div><div class="pct">전체의 5.1%</div></div>
+      <div class="risk-chip"><span class="dot" style="background:var(--warning);"></span><span class="lbl">직책자</span><div class="val">14<span style="font-size:13px;">명</span></div><div class="pct">전체의 8.0%</div></div>
+      <div class="risk-chip"><span class="dot" style="background:var(--navy);"></span><span class="lbl">AX역량보유</span><div class="val">21<span style="font-size:13px;">명</span></div><div class="pct">전체의 11.9%</div></div>
+      <div class="risk-chip"><span class="dot" style="background:var(--brand);"></span><span class="lbl">조기퇴사(1년내)</span><div class="val">18<span style="font-size:13px;">명</span></div><div class="pct">전체의 10.2%</div></div>
     </div>
+  </div>
+
+  <!-- ① 조직별 퇴직 현황 -->
+  <div class="card" id="s1">
+    <div class="card-head"><h2><span class="num">1</span>조직별 퇴직 현황</h2><span class="unit">단위: 명 · 부문을 클릭하면 퇴직자 명단이 표시됩니다</span></div>
+    <table class="org" id="orgTable">
+      <thead><tr>
+        <th>부문</th><th style="text-align:right;">이번달</th><th style="text-align:right;">전년동월</th><th style="text-align:right;">증감</th>
+        <th style="text-align:right;">누적(올해)</th><th style="text-align:right;">누적(전년)</th><th style="text-align:right;">증감</th>
+      </tr></thead>
+      <tbody id="orgTableBody"></tbody>
+    </table>
   </div>
 
   <!-- ② 퇴직 상세 리스트 -->
   <div class="card" id="s2">
-    <div class="card-head"><h2><span class="num">2</span>퇴직 상세 리스트</h2><span class="unit">최근 퇴직자 8건 · 전체 176건 중 표본</span></div>
+    <div class="card-head"><h2><span class="num">2</span>퇴직 상세 리스트</h2><span class="unit" id="detailUnit">최근 퇴직자 8건 · 전체 176건 중 표본</span></div>
+    <div class="filterbar">
+      <select id="fOrg"><option value="">조직 전체</option></select>
+      <select id="fCore"><option value="">핵심인재 전체</option><option value="Y">핵심인재 Y</option><option value="N">핵심인재 N</option></select>
+      <select id="fLead"><option value="">직책자 전체</option><option value="Y">직책자 Y</option><option value="N">직책자 N</option></select>
+      <select id="fAx"><option value="">AX역량 전체</option><option value="Y">AX역량 Y</option><option value="N">AX역량 N</option></select>
+      <select id="fReason"><option value="">퇴직사유 전체</option></select>
+      <button class="filter-reset" id="fReset" type="button">필터 초기화</button>
+      <span class="filter-count" id="fCount"></span>
+    </div>
     <div class="table-scroll">
       <table class="detail">
         <thead><tr>
@@ -358,6 +411,28 @@
       '<div class="val">'+row.v+'명<span class="pct">'+(row.p!==undefined?(' · '+row.p+'%'):'')+'</span></div></div>';
   }
 
+  // ---------- seeded RNG for reproducible mock rosters ----------
+  function mulberry32(a){
+    return function(){
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  var rnd = mulberry32(20260708);
+  function pick(arr){ return arr[Math.floor(rnd()*arr.length)]; }
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){ var j=Math.floor(rnd()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+  function buildCountArray(counts){
+    var out=[];
+    counts.forEach(function(c){ for(var i=0;i<c[1];i++) out.push(c[0]); });
+    return shuffle(out);
+  }
+
   // ① org table
   var orgs = [
     ["Enterprise부문",9,12,47,55],
@@ -374,23 +449,126 @@
     ["CX센터",0,0,2,2],
     ["CHO",0,0,1,1]
   ];
+
+  // ⑤/⑥ taxonomy reused to build individual rosters
+  var titleCounts = [['사원',12],['선임',58],['책임Ⅰ',41],['책임Ⅱ',37],['수석',22],['그룹장/임원',6]];
+  var reasonCounts = [['타사이직',61],['개인사업',15],['유학·학업',11],['가사·육아·건강',14],['기타',6],
+    ['희망퇴직',38],['전출',12],['정년퇴직',9],['계약만료',6],['직무재배치',4]];
+  var titlesGlobal = buildCountArray(titleCounts);
+  var reasonGlobal = buildCountArray(reasonCounts);
+  var coreGlobal = shuffle(Array(9).fill(true).concat(Array(167).fill(false)));
+  var leadGlobal = shuffle(Array(14).fill(true).concat(Array(162).fill(false)));
+  var axGlobal = shuffle(Array(21).fill(true).concat(Array(155).fill(false)));
+
+  var surnames = ['김','이','박','최','정','강','조','윤','장','임','한','오','서','신','권','황','안','송','전','홍','유','고','문','양','손','배'];
+  var syl1 = ['민','서','지','현','우','윤','수','영','호','태','아','연','하','율','찬','도','예','시','채','성','준','재','은','효'];
+  var syl2 = ['준','호','우','진','아','원','빈','율','희','현','서','민','영','수','경','은','린','재','훈','아'];
+
+  var teamsByOrg = {
+    "Enterprise부문": ["B2B솔루션담당 AX솔루션팀","법인영업담당 대기업영업팀","클라우드사업담당 클라우드플랫폼팀","스마트팩토리담당 스마트팩토리팀","공공사업담당 공공사업1팀"],
+    "NW부문": ["네트워크운영담당 코어망운영팀","네트워크운영담당 액세스망운영팀","네트워크기획담당 망설계팀","5G인프라담당 무선망운영팀"],
+    "정보보안부문": ["보안운영담당 SOC팀","보안기획담당 보안정책팀","정보보호담당 개인정보보호팀","침해대응담당 CERT팀"],
+    "CTO": ["AI플랫폼담당 AI Foundation팀","데이터플랫폼담당 빅데이터팀","서비스개발담당 플랫폼개발팀","클라우드인프라담당 인프라운영팀"],
+    "Consumer부문": ["Consumer기획담당 Consumer기획팀","홈사업그룹 광고사업팀","Consumer사업기획담당 STUDIO X+U TF","미디어사업담당 콘텐츠제휴팀"],
+    "법무실": ["법무담당 계약심사팀","법무담당 소송관리팀","컴플라이언스담당 내부통제팀"],
+    "위기관리센터": ["위기대응담당 이슈관리팀","리스크관리담당 리스크분석팀"],
+    "CISO": ["정보보안전략담당 보안전략팀","보안관제담당 관제운영팀"],
+    "CESO": ["ESG경영담당 지속가능경영팀","안전보건담당 산업안전팀"],
+    "CFO/CRO": ["재무기획담당 재무기획팀","리스크관리담당 신용리스크팀","회계담당 결산회계팀"],
+    "윤리컴플라이언스실": ["윤리경영담당 윤리경영팀"],
+    "CX센터": ["고객경험담당 CX전략팀"],
+    "CHO": ["인사담당 인재개발팀"]
+  };
+
+  var rosterByOrg = {};
+  var gi = 0;
+  orgs.forEach(function(o){
+    var name=o[0], cur=o[1], total=o[3];
+    var monthArr = [];
+    for(var i=0;i<cur;i++) monthArr.push(7);
+    for(var i=0;i<total-cur;i++) monthArr.push(1+Math.floor(rnd()*6));
+    monthArr = shuffle(monthArr);
+    var list = [];
+    for(var i=0;i<total;i++){
+      list.push({
+        name: pick(surnames)+pick(syl1)+pick(syl2),
+        title: titlesGlobal[gi],
+        team: pick(teamsByOrg[name] || ["조직운영팀"]),
+        month: monthArr[i],
+        reason: reasonGlobal[gi],
+        core: coreGlobal[gi],
+        lead: leadGlobal[gi],
+        ax: axGlobal[gi]
+      });
+      gi++;
+    }
+    rosterByOrg[name] = list;
+  });
+
+  function rosterFlags(p){
+    var out=[];
+    if(p.core) out.push('<span class="flag core">핵심</span>');
+    if(p.lead) out.push('<span class="flag lead">직책자</span>');
+    if(p.ax) out.push('<span class="flag ax">AX</span>');
+    if(!p.core && !p.lead && !p.ax) out.push('<span style="color:var(--text-muted);font-size:12px;">-</span>');
+    return '<div class="roster-flags">'+out.join('')+'</div>';
+  }
+
+  function renderRosterPanel(orgName, total){
+    var list = rosterByOrg[orgName] || [];
+    if(list.length===0){
+      return '<div class="roster-panel"><span style="color:var(--text-muted);font-size:13px;">누적 퇴직자가 없습니다.</span></div>';
+    }
+    var rowsHtml = list.map(function(p){
+      var nameCls = p.linked ? 'roster-name linked' : 'roster-name';
+      var nameAttr = p.linked ? ' onclick="scrollToDetail(\''+p.detailId+'\')" title="상세 리스트에서 보기"' : '';
+      return '<tr><td class="'+nameCls+'"'+nameAttr+'>'+p.name+(p.linked?' 🔍':'')+'</td>'+
+        '<td>'+p.title+'</td><td>'+p.team+'</td>'+
+        '<td>2026-'+String(p.month).padStart(2,'0')+'</td>'+
+        '<td>'+p.reason+'</td><td>'+rosterFlags(p)+'</td></tr>';
+    }).join('');
+    return '<div class="roster-panel">'+
+      '<div class="rp-head">'+orgName+' 누적 퇴직자 명단 · 총 '+total+'명</div>'+
+      '<table class="roster"><thead><tr><th>이름</th><th>호칭</th><th>팀</th><th>퇴직월</th><th>퇴직유형</th><th>비고</th></tr></thead>'+
+      '<tbody>'+rowsHtml+'</tbody></table></div>';
+  }
+
   var maxM = Math.max.apply(null, orgs.map(function(o){return o[2];}));
-  var rows = orgs.map(function(o){
+  var orgRowsHtml = orgs.map(function(o, idx){
     var name=o[0], cur=o[1], prev=o[2], curY=o[3], prevY=o[4];
     var d1 = prev===0 ? 0 : Math.round((cur-prev)/prev*1000)/10;
     var d2 = prevY===0 ? 0 : Math.round((curY-prevY)/prevY*1000)/10;
     function tag(d){ if(d===0) return '<span class="delta-tag" style="color:var(--text-muted);">-</span>';
       return '<span class="delta-tag '+(d<0?'good':'bad')+'">'+(d<0?'▼':'▲')+' '+Math.abs(d)+'%</span>'; }
-    return '<tr><td class="name">'+name+'</td>'+
+    var head = '<tr class="org-row" onclick="toggleRoster('+idx+')">'+
+      '<td class="name"><span class="chev" id="chev-'+idx+'">▸</span>'+name+'</td>'+
       '<td class="num">'+cur+'명</td>'+
-      '<td><div class="bar-mini"><span style="width:'+(prev===0?0:Math.round(cur/maxM*100))+'%;"></span></div></td>'+
       '<td class="num">'+prev+'명</td>'+
       '<td class="num">'+tag(d1)+'</td>'+
       '<td class="num">'+curY+'명</td>'+
       '<td class="num">'+prevY+'명</td>'+
       '<td class="num">'+tag(d2)+'</td></tr>';
+    var roster = '<tr class="roster-tr" id="roster-'+idx+'" style="display:none;"><td colspan="7">'+
+      renderRosterPanel(name, curY)+'</td></tr>';
+    return head + roster;
   });
-  document.querySelector('#orgTable tbody').innerHTML = rows.join('');
+  document.getElementById('orgTableBody').innerHTML = orgRowsHtml.join('');
+
+  window.toggleRoster = function(idx){
+    var row = document.getElementById('roster-'+idx);
+    var chev = document.getElementById('chev-'+idx);
+    var open = row.style.display !== 'none';
+    row.style.display = open ? 'none' : '';
+    chev.classList.toggle('open', !open);
+  };
+
+  window.scrollToDetail = function(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.add('flash');
+    setTimeout(function(){ el.classList.remove('flash'); }, 1800);
+  };
 
   // ⑤ type breakdown
   var voluntary = [
@@ -401,9 +579,9 @@
   ];
   var allType = voluntary.concat(involuntary);
   var maxType = Math.max.apply(null, allType.map(function(x){return x.v;}));
-  var typeHtml = '<div style="font-size:11px;font-weight:800;color:var(--text-muted);margin-bottom:2px;">자발 (107명)</div>' +
+  var typeHtml = '<div style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:2px;">자발 (107명)</div>' +
     voluntary.map(function(x){return bar({l:x.l, v:x.v, max:maxType, c:'var(--brand)'});}).join('') +
-    '<div style="font-size:11px;font-weight:800;color:var(--text-muted);margin:10px 0 2px;">비자발 (69명)</div>' +
+    '<div style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin:10px 0 2px;">비자발 (69명)</div>' +
     involuntary.map(function(x){return bar({l:x.l, v:x.v, max:maxType, c:'var(--navy)'});}).join('');
   document.getElementById('typeBarlist').innerHTML = typeHtml;
   document.getElementById('typeDonut').style.background =
@@ -451,97 +629,180 @@
   }
   var details = [
     {
+      id:'detail-1', orgTop:'Consumer부문',
       org:'Consumer부문<br>홈사업그룹<br>광고사업담당<br>광고사업팀',
       who:'박준호 책임(8)', meta:'43세, 남 · 경력 10년 신입',
       hist:"'25.01~'25.05  광고사업팀\n'24.01~'24.12  FAST사업팀\n'22.01~'23.12  미디어DX챕터\n'19.07~'21.12  서비스BP운영팀(Consumer부문)\n'18.01~'19.06  AIoT제휴상품2팀(스마트홈부문)\n'16.01~'17.12  FC전략팀(FC부문)\n'11.01~'15.12  디지털사이니지팀\n'10.10~'11.01  그룹영업2팀(BS본부)",
       eval:'3.3<br><span style="color:var(--text-muted);font-weight:600;">(B/A/B)</span>',
       edu:"이전 경력 없음\n'05.03~'09.02 서강대 정치외교(석)\n'00.03~'05.02 서강대 영미문화(학)",
-      flags:flags(false,false,false),
+      core:false, lead:false, ax:false, reasonCat:'가사·육아·건강',
       sum:'결혼/출산/육아/가족 돌봄 등의 개인사',
       detail:'[퇴직 사유]\n- 배우자 주재원(호주) 장기 발령에 따른 퇴직\n : 휴직 가능여부에 대해 살펴보았으나 자녀가 없어 휴직 가능한 방법이 없었음.\n*퇴직발령 상세 : 일반퇴직(유학·학업)'
     },
     {
+      id:'detail-2', orgTop:'Consumer부문',
       org:'Consumer부문<br>Consumer사업기획담당<br>Consumer기획팀',
       who:'배상진 선임(6)', meta:'39세, 남 · 경력 입사(2015)',
       hist:"'15.09~'25.12  Consumer기획담당 Consumer기획팀\n총 근속 123개월",
       eval:'2.9<br><span style="color:var(--text-muted);font-weight:600;">(B/B/C)</span>',
       edu:"이전 경력 없음\n고려대 정치외교학(학)",
-      flags:flags(false,false,false),
+      core:false, lead:false, ax:false, reasonCat:'전출',
       sum:'전출 (지주사 전출)',
       detail:'[퇴직 사유]\n- 그룹 지주사 조직개편에 따른 인력 전출\n*퇴직발령 상세 : 전출 &gt; 지주사전출'
     },
     {
+      id:'detail-3', orgTop:'Consumer부문',
       org:'Consumer부문<br>Consumer기획담당<br>STUDIO X+U TF',
       who:'이미영 책임Ⅱ(13)', meta:'51세, 여 · 경력 입사(2022)',
       hist:"'22.12~'26.01  Consumer기획담당 STUDIO X+U TF\n총 근속 37개월",
       eval:'3.1<br><span style="color:var(--text-muted);font-weight:600;">(B/A/B)</span>',
       edu:"미디어로그\n서울과학기술대학교 산업공학과(학)",
-      flags:flags(false,false,false),
+      core:false, lead:false, ax:false, reasonCat:'희망퇴직',
       sum:'희망퇴직',
       detail:'[퇴직 사유]\n- 조직 개편에 따른 희망퇴직 신청 및 승인\n*퇴직발령 상세 : 희망퇴직'
     },
     {
+      id:'detail-4', orgTop:'CTO',
       org:'CTO<br>AI플랫폼담당<br>AI Foundation팀',
       who:'정하늘 수석(17)', meta:'46세, 남 · 경력 입사(2016)',
       hist:"'21.01~'26.06  AI플랫폼담당 AI Foundation팀\n'16.03~'20.12  데이터플랫폼담당 빅데이터팀",
       eval:'4.0<br><span style="color:var(--text-muted);font-weight:600;">(S/A/A)</span>',
       edu:"삼성SDS AI연구소 (4년)\nKAIST 전산학(석)",
-      flags:flags(true,false,true),
+      core:true, lead:false, ax:true, reasonCat:'타사이직',
       sum:'타사이직 (보상/처우)',
       detail:'[퇴직 사유]\n- 경쟁사 대비 낮은 보상 수준 및 AI조직 리더 포지션 제안 수락\n- 잔류 조건으로 보상 재협상 시도했으나 예산 제약으로 성사되지 않음\n*이직처 : IT/플랫폼 대기업'
     },
     {
+      id:'detail-5', orgTop:'정보보안부문',
       org:'정보보안부문<br>보안운영담당<br>SOC팀',
       who:'한소민 사원(1)', meta:'27세, 여 · 신입 입사(2025.11)',
       hist:"'25.11~'26.07  보안운영담당 SOC팀\n총 근속 8개월",
       eval:'평가이력 없음<br><span style="color:var(--text-muted);font-weight:600;">(입사 1년 미만)</span>',
       edu:"이전 경력 없음\n이화여대 정보보호학과(학)",
-      flags:flags(false,false,false),
+      core:false, lead:false, ax:false, reasonCat:'기타',
       sum:'직무 미스매치 (조기퇴사)',
       detail:'[퇴직 사유]\n- 채용 시 기대했던 정책기획 업무 대신 24시간 교대 모니터링 업무에 배치되어 적응에 어려움을 겪음\n*퇴직발령 상세 : 일반퇴직(직무부적응)'
     },
     {
+      id:'detail-6', orgTop:'법무실',
       org:'법무실<br>법무담당<br>계약심사팀',
       who:'최영수 수석(28)', meta:'60세, 남 · 경력 입사(1998)',
       hist:"'05.01~'26.06  법무담당 계약심사팀\n'98.03~'04.12  법무팀",
       eval:'3.5<br><span style="color:var(--text-muted);font-weight:600;">(A/B/A)</span>',
       edu:"이전 경력 없음\n서울대 법학(학)",
-      flags:flags(false,false,false),
+      core:false, lead:false, ax:false, reasonCat:'정년퇴직',
       sum:'정년퇴직',
       detail:'[퇴직 사유]\n- 만 60세 정년 도래에 따른 정년퇴직\n- 후임자 계약심사 업무 인수인계 완료\n*퇴직발령 상세 : 정년퇴직'
     },
     {
+      id:'detail-7', orgTop:'NW부문',
       org:'NW부문<br>네트워크운영담당<br>코어망운영팀',
       who:'강민재 책임Ⅰ(10)', meta:'38세, 남 · 신입 입사(2016)',
       hist:"'19.01~'26.05  네트워크운영담당 코어망운영팀\n'16.01~'18.12  네트워크운영담당 액세스망운영팀",
       eval:'3.0<br><span style="color:var(--text-muted);font-weight:600;">(B/B/B)</span>',
       edu:"이전 경력 없음\n한양대 전자공학(학)",
-      flags:flags(false,false,false),
+      core:false, lead:false, ax:false, reasonCat:'개인사업',
       sum:'개인사업 준비',
       detail:'[퇴직 사유]\n- 네트워크 유지보수 스타트업 창업을 위한 자진 퇴사\n*퇴직발령 상세 : 일반퇴직(개인사업)'
     },
     {
+      id:'detail-8', orgTop:'Enterprise부문',
       org:'Enterprise부문<br>B2B솔루션담당<br>AX솔루션팀(팀장)',
       who:'오지훈 책임Ⅱ(15)', meta:'44세, 남 · 경력 입사(2019)',
       hist:"'23.03~'26.06  B2B솔루션담당 AX솔루션팀장\n'19.01~'23.02  B2B솔루션담당 스마트팩토리팀",
       eval:'3.8<br><span style="color:var(--text-muted);font-weight:600;">(A/A/B)</span>',
       edu:"글로벌 IT컨설팅펌 (6년)\n연세대 산업공학(학)",
-      flags:flags(true,true,true),
+      core:true, lead:true, ax:true, reasonCat:'타사이직',
       sum:'타사이직 (커리어 성장)',
       detail:'[퇴직 사유]\n- 글로벌 컨설팅펌 AI Transformation 담당 파트너급 포지션 제안 수락\n- 리텐션 면담 진행했으나 본인 커리어 방향성에 따른 확고한 이직 의사 확인\n*이직처 : 컨설팅펌'
     }
   ];
+
+  // link the rich sample rows into their org roster, replacing one generated slot
+  var monthByDetailId = {'detail-1':5,'detail-2':12,'detail-3':1,'detail-4':6,'detail-5':7,'detail-6':6,'detail-7':5,'detail-8':6};
+  details.forEach(function(d){
+    var list = rosterByOrg[d.orgTop];
+    if(!list || list.length===0) return;
+    list.pop();
+    var titleMatch = d.who.match(/([가-힣Ⅰ-Ⅴ]+)\(/);
+    list.push({
+      name: d.who.split(' ')[0],
+      title: titleMatch ? titleMatch[1] : d.who.split(' ')[1],
+      team: d.org.split('<br>').pop(),
+      month: monthByDetailId[d.id] || 7,
+      reason: d.reasonCat,
+      core: d.core, lead: d.lead, ax: d.ax,
+      linked: true, detailId: d.id
+    });
+  });
+  // re-render org table now rosters include linked people
+  document.getElementById('orgTableBody').innerHTML = orgs.map(function(o, idx){
+    var name=o[0], cur=o[1], prev=o[2], curY=o[3], prevY=o[4];
+    var d1 = prev===0 ? 0 : Math.round((cur-prev)/prev*1000)/10;
+    var d2 = prevY===0 ? 0 : Math.round((curY-prevY)/prevY*1000)/10;
+    function tag(d){ if(d===0) return '<span class="delta-tag" style="color:var(--text-muted);">-</span>';
+      return '<span class="delta-tag '+(d<0?'good':'bad')+'">'+(d<0?'▼':'▲')+' '+Math.abs(d)+'%</span>'; }
+    var head = '<tr class="org-row" onclick="toggleRoster('+idx+')">'+
+      '<td class="name"><span class="chev" id="chev-'+idx+'">▸</span>'+name+'</td>'+
+      '<td class="num">'+cur+'명</td>'+
+      '<td class="num">'+prev+'명</td>'+
+      '<td class="num">'+tag(d1)+'</td>'+
+      '<td class="num">'+curY+'명</td>'+
+      '<td class="num">'+prevY+'명</td>'+
+      '<td class="num">'+tag(d2)+'</td></tr>';
+    var roster = '<tr class="roster-tr" id="roster-'+idx+'" style="display:none;"><td colspan="7">'+
+      renderRosterPanel(name, curY)+'</td></tr>';
+    return head + roster;
+  }).join('');
+
   document.getElementById('detailBody').innerHTML = details.map(function(d){
-    return '<tr>'+
+    return '<tr id="'+d.id+'" data-org="'+d.orgTop+'" data-core="'+(d.core?'Y':'N')+'" data-lead="'+(d.lead?'Y':'N')+'" data-ax="'+(d.ax?'Y':'N')+'" data-reason="'+d.reasonCat+'">'+
       '<td>'+d.org+'</td>'+
       '<td class="who"><b>'+d.who+'</b><div class="meta">'+d.meta+'</div></td>'+
       '<td class="hist">'+d.hist+'</td>'+
       '<td>'+d.eval+'</td>'+
       '<td class="hist">'+d.edu+'</td>'+
-      '<td>'+d.flags+'</td>'+
+      '<td>'+flags(d.core,d.lead,d.ax)+'</td>'+
       '<td class="reason-sum">'+d.sum+'</td>'+
       '<td class="reason-detail hist">'+d.detail+'</td>'+
       '</tr>';
   }).join('');
+
+  // filters for detail list
+  var orgOptions = [];
+  details.forEach(function(d){ if(orgOptions.indexOf(d.orgTop)===-1) orgOptions.push(d.orgTop); });
+  document.getElementById('fOrg').innerHTML += orgOptions.map(function(o){return '<option value="'+o+'">'+o+'</option>';}).join('');
+
+  var reasonOptions = [];
+  details.forEach(function(d){ if(reasonOptions.indexOf(d.reasonCat)===-1) reasonOptions.push(d.reasonCat); });
+  document.getElementById('fReason').innerHTML += reasonOptions.map(function(r){return '<option value="'+r+'">'+r+'</option>';}).join('');
+
+  function applyFilters(){
+    var fo = document.getElementById('fOrg').value;
+    var fc = document.getElementById('fCore').value;
+    var fl = document.getElementById('fLead').value;
+    var fa = document.getElementById('fAx').value;
+    var fr = document.getElementById('fReason').value;
+    var rows = document.querySelectorAll('#detailBody tr');
+    var shown = 0;
+    rows.forEach(function(tr){
+      var ok = (!fo || tr.dataset.org===fo) &&
+        (!fc || tr.dataset.core===fc) &&
+        (!fl || tr.dataset.lead===fl) &&
+        (!fa || tr.dataset.ax===fa) &&
+        (!fr || tr.dataset.reason===fr);
+      tr.classList.toggle('hidden-row', !ok);
+      if(ok) shown++;
+    });
+    document.getElementById('fCount').textContent = shown + ' / ' + rows.length + '건 표시중';
+  }
+  ['fOrg','fCore','fLead','fAx','fReason'].forEach(function(id){
+    document.getElementById(id).addEventListener('change', applyFilters);
+  });
+  document.getElementById('fReset').addEventListener('click', function(){
+    ['fOrg','fCore','fLead','fAx','fReason'].forEach(function(id){ document.getElementById(id).value=''; });
+    applyFilters();
+  });
+  applyFilters();
 })();
 </script>
