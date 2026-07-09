@@ -221,7 +221,7 @@
   <!-- 데이터 업로드 -->
   <div class="card" id="uploadPanel">
     <div class="card-head"><h2>데이터 업로드</h2><span class="unit" id="dataSourceLabel">현재: 샘플(Mock) 데이터</span></div>
-    <div class="card-desc">퇴직자 데이터 CSV(또는 TSV) 파일을 업로드하면 아래 대시보드 전체가 업로드한 데이터 기준으로 다시 계산됩니다. 필요한 핵심 컬럼: 부문, 이름, 호칭, 담당/팀, 입사일, 마지막재직일, 퇴직발령유형/사유/요약, 퇴직유형대분류/중분류, 핵심인재, AX역량보유여부, 이직처명, <b>직군, 직종</b>(⑥ 직무별 현황에 반영) 등. 파일은 UTF-8 인코딩이어야 합니다.</div>
+    <div class="card-desc">퇴직자 데이터 CSV(또는 TSV) 파일을 업로드하면 아래 대시보드 전체가 업로드한 데이터 기준으로 다시 계산됩니다. 인식하는 핵심 컬럼: 부문(정리), 이름, 호칭, 담당/팀, 직군/직종, 입사일, 마지막재직일/퇴직일, 퇴직발령유형/사유, 퇴직유형대/중/소/보고분류, 핵심인재, AX역량보유여부, 이직처명/대분류/중분류, 경력채용/전입(이전직장), 생년월일, 자발퇴직자 면담결과요약/상세 등. 컬럼 순서는 상관없고 일부가 없어도 동작합니다. 파일은 UTF-8 인코딩이어야 합니다.</div>
     <div class="filterbar" style="margin-bottom:0;">
       <label class="upload-btn" for="csvFile">CSV 파일 선택</label>
       <input type="file" id="csvFile" accept=".csv,.tsv,.txt" style="display:none;">
@@ -660,13 +660,13 @@
     empId:['통합사번','사번'], name:['이름','성명'], divisionRaw:['부문정리'], division:['부문'],
     group:['그룹'], dept:['담당'], team:['팀'], title:['호칭'], titleSummary:['호칭요약'],
     position:['직책'], job:['직무'], jobConverted:['직무(변환)','직무변환'], jobFamily:['직군'], jobCategory:['직종'],
-    hireDateRaw:['입사일'], lastActiveDateRaw:['마지막재직일','퇴직일'], tenureMonthsRaw:['근무개월수','근속개월수'],
+    hireDateRaw:['입사일'], lastActiveDateRaw:['마지막재직일'], retireDateRaw:['퇴직일'], tenureMonthsRaw:['근무개월수','근속개월수'],
     retireOrderType:['퇴직발령유형'], retireOrderReason:['퇴직발령사유'], retireOrderSummary:['퇴직발령요약'],
     retireTypeMajorRaw:['퇴직유형대분류'], retireTypeMidRaw:['퇴직유형중분류'], retireTypeMinorRaw:['퇴직유형소분류'], retireTypeReportRaw:['퇴직유형보고분류'],
     destName:['이직처명'], destMajorRaw:['이직처대분류'], destMidRaw:['이직처중분류'],
     coreTalentRaw:['핵심인재'], axRaw:['AX역량보유여부','AX역량보유'],
     birthDateRaw:['생년월일'], gender:['성별'], education:['최종학력'], university:['대학'], major:['전공'],
-    prevCompany:['이전직장'], voluntarySummary:['자발퇴직자면담결과요약'], voluntaryDetail:['자발퇴직자면담결과상세']
+    prevCompany:['이전직장','경력채용/전입'], voluntarySummary:['자발퇴직자면담결과요약'], voluntaryDetail:['자발퇴직자면담결과상세']
   };
   function buildHeaderIndex(headerRow){
     var norm = headerRow.map(normHeader);
@@ -678,13 +678,19 @@
     return idx;
   }
   function cellAt(idx,key,arr){ var i=idx[key]; return (i==null || i>=arr.length) ? '' : String(arr[i]==null?'':arr[i]).trim(); }
-  function stripNum(s){ return String(s||'').replace(/^\s*\d+\.\s*/,'').trim(); }
+  function blankish(v){ v = String(v==null?'':v).trim(); return !v || v==='0'; }
+  function firstNonBlank(){ for(var i=0;i<arguments.length;i++){ if(!blankish(arguments[i])) return arguments[i]; } return null; }
+  function stripNum(s){ return String(s||'').replace(/^\s*\d+(-\d+)?\.\s*/,'').trim(); }
   function truthy(s){ return ['1','Y','y','예','O','o','TRUE','true','참'].indexOf(String(s==null?'':s).trim())>=0; }
   function parseDateLoose(s){
     s = String(s==null?'':s).trim();
-    if(!s) return null;
+    if(!s || s==='0') return null;
     var m = s.match(/^(\d{4})[-.\/](\d{1,2})[-.\/](\d{1,2})/);
     if(m) return new Date(Number(m[1]), Number(m[2])-1, Number(m[3]));
+    if(/^\d{4,6}$/.test(s)){
+      var serial = parseInt(s,10);
+      if(serial>=1 && serial<=60000) return new Date(Date.UTC(1899,11,30) + serial*86400000);
+    }
     var t = Date.parse(s);
     return isNaN(t) ? null : new Date(t);
   }
@@ -695,11 +701,13 @@
     var tenureMonths = tenureRaw ? parseInt(tenureRaw.replace(/[^0-9]/g,''),10) : null;
     if(tenureMonths!=null && isNaN(tenureMonths)) tenureMonths = null;
     return {
-      name:g('name'), empId:g('empId'), division: stripNum(g('division')) || stripNum(g('divisionRaw')),
+      name:g('name'), empId:g('empId'),
+      division: !blankish(g('division')) ? stripNum(g('division')) : stripNum(g('divisionRaw')),
       group:g('group'), dept:g('dept'), team:g('team'), title:g('title'), titleSummary: g('titleSummary')||g('title'),
       position:g('position'), job:g('job'), jobConverted: g('jobConverted')||g('job'),
       jobFamily:g('jobFamily'), jobCategory:g('jobCategory'),
-      hireDate: parseDateLoose(g('hireDateRaw')), lastActiveDate: parseDateLoose(g('lastActiveDateRaw')),
+      hireDate: parseDateLoose(g('hireDateRaw')),
+      lastActiveDate: parseDateLoose(g('retireDateRaw')) || parseDateLoose(g('lastActiveDateRaw')),
       tenureMonths: tenureMonths,
       retireOrderType:g('retireOrderType'), retireOrderReason:g('retireOrderReason'), retireOrderSummary:g('retireOrderSummary'),
       retireTypeMajor: stripNum(g('retireTypeMajorRaw')), retireTypeMid: stripNum(g('retireTypeMidRaw')),
@@ -745,18 +753,20 @@
     var ytdRows = valid.filter(function(r){ var d=r.lastActiveDate; return d.getFullYear()===curYear && (d.getMonth()+1)<=curMonth; });
 
     var allPeople = ytdRows.map(function(r, i){
-      var reason = r.retireTypeMid || r.retireTypeReport || r.retireOrderType || '기타';
-      var lead = !!(r.position && r.position!=='0' && r.position.trim()!=='');
+      var reason = firstNonBlank(r.retireTypeReport, r.retireTypeMinor, r.retireTypeMid, r.retireOrderReason) || '기타';
+      var isJobChange = reason.indexOf('이직')>=0 || reason.indexOf('전직')>=0;
+      var lead = !blankish(r.position);
       var tenureMo = r.tenureMonths!=null ? r.tenureMonths : (r.hireDate ? monthsBetween(r.hireDate, r.lastActiveDate) : null);
       return {
         id:'row-'+i, detailId:'row-'+i, linked:true,
-        name:r.name, org: r.division || '미분류', title: r.titleSummary || r.title || '-',
-        team: [r.dept, r.team].filter(function(x){return x && x!=='0';}).join(' ') || '-',
+        name:r.name, org: r.division || '미분류', title: firstNonBlank(r.titleSummary, r.title) || '-',
+        team: [r.dept, r.team].filter(function(x){return !blankish(x);}).join(' ') || '-',
         job:r.job, jobConverted:r.jobConverted, jobFamily:r.jobFamily, jobCategory:r.jobCategory,
         dateLabel: fmtMonth(r.lastActiveDate), reason: reason, major: guessMajor(r),
         core: r.coreTalent, lead: lead, ax: r.axCapability,
         hireYear: r.hireDate ? r.hireDate.getFullYear() : null, hireType:'-',
-        destCompany: (reason.indexOf('이직')>=0) ? (r.destMajor || r.destName || null) : null,
+        destCompany: isJobChange ? firstNonBlank(r.destName, r.destMid, r.destMajor) : null,
+        destGroup: isJobChange ? firstNonBlank(r.destMid, r.destMajor, r.destName) : null,
         tenureMonths: tenureMo, early: tenureMo!=null && tenureMo<12,
         raw:r
       };
@@ -770,8 +780,8 @@
 
     var jobMap = {};
     allPeople.forEach(function(p){
-      var grp = p.jobFamily || p.job || '미기재';
-      var lbl = p.jobCategory || p.jobConverted || p.job || '미기재';
+      var grp = firstNonBlank(p.jobFamily, p.job) || '미기재';
+      var lbl = firstNonBlank(p.jobCategory, p.jobConverted, p.job) || '미기재';
       var key = grp+'|'+lbl;
       jobMap[key] = (jobMap[key]||0)+1;
     });
@@ -808,7 +818,6 @@
       var tenureLabel = p.tenureMonths!=null ? (Math.floor(p.tenureMonths/12)+'년 '+(p.tenureMonths%12)+'개월') : '-';
       var histLines = [ fmtFull(r.hireDate)+' ~ '+fmtFull(r.lastActiveDate), esc(p.team) ];
       if(p.tenureMonths!=null) histLines.push('총 근속 '+p.tenureMonths+'개월');
-      function blankish(v){ v = String(v==null?'':v).trim(); return !v || v==='0'; }
       var reasonDetailLines = [];
       if(!blankish(r.voluntaryDetail)) reasonDetailLines.push(esc(r.voluntaryDetail));
       else if(!blankish(r.retireOrderReason)) reasonDetailLines.push(esc(r.retireOrderReason));
@@ -836,7 +845,7 @@
         voluntary: groupCount(voluntaryPeople, function(p){ return p.reason; }),
         involuntary: groupCount(involuntaryPeople, function(p){ return p.reason; }) },
       titleBreakdown: groupCount(allPeople, function(p){ return p.title; }),
-      destBreakdown: groupCount(allPeople.filter(function(p){ return p.destCompany; }), function(p){ return p.destCompany; }),
+      destBreakdown: groupCount(allPeople.filter(function(p){ return p.destGroup; }), function(p){ return p.destGroup; }),
       jobBreakdown: jobBreakdown,
       earlyAttrition: earlyAttrition,
       details: details
