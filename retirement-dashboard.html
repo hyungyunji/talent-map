@@ -82,6 +82,23 @@
   .risk-chip .val{font-size:23px;font-weight:800;margin-top:4px;}
   .risk-chip .pct{font-size:12.5px;color:var(--text-muted);font-weight:600;}
 
+  .vol-compare{display:flex;flex-direction:column;gap:8px;justify-content:center;height:100%;padding-top:2px;}
+  .vol-compare .vc-row{display:grid;grid-template-columns:52px 1fr 92px;align-items:center;gap:8px;}
+  .vol-compare .vc-lbl{font-size:12.5px;font-weight:700;color:var(--text-secondary);}
+  .vol-compare .vc-track{position:relative;height:16px;border-radius:4px;background:var(--gridline);overflow:hidden;}
+  .vol-compare .vc-fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px;}
+  .vol-compare .vc-val{font-size:13px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums;}
+  .vol-compare .vc-val .p{color:var(--text-muted);font-weight:600;font-size:11.5px;margin-left:2px;}
+
+  .trend-wrap{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+  .trend-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
+  #trendChart svg{width:100%;height:auto;display:block;overflow:visible;}
+  #trendChart .tc-line{fill:none;stroke-width:2;}
+  #trendChart .tc-line.dashed{stroke-dasharray:5 4;}
+  #trendChart .tc-dot{stroke:var(--surface);stroke-width:2;}
+  #trendChart .tc-val{font-size:11px;font-weight:800;font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;}
+  #trendChart .tc-xlabel{font-size:11.5px;font-weight:700;fill:var(--text-secondary);}
+
   /* org table */
   table.org{width:100%;border-collapse:collapse;font-size:15px;}
   table.org thead th{text-align:left;color:var(--text-secondary);font-weight:800;font-size:12.5px;
@@ -230,8 +247,8 @@
         <div class="stat-delta good" id="sumYtdDelta">▼ 13.3% <span class="stat-vs">전년누적 203명</span></div>
       </div>
       <div class="stat-tile">
-        <div class="stat-label">퇴직유형 TOP 3 <span style="font-weight:600;color:var(--text-muted);">(누적 기준)</span></div>
-        <div id="sumTopTypes"></div>
+        <div class="stat-label">자발 vs 비자발 <span style="font-weight:600;color:var(--text-muted);">(누적 기준)</span></div>
+        <div id="sumVolCompare" class="vol-compare"></div>
       </div>
     </div>
     <div class="risk-row" style="margin-top:14px;">
@@ -239,6 +256,18 @@
       <div class="risk-chip"><span class="dot" style="background:var(--warning);"></span><span class="lbl">직책자</span><div class="val" id="riskLeadVal">14명</div><div class="pct" id="riskLeadPct">전체의 8.0%</div></div>
       <div class="risk-chip"><span class="dot" style="background:var(--navy);"></span><span class="lbl">AX역량보유</span><div class="val" id="riskAxVal">21명</div><div class="pct" id="riskAxPct">전체의 11.9%</div></div>
       <div class="risk-chip"><span class="dot" style="background:var(--brand);"></span><span class="lbl">조기퇴사(1년내)</span><div class="val" id="riskEarlyVal">18명</div><div class="pct" id="riskEarlyPct">전체의 10.2%</div></div>
+    </div>
+    <div class="trend-wrap" id="trendWrap">
+      <div class="trend-head">
+        <div class="stat-label" style="margin-bottom:0;">3개년 퇴직율 트렌드 <span style="font-weight:600;color:var(--text-muted);">(전체 구성원 수 대비)</span></div>
+        <div class="legend" style="margin-bottom:0;" id="trendLegend">
+          <div class="item"><span class="sw" style="background:var(--brand);"></span>자발</div>
+          <div class="item"><span class="sw" style="background:var(--navy);"></span>비자발</div>
+          <div class="item"><span class="sw" style="background:var(--text-muted);border-radius:0;height:2px;width:14px;"></span>합계</div>
+        </div>
+      </div>
+      <div id="trendChart"></div>
+      <div class="footnote" id="trendFootnote" style="margin-top:6px;"></div>
     </div>
   </div>
 
@@ -569,6 +598,16 @@
       summary:{ thisMonth:19, lastMonth:25, ytd:107, lastYtd:123 },
       orgs: orgs,
       allPeople: allPeople,
+      yearlyTrend:{
+        years:[2024,2025,2026],
+        headcounts:{2024:6336,2025:6075,2026:6060},
+        byYear:{
+          2024:{ vol:249, invol:161, total:410, volRate:3.9, involRate:2.5, totalRate:6.5 },
+          2025:{ vol:213, invol:137, total:350, volRate:3.5, involRate:2.3, totalRate:5.8 },
+          2026:{ vol:183, invol:118, total:301, volRate:3.0, involRate:1.9, totalRate:5.0 }
+        },
+        footnote:'※ 전체 구성원 수: 2024년 6,336명 · 2025년 6,075명 · 2026년 6,060명 기준. 2026년은 1~7월 실적을 연환산한 값입니다.'
+      },
       typeBreakdown:{ voluntaryTotal: voluntary.reduce(function(s,x){return s+x.count;},0),
         involuntaryTotal: involuntary.reduce(function(s,x){return s+x.count;},0), voluntary:voluntary, involuntary:involuntary },
       titleBreakdown: groupCount(allPeople, function(p){ return p.title; }),
@@ -792,6 +831,7 @@
         ytd: ytdRows.filter(function(r){ return guessMajor(r)==='자발'; }).length,
         lastYtd: valid.filter(function(r){ var d=r.lastActiveDate; return guessMajor(r)==='자발' && d.getFullYear()===curYear-1 && (d.getMonth()+1)<=curMonth; }).length },
       orgs: orgs, allPeople: allPeople,
+      yearlyTrend: null,
       typeBreakdown:{ voluntaryTotal: voluntaryPeople.length, involuntaryTotal: involuntaryPeople.length,
         voluntary: groupCount(voluntaryPeople, function(p){ return p.reason; }),
         involuntary: groupCount(involuntaryPeople, function(p){ return p.reason; }) },
@@ -893,6 +933,51 @@
 
   function safeKey(k){ return String(k).replace(/[^a-zA-Z0-9가-힣]/g,'_'); }
 
+  function renderTrendChart(model){
+    var t = model.yearlyTrend;
+    var legendEl = document.getElementById('trendLegend');
+    var chartEl = document.getElementById('trendChart');
+    var footEl = document.getElementById('trendFootnote');
+    if(!t || !t.years || t.years.length===0){
+      legendEl.style.display = 'none';
+      chartEl.innerHTML = '<div class="empty-note" style="text-align:left;padding:8px 0 0;">연도별 전체 구성원 수 데이터가 없어 3개년 퇴직율 트렌드를 계산할 수 없습니다. (연도별 헤드카운트 정보가 필요합니다)</div>';
+      footEl.textContent = '';
+      return;
+    }
+    legendEl.style.display = '';
+    var years = t.years;
+    var series = [
+      {key:'total', label:'합계', color:'var(--text-muted)', dashed:true, labelDy:-10, values: years.map(function(y){ return t.byYear[y].totalRate; })},
+      {key:'vol', label:'자발', color:'var(--brand)', dashed:false, labelDy:-10, values: years.map(function(y){ return t.byYear[y].volRate; })},
+      {key:'invol', label:'비자발', color:'var(--navy)', dashed:false, labelDy:16, values: years.map(function(y){ return t.byYear[y].involRate; })}
+    ];
+    var allVals = series.reduce(function(a,s){ return a.concat(s.values); }, []);
+    var maxV = Math.max.apply(null, allVals.concat([1]));
+    var domainMax = Math.max(1, maxV*1.3);
+
+    var W=720, H=170, padL=8, padR=8, padT=24, padB=24;
+    var plotW = W-padL-padR, plotH = H-padT-padB;
+    function xAt(i){ return years.length===1 ? (padL+plotW/2) : padL + i*(plotW/(years.length-1)); }
+    function yAt(v){ return padT + (1 - v/domainMax)*plotH; }
+    function pathFor(vals){ return vals.map(function(v,i){ return (i===0?'M':'L')+xAt(i).toFixed(1)+','+yAt(v).toFixed(1); }).join(' '); }
+
+    var svg = [];
+    svg.push('<line x1="'+padL+'" y1="'+(padT+plotH)+'" x2="'+(padL+plotW)+'" y2="'+(padT+plotH)+'" stroke="var(--gridline)" stroke-width="1"/>');
+    years.forEach(function(y,i){
+      svg.push('<text class="tc-xlabel" x="'+xAt(i).toFixed(1)+'" y="'+(H-4)+'" text-anchor="middle">'+y+'</text>');
+    });
+    series.forEach(function(s){
+      svg.push('<path class="tc-line'+(s.dashed?' dashed':'')+'" d="'+pathFor(s.values)+'" stroke="'+s.color+'"/>');
+      s.values.forEach(function(v,i){
+        var x=xAt(i).toFixed(1), y=yAt(v);
+        svg.push('<circle class="tc-dot" cx="'+x+'" cy="'+y.toFixed(1)+'" r="4" fill="'+s.color+'"/>');
+        svg.push('<text class="tc-val" x="'+x+'" y="'+(y+s.labelDy).toFixed(1)+'" text-anchor="middle" fill="var(--text-primary)">'+v+'%</text>');
+      });
+    });
+    chartEl.innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'+svg.join('')+'</svg>';
+    footEl.textContent = t.footnote || '※ 연도별 퇴직율 = 해당 연도 퇴직자 수 ÷ 연도별 전체 구성원 수 × 100';
+  }
+
   function renderModel(model){
     var m = model.meta, s = model.summary;
     document.getElementById('headerSub').textContent = '기준월: '+m.asOfLabel+' · 데이터: '+m.sourceLabel+' ('+m.count+'건)';
@@ -922,10 +1007,15 @@
 
     var voluntaryPeopleForSummary = model.allPeople.filter(function(p){ return p.major==='자발'; });
     var volTotal = model.typeBreakdown.voluntaryTotal;
-    var topTypes = model.typeBreakdown.voluntary.slice(0, 3);
-    document.getElementById('sumTopTypes').innerHTML = topTypes.length ? topTypes.map(function(t){
-      return '<div class="top-type-row"><span>'+esc(t.label)+'</span><span class="n">'+t.count+'명 · '+pct1(t.count, volTotal)+'%</span></div>';
-    }).join('') : '<div class="top-type-row"><span style="color:var(--text-muted);">자발 퇴직 데이터 없음</span></div>';
+    var involTotal = model.typeBreakdown.involuntaryTotal;
+    var vcMax = Math.max(1, volTotal, involTotal);
+    document.getElementById('sumVolCompare').innerHTML =
+      '<div class="vc-row"><div class="vc-lbl">자발</div><div class="vc-track"><div class="vc-fill" style="width:'+(volTotal/vcMax*100)+'%;background:var(--brand);"></div></div>'+
+      '<div class="vc-val">'+volTotal+'명<span class="p"> · '+pct1(volTotal, volTotal+involTotal)+'%</span></div></div>'+
+      '<div class="vc-row"><div class="vc-lbl">비자발</div><div class="vc-track"><div class="vc-fill" style="width:'+(involTotal/vcMax*100)+'%;background:var(--navy);"></div></div>'+
+      '<div class="vc-val">'+involTotal+'명<span class="p"> · '+pct1(involTotal, volTotal+involTotal)+'%</span></div></div>';
+
+    renderTrendChart(model);
 
     var r = { core:0, lead:0, ax:0, early:0 };
     voluntaryPeopleForSummary.forEach(function(p){ if(p.core) r.core++; if(p.lead) r.lead++; if(p.ax) r.ax++; if(p.early) r.early++; });
