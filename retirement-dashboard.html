@@ -9,6 +9,8 @@
     --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#898781;
     --gridline:#e1e0d9; --border:rgba(11,11,11,0.08);
     --good:#0ca30c; --warning:#c9860a; --serious:#c15a34; --critical:#d03b3b;
+    --cat-1:#2a78d6; --cat-2:#1baf7a; --cat-3:#eda100; --cat-4:#008300;
+    --cat-5:#4a3aa7; --cat-6:#e34948; --cat-7:#e87ba4; --cat-8:#eb6834;
     --radius:14px;
   }
   :root[data-theme="dark"]{
@@ -18,6 +20,8 @@
     --text-primary:#ffffff; --text-secondary:#c3c2b7; --text-muted:#8f8d86;
     --gridline:#2c2c2a; --border:rgba(255,255,255,0.10);
     --good:#2fbf2f; --warning:#fab219; --serious:#ec835a; --critical:#e66767;
+    --cat-1:#3987e5; --cat-2:#199e70; --cat-3:#c98500; --cat-4:#008300;
+    --cat-5:#9085e9; --cat-6:#e66767; --cat-7:#d55181; --cat-8:#d95926;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -27,6 +31,8 @@
       --text-primary:#ffffff; --text-secondary:#c3c2b7; --text-muted:#8f8d86;
       --gridline:#2c2c2a; --border:rgba(255,255,255,0.10);
       --good:#2fbf2f; --warning:#fab219; --serious:#ec835a; --critical:#e66767;
+      --cat-1:#3987e5; --cat-2:#199e70; --cat-3:#c98500; --cat-4:#008300;
+      --cat-5:#9085e9; --cat-6:#e66767; --cat-7:#d55181; --cat-8:#d95926;
     }
   }
   *{box-sizing:border-box;}
@@ -88,14 +94,6 @@
   .top-type-row{display:flex;justify-content:space-between;font-size:13px;font-weight:700;padding:5px 0;border-bottom:1px dashed var(--gridline);}
   .top-type-row:last-child{border-bottom:none;}
   .top-type-row span.n{color:var(--text-muted);font-weight:600;}
-
-  .risk-row{display:flex;gap:10px;flex-wrap:wrap;}
-  .risk-chip{flex:1 1 128px;background:var(--surface);border:1px solid var(--border);border-radius:10px;
-    padding:11px 13px;min-width:128px;}
-  .risk-chip .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
-  .risk-chip .lbl{font-size:13px;color:var(--text-secondary);font-weight:700;}
-  .risk-chip .val{font-size:23px;font-weight:800;margin-top:4px;}
-  .risk-chip .pct{font-size:12.5px;color:var(--text-muted);font-weight:600;}
 
   .vol-compare{display:flex;flex-direction:column;gap:8px;justify-content:center;height:100%;padding-top:2px;}
   .vol-compare .vc-row{display:grid;grid-template-columns:52px 1fr 92px;align-items:center;gap:8px;}
@@ -183,14 +181,17 @@
   .donut-legend .item{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;}
   .donut-legend .sw{width:11px;height:11px;border-radius:3px;flex:none;}
   .donut-legend .n{color:var(--text-muted);font-weight:600;margin-left:auto;padding-left:14px;}
-
-  /* job table */
-  table.job{width:100%;border-collapse:collapse;font-size:14.5px;}
-  table.job th{text-align:left;color:var(--text-muted);font-weight:700;font-size:12.5px;padding:7px 8px;border-bottom:1px solid var(--gridline);}
-  table.job td{padding:8px 8px;border-bottom:1px solid var(--gridline);}
-  table.job tr:last-child td{border-bottom:none;}
-  table.job td.n{text-align:right;font-weight:800;font-variant-numeric:tabular-nums;}
-  table.job td.grp{color:var(--text-muted);font-weight:600;}
+  .donut-chart{width:146px;height:146px;flex:none;position:relative;}
+  .donut-chart svg{display:block;}
+  .job-donut-seg{cursor:pointer;transition:opacity .15s;}
+  .job-donut-seg:hover{opacity:0.82;}
+  .donut-legend .item{cursor:pointer;border-radius:6px;padding:3px 6px;margin:-3px -6px;transition:background .15s;}
+  .donut-legend .item:hover{background:var(--zebra);}
+  .chart-tooltip{position:fixed;z-index:60;display:none;pointer-events:none;
+    background:var(--text-primary);color:var(--surface);font-size:12px;font-weight:600;line-height:1.6;
+    padding:8px 11px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.22);width:max-content;max-width:260px;}
+  .chart-tooltip b{display:block;font-size:12.5px;font-weight:800;margin-bottom:4px;white-space:nowrap;}
+  .chart-tooltip .row{display:flex;justify-content:space-between;gap:16px;color:var(--surface);opacity:0.92;white-space:nowrap;}
 
   /* filter bar */
   .filterbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;}
@@ -284,13 +285,6 @@
       </div>
     </div>
     <div id="volPeopleCard" style="display:none;margin-top:14px;"></div>
-    <div style="font-size:11.5px;color:var(--text-muted);font-weight:700;margin-top:14px;">주요 인원 퇴직 현황 <span style="font-weight:600;">(자발퇴직자, 올해 누적 기준)</span></div>
-    <div class="risk-row" style="margin-top:6px;">
-      <div class="risk-chip"><span class="dot" style="background:var(--critical);"></span><span class="lbl">핵심인재</span><div class="val" id="riskCoreVal">9명</div><div class="pct" id="riskCorePct">전체의 5.1%</div></div>
-      <div class="risk-chip"><span class="dot" style="background:var(--warning);"></span><span class="lbl">직책자</span><div class="val" id="riskLeadVal">14명</div><div class="pct" id="riskLeadPct">전체의 8.0%</div></div>
-      <div class="risk-chip"><span class="dot" style="background:var(--navy);"></span><span class="lbl">AX역량보유</span><div class="val" id="riskAxVal">21명</div><div class="pct" id="riskAxPct">전체의 11.9%</div></div>
-      <div class="risk-chip"><span class="dot" style="background:var(--brand);"></span><span class="lbl">조기퇴사(1년내)</span><div class="val" id="riskEarlyVal">18명</div><div class="pct" id="riskEarlyPct">전체의 10.2%</div></div>
-    </div>
     <div class="trend-wrap" id="trendWrap">
       <div class="trend-head">
         <div class="stat-label" style="margin-bottom:0;">3개년 퇴직율 트렌드 <span style="font-weight:600;color:var(--text-muted);">(전체 구성원 수 대비)</span></div>
@@ -381,23 +375,13 @@
     </div>
 
     <div class="card" id="s6">
-      <div class="card-head"><h2><span class="num">6</span>직무별 퇴직자 현황</h2><span class="unit">단위: 건</span></div>
-      <table class="job">
-        <thead><tr><th>직무구분</th><th>직무명</th><th style="text-align:right;">건수</th></tr></thead>
-        <tbody id="jobBody"></tbody>
-      </table>
+      <div class="card-head"><h2><span class="num">6</span>직무별 퇴직자 현황</h2><span class="unit" id="jobUnit">단위: 명</span></div>
+      <div class="donut-wrap">
+        <div class="donut-chart" id="jobDonutChart"></div>
+        <div class="donut-legend" id="jobDonutLegend"></div>
+      </div>
+      <div class="chart-tooltip" id="jobDonutTooltip"></div>
     </div>
-  </div>
-
-  <!-- ⑦ -->
-  <div class="card" id="s7">
-    <div class="card-head"><h2><span class="num">7</span>3개년 신입/경력사원 조기퇴직율</h2><span class="unit">근속 12개월 미만 조기퇴사 기준</span></div>
-    <div class="legend" id="s7Legend">
-      <div class="item"><span class="sw" style="background:var(--brand);"></span>신입</div>
-      <div class="item"><span class="sw" style="background:var(--navy);"></span>경력</div>
-    </div>
-    <div id="s7Body"></div>
-    <div class="footnote" id="s7Footnote"></div>
   </div>
 
   <div class="footnote" style="text-align:center;" id="bottomFootnote">
@@ -1009,6 +993,78 @@
     return '<div class="flag-row">'+out.join('')+'</div>';
   }
   function pct1(n,d){ return d>0 ? Math.round(n/d*1000)/10 : 0; }
+  var JOB_DONUT_PALETTE = ['var(--cat-1)','var(--cat-2)','var(--cat-3)','var(--cat-4)','var(--cat-5)','var(--cat-6)','var(--cat-7)','var(--cat-8)'];
+  function renderJobDonut(model){
+    var chartEl = document.getElementById('jobDonutChart');
+    var legendEl = document.getElementById('jobDonutLegend');
+    var tip = document.getElementById('jobDonutTooltip');
+    var groupMap = {}, order = [];
+    (model.jobBreakdown||[]).forEach(function(j){
+      if(!groupMap[j.group]){ groupMap[j.group] = {group:j.group, count:0, items:[]}; order.push(j.group); }
+      groupMap[j.group].count += j.count;
+      groupMap[j.group].items.push({label:j.label, count:j.count});
+    });
+    var groups = order.map(function(g){ return groupMap[g]; }).sort(function(a,b){ return b.count-a.count; });
+    groups.forEach(function(g){ g.items.sort(function(a,b){ return b.count-a.count; }); });
+    var total = groups.reduce(function(s,g){ return s+g.count; }, 0);
+    document.getElementById('jobUnit').textContent = '누적 '+total+'건';
+
+    if(total===0){
+      chartEl.innerHTML = '';
+      legendEl.innerHTML = '<div class="empty-note">직무 데이터가 없습니다.</div>';
+      return;
+    }
+
+    var size=146, cx=73, cy=73, rOuter=73, rInner=51;
+    function polarPt(r, angleDeg){
+      var rad = (angleDeg-90) * Math.PI/180;
+      return { x: cx + r*Math.cos(rad), y: cy + r*Math.sin(rad) };
+    }
+    function sectorPath(startAngle, endAngle){
+      var so = polarPt(rOuter, endAngle), eo = polarPt(rOuter, startAngle);
+      var si = polarPt(rInner, startAngle), ei = polarPt(rInner, endAngle);
+      var largeArc = (endAngle-startAngle) > 180 ? 1 : 0;
+      return ['M', so.x.toFixed(2), so.y.toFixed(2),
+        'A', rOuter, rOuter, 0, largeArc, 0, eo.x.toFixed(2), eo.y.toFixed(2),
+        'L', ei.x.toFixed(2), ei.y.toFixed(2),
+        'A', rInner, rInner, 0, largeArc, 1, si.x.toFixed(2), si.y.toFixed(2), 'Z'].join(' ');
+    }
+    var gapDeg = groups.length>1 ? 1.6 : 0;
+    var angle=0;
+    var segs = groups.map(function(g,i){
+      var span = g.count/total*360;
+      var d = sectorPath(angle+gapDeg/2, angle+span-gapDeg/2);
+      angle += span;
+      return '<path class="job-donut-seg" data-gi="'+i+'" d="'+d+'" fill="'+JOB_DONUT_PALETTE[i%JOB_DONUT_PALETTE.length]+'"></path>';
+    }).join('');
+    chartEl.innerHTML = '<svg viewBox="0 0 '+size+' '+size+'" width="'+size+'" height="'+size+'">'+segs+'</svg>'+
+      '<div class="donut-center"><b>'+total+'</b><span>전체</span></div>';
+
+    legendEl.innerHTML = groups.map(function(g,i){
+      return '<div class="item" data-gi="'+i+'"><span class="sw" style="background:'+JOB_DONUT_PALETTE[i%JOB_DONUT_PALETTE.length]+';"></span>'+
+        esc(g.group)+'<span class="n">'+g.count+'명 · '+pct1(g.count,total)+'%</span></div>';
+    }).join('');
+
+    function tooltipHtml(g){
+      var rows = g.items.map(function(it){ return '<div class="row"><span>'+esc(it.label)+'</span><span>'+it.count+'명</span></div>'; }).join('');
+      return '<b>'+esc(g.group)+' · '+g.count+'명</b>'+rows;
+    }
+    function moveTip(e){ tip.style.left = (e.clientX+14)+'px'; tip.style.top = (e.clientY+14)+'px'; }
+    function showTip(e, gi){ tip.innerHTML = tooltipHtml(groups[gi]); tip.style.display = 'block'; moveTip(e); }
+    function hideTip(){ tip.style.display = 'none'; }
+    chartEl.querySelectorAll('.job-donut-seg').forEach(function(seg){
+      var gi = +seg.getAttribute('data-gi');
+      seg.addEventListener('mouseenter', function(e){ showTip(e, gi); });
+      seg.addEventListener('mousemove', moveTip);
+      seg.addEventListener('mouseleave', hideTip);
+    });
+    legendEl.querySelectorAll('.item').forEach(function(item){
+      var gi = +item.getAttribute('data-gi');
+      item.addEventListener('mouseenter', function(e){ showTip(e, gi); });
+      item.addEventListener('mousemove', moveTip);
+      item.addEventListener('mouseleave', hideTip);
+    });
+  }
   function deltaTag(cur, prev){
     if(prev===0) return '<span class="delta-tag" style="color:var(--text-muted);">-</span>';
     var d = Math.round((cur-prev)/prev*1000)/10;
@@ -1120,7 +1176,8 @@
     lastModelMeta = m;
     document.getElementById('volPeopleCard').style.display = 'none';
     document.getElementById('headerSub').textContent = '기준월: '+m.asOfLabel+' · 데이터: '+m.sourceLabel+' ('+m.count+'건)';
-    document.getElementById('dataSourceLabel').textContent = '현재: '+m.sourceLabel;
+    var dataSourceLabelEl = document.getElementById('dataSourceLabel');
+    if(dataSourceLabelEl) dataSourceLabelEl.textContent = '현재: '+m.sourceLabel;
     document.getElementById('summaryAsOf').textContent = '기준월 '+m.asOfLabel+' · 자발 퇴직자 기준 · 조직별(전체) 상세는 아래 ① 표를 확인하세요';
     document.getElementById('bottomFootnote').textContent = m.mode==='mock'
       ? '본 대시보드는 설계 확인용 샘플(Mock) 데이터로 구성되어 있습니다. 실제 인사 데이터를 업로드하면 동일한 구조로 자동 갱신됩니다.'
@@ -1144,7 +1201,6 @@
     })();
     document.getElementById('sumYtdDelta').className = 'stat-delta '+(s.lastYtd===0?'flat':(s.ytd<s.lastYtd?'good':'bad'));
 
-    var voluntaryPeopleForSummary = model.allPeople.filter(function(p){ return p.major==='자발'; });
     var volTotal = model.typeBreakdown.voluntaryTotal;
     var involTotal = model.typeBreakdown.involuntaryTotal;
     var thisMonthVol = s.thisMonth, thisMonthInvol = s.thisMonthInvol||0;
@@ -1166,17 +1222,6 @@
       '</div>';
 
     renderTrendChart(model);
-
-    var r = { core:0, lead:0, ax:0, early:0 };
-    voluntaryPeopleForSummary.forEach(function(p){ if(p.core) r.core++; if(p.lead) r.lead++; if(p.ax) r.ax++; if(p.early) r.early++; });
-    document.getElementById('riskCoreVal').textContent = r.core+'명';
-    document.getElementById('riskCorePct').textContent = '자발퇴직의 '+pct1(r.core, volTotal)+'%';
-    document.getElementById('riskLeadVal').textContent = r.lead+'명';
-    document.getElementById('riskLeadPct').textContent = '자발퇴직의 '+pct1(r.lead, volTotal)+'%';
-    document.getElementById('riskAxVal').textContent = r.ax+'명';
-    document.getElementById('riskAxPct').textContent = '자발퇴직의 '+pct1(r.ax, volTotal)+'%';
-    document.getElementById('riskEarlyVal').textContent = r.early+'명';
-    document.getElementById('riskEarlyPct').textContent = '자발퇴직의 '+pct1(r.early, volTotal)+'%';
 
     // ① org table
     var prevYear = m.curYear - 1;
@@ -1265,35 +1310,8 @@
       ? model.destBreakdown.map(function(x){ return barItemHtml(x.label, x.count, maxDest, 'var(--navy)', pct1(x.count, destTotal)); }).join('')
       : '<div class="empty-note">이직처 데이터가 없습니다.</div>';
 
-    // ⑥ job table
-    document.getElementById('jobBody').innerHTML = model.jobBreakdown.length
-      ? model.jobBreakdown.map(function(j){ return '<tr><td class="grp">'+esc(j.group)+'</td><td>'+esc(j.label)+'</td><td class="n">'+j.count+'</td></tr>'; }).join('')
-      : '<tr><td colspan="3" class="empty-note">직무 데이터가 없습니다.</td></tr>';
-
-    // ⑦ early attrition
-    var ea = model.earlyAttrition;
-    document.getElementById('s7Legend').style.display = (ea.type==='rate') ? '' : 'none';
-    if(ea.type==='unavailable'){
-      document.getElementById('s7Body').innerHTML = '<div class="empty-note">업로드된 데이터에 "입사일" 정보가 충분하지 않아 조기퇴직 현황을 계산할 수 없습니다.</div>';
-      document.getElementById('s7Footnote').textContent = '';
-    } else if(ea.type==='rate'){
-      var maxRate = Math.max.apply(null, ea.cohorts.map(function(c){ return Math.max(c.newHireRate,c.expRate); })) * 1.3;
-      document.getElementById('s7Body').innerHTML = '<div class="grouped">' + ea.cohorts.map(function(c){
-        return '<div class="grp"><div class="bars">'+
-          '<div class="col" style="height:'+(c.newHireRate/maxRate*100)+'%;background:var(--brand);"><span class="v">'+c.newHireRate+'%</span></div>'+
-          '<div class="col" style="height:'+(c.expRate/maxRate*100)+'%;background:var(--navy);"><span class="v">'+c.expRate+'%</span></div>'+
-          '</div><div class="xlabel">'+esc(c.label)+'</div></div>';
-      }).join('') + '</div>';
-      document.getElementById('s7Footnote').textContent = ea.footnote || '';
-    } else {
-      var maxCnt = Math.max.apply(null, [1].concat(ea.cohorts.map(function(c){ return c.count; }))) * 1.3;
-      document.getElementById('s7Body').innerHTML = '<div class="grouped">' + ea.cohorts.map(function(c){
-        return '<div class="grp"><div class="bars">'+
-          '<div class="col" style="height:'+(c.count/maxCnt*100)+'%;background:var(--brand);"><span class="v">'+c.count+'명</span></div>'+
-          '</div><div class="xlabel">'+esc(c.label)+' <span style="color:var(--text-muted);font-weight:600;">(퇴직자 '+c.total+'명 중)</span></div></div>';
-      }).join('') + '</div>';
-      document.getElementById('s7Footnote').textContent = ea.footnote || '';
-    }
+    // ⑥ job donut (직군 기준, hover 시 직종별 상세)
+    renderJobDonut(model);
 
     // ② detail list (자발 퇴직자만 표시)
     document.getElementById('evalHeader').innerHTML = m.mode==='mock' ? "3개년 평가<br>('24/'23/'22)" : '재직기간';
@@ -1456,12 +1474,14 @@
   });
 
   // ================= upload / export wiring =================
-  // In a file exported via "공유용 HTML로 저장", #uploadPanel has been
-  // stripped out — skip all upload wiring and the initial mock render so
-  // the exported snapshot's already-baked-in data stays exactly as shared.
-  if(!document.getElementById('uploadPanel')){ return; }
-
   var currentModel = null;
+
+  // In a file exported via "공유용 HTML로 저장", #uploadPanel (and everything
+  // inside it — CSV upload, sample reset, headcount/trend input, the export
+  // button itself) has been stripped out, so skip wiring those up. The org
+  // filter buttons wired above stay active — they work off the model data
+  // embedded at export time (see #embeddedModelData below).
+  if(document.getElementById('uploadPanel')){
 
   document.getElementById('csvFile').addEventListener('change', function(e){
     var file = e.target.files && e.target.files[0];
@@ -1572,6 +1592,17 @@
     var clone = document.documentElement.cloneNode(true);
     var up = clone.querySelector('#uploadPanel');
     if(up) up.remove();
+    // Embed the currently-loaded model as data so the exported file's org
+    // filter buttons keep working without the (now-removed) upload panel.
+    if(currentModel){
+      var exportModel = JSON.parse(JSON.stringify(currentModel));
+      exportModel.rawForTrend = null;
+      var dataScript = document.createElement('script');
+      dataScript.type = 'application/json';
+      dataScript.id = 'embeddedModelData';
+      dataScript.textContent = JSON.stringify(exportModel).replace(/</g, '\\u003c');
+      clone.querySelector('body').appendChild(dataScript);
+    }
     var htmlStr = '<!doctype html>\n<html lang="ko">\n' + clone.outerHTML + '\n</html>';
     var blob = new Blob([htmlStr], {type:'text/html;charset=utf-8'});
     var url = URL.createObjectURL(blob);
@@ -1583,7 +1614,15 @@
     setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
   });
 
-  currentModel = buildMockModel();
+  } // end if(#uploadPanel)
+
+  var embeddedDataEl = document.getElementById('embeddedModelData');
+  if(embeddedDataEl){
+    try{ currentModel = JSON.parse(embeddedDataEl.textContent); }
+    catch(e){ currentModel = buildMockModel(); }
+  } else {
+    currentModel = buildMockModel();
+  }
   rerenderWithOrgFilter();
 })();
 </script>
