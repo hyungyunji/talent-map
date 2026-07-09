@@ -377,6 +377,9 @@
     var titleCounts = [['사원',12],['선임',58],['책임Ⅰ',41],['책임Ⅱ',37],['수석',22],['그룹장/임원',6]];
     var reasonCounts = [['타사이직',61],['개인사업',15],['유학·학업',11],['가사·육아·건강',14],['기타',6],
       ['희망퇴직',38],['전출',12],['정년퇴직',9],['계약만료',6],['직무재배치',4]];
+    var voluntaryKeys = ['타사이직','개인사업','유학·학업','가사·육아·건강','기타'];
+    var involuntaryKeys = ['희망퇴직','전출','정년퇴직','계약만료','직무재배치'];
+    function majorFor(reason){ return voluntaryKeys.indexOf(reason)>=0 ? '자발' : '비자발'; }
     var titlesGlobal = buildCountArray(rnd, titleCounts);
     var reasonGlobal = buildCountArray(rnd, reasonCounts);
     var coreGlobal = shuffle(rnd, Array(9).fill(true).concat(Array(167).fill(false)));
@@ -546,6 +549,7 @@
 
     var allPeople = [];
     orgs.forEach(function(o){ o.roster.forEach(function(p){ allPeople.push(p); }); });
+    allPeople.forEach(function(p){ p.major = majorFor(p.reason); });
 
     var destPool = [];
     [['경쟁 통신사',14],['IT/플랫폼 대기업',10],['스타트업',9],['컨설팅펌',6],['금융권',6],['공공기관/공기업',5],['기타',9]]
@@ -556,15 +560,13 @@
       if(p.reason === '타사이직' && !p.destCompany){ p.destCompany = destPool[dpi] || '기타'; dpi++; }
     });
 
-    var voluntaryKeys = ['타사이직','개인사업','유학·학업','가사·육아·건강','기타'];
-    var involuntaryKeys = ['희망퇴직','전출','정년퇴직','계약만료','직무재배치'];
-    var voluntary = groupCount(allPeople.filter(function(p){ return voluntaryKeys.indexOf(p.reason)>=0; }), function(p){ return p.reason; });
-    var involuntary = groupCount(allPeople.filter(function(p){ return involuntaryKeys.indexOf(p.reason)>=0; }), function(p){ return p.reason; });
+    var voluntary = groupCount(allPeople.filter(function(p){ return p.major==='자발'; }), function(p){ return p.reason; });
+    var involuntary = groupCount(allPeople.filter(function(p){ return p.major==='비자발'; }), function(p){ return p.reason; });
 
     return {
       meta:{ mode:'mock', sourceLabel:'샘플(Mock)', asOfLabel:'2026-07', curYear:2026, curMonth:7,
         count: allPeople.length, detailUnitLabel: details.length+'건 (표본 상세) · 전체 '+allPeople.length+'건 중' },
-      summary:{ thisMonth:32, lastMonth:41, ytd:176, lastYtd:203 },
+      summary:{ thisMonth:19, lastMonth:25, ytd:107, lastYtd:123 },
       orgs: orgs,
       allPeople: allPeople,
       typeBreakdown:{ voluntaryTotal: voluntary.reduce(function(s,x){return s+x.count;},0),
@@ -785,10 +787,10 @@
     return {
       meta:{ mode:'csv', sourceLabel:'업로드 CSV: '+esc(fileName), asOfLabel: curYear+'-'+pad2(curMonth), curYear:curYear, curMonth:curMonth,
         count: allPeople.length, detailUnitLabel: details.length + (allPeople.length>300 ? '건 (상위 300건 표시) · 전체 '+allPeople.length+'건 중' : '건 전체 상세') },
-      summary:{ thisMonth: valid.filter(function(r){ var d=r.lastActiveDate; return d.getFullYear()===curYear && (d.getMonth()+1)===curMonth; }).length,
-        lastMonth: valid.filter(function(r){ var d=r.lastActiveDate; return d.getFullYear()===curYear-1 && (d.getMonth()+1)===curMonth; }).length,
-        ytd: ytdRows.length,
-        lastYtd: valid.filter(function(r){ var d=r.lastActiveDate; return d.getFullYear()===curYear-1 && (d.getMonth()+1)<=curMonth; }).length },
+      summary:{ thisMonth: valid.filter(function(r){ var d=r.lastActiveDate; return guessMajor(r)==='자발' && d.getFullYear()===curYear && (d.getMonth()+1)===curMonth; }).length,
+        lastMonth: valid.filter(function(r){ var d=r.lastActiveDate; return guessMajor(r)==='자발' && d.getFullYear()===curYear-1 && (d.getMonth()+1)===curMonth; }).length,
+        ytd: ytdRows.filter(function(r){ return guessMajor(r)==='자발'; }).length,
+        lastYtd: valid.filter(function(r){ var d=r.lastActiveDate; return guessMajor(r)==='자발' && d.getFullYear()===curYear-1 && (d.getMonth()+1)<=curMonth; }).length },
       orgs: orgs, allPeople: allPeople,
       typeBreakdown:{ voluntaryTotal: voluntaryPeople.length, involuntaryTotal: involuntaryPeople.length,
         voluntary: groupCount(voluntaryPeople, function(p){ return p.reason; }),
@@ -895,12 +897,12 @@
     var m = model.meta, s = model.summary;
     document.getElementById('headerSub').textContent = '기준월: '+m.asOfLabel+' · 데이터: '+m.sourceLabel+' ('+m.count+'건)';
     document.getElementById('dataSourceLabel').textContent = '현재: '+m.sourceLabel;
-    document.getElementById('summaryAsOf').textContent = '기준월 '+m.asOfLabel+' · 조직별 상세는 아래 ① 표를 확인하세요';
+    document.getElementById('summaryAsOf').textContent = '기준월 '+m.asOfLabel+' · 자발 퇴직자 기준 · 조직별(전체) 상세는 아래 ① 표를 확인하세요';
     document.getElementById('bottomFootnote').textContent = m.mode==='mock'
       ? '본 대시보드는 설계 확인용 샘플(Mock) 데이터로 구성되어 있습니다. 실제 인사 데이터를 업로드하면 동일한 구조로 자동 갱신됩니다.'
       : '본 대시보드는 업로드된 CSV 데이터('+esc(m.sourceLabel.replace('업로드 CSV: ',''))+') 기준으로 계산되었습니다.';
 
-    document.getElementById('sumThisMonthLabel').textContent = '이번달('+m.curMonth+'월) 퇴직 인원';
+    document.getElementById('sumThisMonthLabel').textContent = '이번달('+m.curMonth+'월) 자발 퇴직 인원';
     document.getElementById('sumThisMonth').innerHTML = s.thisMonth+'<span class="u">명</span>';
     document.getElementById('sumThisMonthDelta').innerHTML = (function(){
       if(s.lastMonth===0) return '<span class="stat-vs">전년동월 데이터 없음</span>';
@@ -909,7 +911,7 @@
       return (d<0?'▼':(d>0?'▲':'-'))+' '+Math.abs(d)+'% <span class="stat-vs">전년동월 '+s.lastMonth+'명</span>';
     })();
     document.getElementById('sumThisMonthDelta').className = 'stat-delta '+(s.lastMonth===0?'flat':(s.thisMonth<s.lastMonth?'good':'bad'));
-    document.getElementById('sumYtdLabel').textContent = '누적(1~'+m.curMonth+'월) 퇴직 인원';
+    document.getElementById('sumYtdLabel').textContent = '누적(1~'+m.curMonth+'월) 자발 퇴직 인원';
     document.getElementById('sumYtd').innerHTML = s.ytd+'<span class="u">명</span>';
     document.getElementById('sumYtdDelta').innerHTML = (function(){
       if(s.lastYtd===0) return '<span class="stat-vs">전년누적 데이터 없음</span>';
@@ -918,21 +920,23 @@
     })();
     document.getElementById('sumYtdDelta').className = 'stat-delta '+(s.lastYtd===0?'flat':(s.ytd<s.lastYtd?'good':'bad'));
 
-    var topTypes = model.typeBreakdown.voluntary.concat(model.typeBreakdown.involuntary).sort(function(a,b){return b.count-a.count;}).slice(0,3);
+    var voluntaryPeopleForSummary = model.allPeople.filter(function(p){ return p.major==='자발'; });
+    var volTotal = model.typeBreakdown.voluntaryTotal;
+    var topTypes = model.typeBreakdown.voluntary.slice(0, 3);
     document.getElementById('sumTopTypes').innerHTML = topTypes.length ? topTypes.map(function(t){
-      return '<div class="top-type-row"><span>'+esc(t.label)+'</span><span class="n">'+t.count+'명 · '+pct1(t.count, m.count)+'%</span></div>';
-    }).join('') : '<div class="top-type-row"><span style="color:var(--text-muted);">데이터 없음</span></div>';
+      return '<div class="top-type-row"><span>'+esc(t.label)+'</span><span class="n">'+t.count+'명 · '+pct1(t.count, volTotal)+'%</span></div>';
+    }).join('') : '<div class="top-type-row"><span style="color:var(--text-muted);">자발 퇴직 데이터 없음</span></div>';
 
     var r = { core:0, lead:0, ax:0, early:0 };
-    model.allPeople.forEach(function(p){ if(p.core) r.core++; if(p.lead) r.lead++; if(p.ax) r.ax++; if(p.early) r.early++; });
+    voluntaryPeopleForSummary.forEach(function(p){ if(p.core) r.core++; if(p.lead) r.lead++; if(p.ax) r.ax++; if(p.early) r.early++; });
     document.getElementById('riskCoreVal').textContent = r.core+'명';
-    document.getElementById('riskCorePct').textContent = '전체의 '+pct1(r.core, m.count)+'%';
+    document.getElementById('riskCorePct').textContent = '자발퇴직의 '+pct1(r.core, volTotal)+'%';
     document.getElementById('riskLeadVal').textContent = r.lead+'명';
-    document.getElementById('riskLeadPct').textContent = '전체의 '+pct1(r.lead, m.count)+'%';
+    document.getElementById('riskLeadPct').textContent = '자발퇴직의 '+pct1(r.lead, volTotal)+'%';
     document.getElementById('riskAxVal').textContent = r.ax+'명';
-    document.getElementById('riskAxPct').textContent = '전체의 '+pct1(r.ax, m.count)+'%';
+    document.getElementById('riskAxPct').textContent = '자발퇴직의 '+pct1(r.ax, volTotal)+'%';
     document.getElementById('riskEarlyVal').textContent = r.early+'명';
-    document.getElementById('riskEarlyPct').textContent = '전체의 '+pct1(r.early, m.count)+'%';
+    document.getElementById('riskEarlyPct').textContent = '자발퇴직의 '+pct1(r.early, volTotal)+'%';
 
     // ① org table
     var orgBody = document.getElementById('orgTableBody');
