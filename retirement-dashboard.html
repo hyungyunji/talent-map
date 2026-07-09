@@ -56,6 +56,15 @@
   .upload-btn:hover{opacity:.9;}
   #uploadError{font-size:12.5px;color:var(--critical);margin-top:10px;font-weight:600;}
 
+  .hc-panel{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);}
+  .hc-label{font-size:12.5px;font-weight:700;color:var(--text-secondary);margin-bottom:8px;}
+  .hc-pair{display:inline-flex;gap:4px;}
+  .hc-input{border:1px solid var(--border);background:var(--surface);color:var(--text-primary);
+    border-radius:8px;font-size:13px;font-weight:600;padding:8px 9px;}
+  .hc-input.hc-year{width:64px;}
+  .hc-input.hc-count{width:92px;}
+  .hc-input::placeholder{color:var(--text-muted);font-weight:500;}
+
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
   .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
   @media (max-width:860px){.grid2,.grid3{grid-template-columns:1fr;}}
@@ -230,6 +239,17 @@
       <span class="filter-count" id="uploadCount"></span>
     </div>
     <div id="uploadError" style="display:none;"></div>
+
+    <div class="hc-panel">
+      <div class="hc-label">3개년 퇴직율 트렌드 계산용 · 연도별 전체 구성원 수 (선택 입력)</div>
+      <div class="filterbar" style="margin-bottom:0;">
+        <span class="hc-pair"><input type="number" id="hcYear1" class="hc-input hc-year" placeholder="연도"><input type="number" id="hcCount1" class="hc-input hc-count" placeholder="구성원 수"></span>
+        <span class="hc-pair"><input type="number" id="hcYear2" class="hc-input hc-year" placeholder="연도"><input type="number" id="hcCount2" class="hc-input hc-count" placeholder="구성원 수"></span>
+        <span class="hc-pair"><input type="number" id="hcYear3" class="hc-input hc-year" placeholder="연도"><input type="number" id="hcCount3" class="hc-input hc-count" placeholder="구성원 수"></span>
+        <button class="filter-reset" id="hcApply" type="button">퇴직율 트렌드 계산</button>
+        <span class="filter-count" id="hcStatus"></span>
+      </div>
+    </div>
   </div>
 
   <!-- 전사 요약 -->
@@ -470,7 +490,7 @@
         hist:"'25.01~'25.05  광고사업팀\n'24.01~'24.12  FAST사업팀\n'22.01~'23.12  미디어DX챕터\n'19.07~'21.12  서비스BP운영팀(Consumer부문)\n'18.01~'19.06  AIoT제휴상품2팀(스마트홈부문)\n'16.01~'17.12  FC전략팀(FC부문)\n'11.01~'15.12  디지털사이니지팀\n'10.10~'11.01  그룹영업2팀(BS본부)",
         eval:'3.3<br><span style="color:var(--text-muted);font-weight:600;">(B/A/B)</span>',
         edu:"이전 경력 없음\n'05.03~'09.02 서강대 정치외교(석)\n'00.03~'05.02 서강대 영미문화(학)",
-        core:false, lead:false, ax:false, early:false, reasonCat:'가사·육아·건강', hireYear:2010, hireType:'신입',
+        core:false, lead:false, ax:false, early:false, reasonCat:'가사·육아·건강', major:'자발', hireYear:2010, hireType:'신입',
         sum:'결혼/출산/육아/가족 돌봄 등의 개인사',
         detail:'[퇴직 사유]\n- 배우자 주재원(호주) 장기 발령에 따른 퇴직\n : 휴직 가능여부에 대해 살펴보았으나 자녀가 없어 휴직 가능한 방법이 없었음.\n*퇴직발령 상세 : 일반퇴직(유학·학업)' },
       { id:'detail-2', orgTop:'Consumer부문',
@@ -479,7 +499,7 @@
         hist:"'15.09~'25.12  Consumer기획담당 Consumer기획팀\n총 근속 123개월",
         eval:'2.9<br><span style="color:var(--text-muted);font-weight:600;">(B/B/C)</span>',
         edu:"이전 경력 없음\n고려대 정치외교학(학)",
-        core:false, lead:false, ax:false, early:false, reasonCat:'전출', hireYear:2015, hireType:'경력',
+        core:false, lead:false, ax:false, early:false, reasonCat:'전출', major:'비자발', hireYear:2015, hireType:'경력',
         sum:'전출 (지주사 전출)',
         detail:'[퇴직 사유]\n- 그룹 지주사 조직개편에 따른 인력 전출\n*퇴직발령 상세 : 전출 &gt; 지주사전출' },
       { id:'detail-3', orgTop:'Consumer부문',
@@ -488,7 +508,7 @@
         hist:"'22.12~'26.01  Consumer기획담당 STUDIO X+U TF\n총 근속 37개월",
         eval:'3.1<br><span style="color:var(--text-muted);font-weight:600;">(B/A/B)</span>',
         edu:"미디어로그\n서울과학기술대학교 산업공학과(학)",
-        core:false, lead:false, ax:false, early:false, reasonCat:'희망퇴직', hireYear:2022, hireType:'경력',
+        core:false, lead:false, ax:false, early:false, reasonCat:'희망퇴직', major:'비자발', hireYear:2022, hireType:'경력',
         sum:'희망퇴직',
         detail:'[퇴직 사유]\n- 조직 개편에 따른 희망퇴직 신청 및 승인\n*퇴직발령 상세 : 희망퇴직' },
       { id:'detail-4', orgTop:'CTO',
@@ -497,7 +517,7 @@
         hist:"'21.01~'26.06  AI플랫폼담당 AI Foundation팀\n'16.03~'20.12  데이터플랫폼담당 빅데이터팀",
         eval:'4.0<br><span style="color:var(--text-muted);font-weight:600;">(S/A/A)</span>',
         edu:"삼성SDS AI연구소 (4년)\nKAIST 전산학(석)",
-        core:true, lead:false, ax:true, early:false, reasonCat:'타사이직', hireYear:2016, hireType:'경력', destCompany:'IT/플랫폼 대기업',
+        core:true, lead:false, ax:true, early:false, reasonCat:'타사이직', major:'자발', hireYear:2016, hireType:'경력', destCompany:'IT/플랫폼 대기업',
         sum:'타사이직 (보상/처우)',
         detail:'[퇴직 사유]\n- 경쟁사 대비 낮은 보상 수준 및 AI조직 리더 포지션 제안 수락\n- 잔류 조건으로 보상 재협상 시도했으나 예산 제약으로 성사되지 않음\n*이직처 : IT/플랫폼 대기업' },
       { id:'detail-5', orgTop:'정보보안부문',
@@ -506,7 +526,7 @@
         hist:"'25.11~'26.07  보안운영담당 SOC팀\n총 근속 8개월",
         eval:'평가이력 없음<br><span style="color:var(--text-muted);font-weight:600;">(입사 1년 미만)</span>',
         edu:"이전 경력 없음\n이화여대 정보보호학과(학)",
-        core:false, lead:false, ax:false, early:true, reasonCat:'기타', hireYear:2025, hireType:'신입',
+        core:false, lead:false, ax:false, early:true, reasonCat:'기타', major:'자발', hireYear:2025, hireType:'신입',
         sum:'직무 미스매치 (조기퇴사)',
         detail:'[퇴직 사유]\n- 채용 시 기대했던 정책기획 업무 대신 24시간 교대 모니터링 업무에 배치되어 적응에 어려움을 겪음\n*퇴직발령 상세 : 일반퇴직(직무부적응)' },
       { id:'detail-6', orgTop:'법무실',
@@ -515,7 +535,7 @@
         hist:"'05.01~'26.06  법무담당 계약심사팀\n'98.03~'04.12  법무팀",
         eval:'3.5<br><span style="color:var(--text-muted);font-weight:600;">(A/B/A)</span>',
         edu:"이전 경력 없음\n서울대 법학(학)",
-        core:false, lead:false, ax:false, early:false, reasonCat:'정년퇴직', hireYear:1998, hireType:'경력',
+        core:false, lead:false, ax:false, early:false, reasonCat:'정년퇴직', major:'비자발', hireYear:1998, hireType:'경력',
         sum:'정년퇴직',
         detail:'[퇴직 사유]\n- 만 60세 정년 도래에 따른 정년퇴직\n- 후임자 계약심사 업무 인수인계 완료\n*퇴직발령 상세 : 정년퇴직' },
       { id:'detail-7', orgTop:'NW부문',
@@ -524,7 +544,7 @@
         hist:"'19.01~'26.05  네트워크운영담당 코어망운영팀\n'16.01~'18.12  네트워크운영담당 액세스망운영팀",
         eval:'3.0<br><span style="color:var(--text-muted);font-weight:600;">(B/B/B)</span>',
         edu:"이전 경력 없음\n한양대 전자공학(학)",
-        core:false, lead:false, ax:false, early:false, reasonCat:'개인사업', hireYear:2016, hireType:'신입',
+        core:false, lead:false, ax:false, early:false, reasonCat:'개인사업', major:'자발', hireYear:2016, hireType:'신입',
         sum:'개인사업 준비',
         detail:'[퇴직 사유]\n- 네트워크 유지보수 스타트업 창업을 위한 자진 퇴사\n*퇴직발령 상세 : 일반퇴직(개인사업)' },
       { id:'detail-8', orgTop:'Enterprise부문',
@@ -533,7 +553,7 @@
         hist:"'23.03~'26.06  B2B솔루션담당 AX솔루션팀장\n'19.01~'23.02  B2B솔루션담당 스마트팩토리팀",
         eval:'3.8<br><span style="color:var(--text-muted);font-weight:600;">(A/A/B)</span>',
         edu:"글로벌 IT컨설팅펌 (6년)\n연세대 산업공학(학)",
-        core:true, lead:true, ax:true, early:false, reasonCat:'타사이직', hireYear:2019, hireType:'경력', destCompany:'컨설팅펌',
+        core:true, lead:true, ax:true, early:false, reasonCat:'타사이직', major:'자발', hireYear:2019, hireType:'경력', destCompany:'컨설팅펌',
         sum:'타사이직 (커리어 성장)',
         detail:'[퇴직 사유]\n- 글로벌 컨설팅펌 AI Transformation 담당 파트너급 포지션 제안 수락\n- 리텐션 면담 진행했으나 본인 커리어 방향성에 따른 확고한 이직 의사 확인\n*이직처 : 컨설팅펌' }
     ];
@@ -558,7 +578,10 @@
       var org = orgByName(d.orgTop);
       if(!org || org.roster.length===0) return;
       var list = org.roster;
-      var removed = list.pop();
+      var removeIdx = -1;
+      for(var ri=list.length-1; ri>=0; ri--){ if(!list[ri].linked){ removeIdx = ri; break; } }
+      if(removeIdx===-1) removeIdx = list.length-1;
+      var removed = list.splice(removeIdx, 1)[0];
       rebalanceCategory('reason', removed.reason, d.reasonCat);
       rebalanceCategory('core', removed.core, d.core);
       rebalanceCategory('lead', removed.lead, d.lead);
@@ -626,7 +649,7 @@
         {label:'2025년 입사', newHireRate:7.1, expRate:12.6}
       ], footnote:'※ 경력사원 조기퇴직율이 신입사원 대비 지속적으로 높게(약 1.6~1.8배) 나타나고 있습니다.' },
       details: details.map(function(d){ return { id:d.id, orgTop:d.orgTop, org:d.org, who:d.who, meta:d.meta,
-        hist:d.hist, eval:d.eval, edu:d.edu, core:d.core, lead:d.lead, ax:d.ax, reasonCat:d.reasonCat, sum:d.sum, detail:d.detail }; })
+        hist:d.hist, eval:d.eval, edu:d.edu, core:d.core, lead:d.lead, ax:d.ax, reasonCat:d.reasonCat, major:d.major, sum:d.sum, detail:d.detail }; })
     };
   }
 
@@ -753,7 +776,7 @@
     var ytdRows = valid.filter(function(r){ var d=r.lastActiveDate; return d.getFullYear()===curYear && (d.getMonth()+1)<=curMonth; });
 
     var allPeople = ytdRows.map(function(r, i){
-      var reason = firstNonBlank(r.retireTypeReport, r.retireTypeMinor, r.retireTypeMid, r.retireOrderReason) || '기타';
+      var reason = firstNonBlank(r.retireTypeReport) || '기타';
       var isJobChange = reason.indexOf('이직')>=0 || reason.indexOf('전직')>=0;
       var lead = !blankish(r.position);
       var tenureMo = r.tenureMonths!=null ? r.tenureMonths : (r.hireDate ? monthsBetween(r.hireDate, r.lastActiveDate) : null);
@@ -826,7 +849,7 @@
         id:p.id, orgTop:p.org, org: orgParts.map(esc).join('<br>') || esc(p.org),
         who: esc(p.name)+' '+esc(p.title), meta: (age? age+'세, ':'') + esc(r.gender||'') + (p.hireYear? (' · 입사 '+p.hireYear) : ''),
         hist: histLines.join('\n'), eval: tenureLabel + '<br><span style="color:var(--text-muted);font-weight:600;">(재직기간)</span>',
-        edu: eduLines.join('\n'), core:p.core, lead:p.lead, ax:p.ax, reasonCat: esc(p.reason),
+        edu: eduLines.join('\n'), core:p.core, lead:p.lead, ax:p.ax, reasonCat: esc(p.reason), major:p.major,
         sum: esc(!blankish(r.retireOrderSummary) ? r.retireOrderSummary : (!blankish(r.voluntarySummary) ? r.voluntarySummary : p.reason || '-')),
         detail: reasonDetailLines.length ? reasonDetailLines.join('\n') : '상세 사유가 입력되지 않았습니다.'
       };
@@ -840,7 +863,7 @@
         ytd: ytdRows.filter(function(r){ return guessMajor(r)==='자발'; }).length,
         lastYtd: valid.filter(function(r){ var d=r.lastActiveDate; return guessMajor(r)==='자발' && d.getFullYear()===curYear-1 && (d.getMonth()+1)<=curMonth; }).length },
       orgs: orgs, allPeople: allPeople,
-      yearlyTrend: null,
+      yearlyTrend: null, rawForTrend: valid,
       typeBreakdown:{ voluntaryTotal: voluntaryPeople.length, involuntaryTotal: involuntaryPeople.length,
         voluntary: groupCount(voluntaryPeople, function(p){ return p.reason; }),
         involuntary: groupCount(involuntaryPeople, function(p){ return p.reason; }) },
@@ -867,15 +890,18 @@
     if(!p.core && !p.lead && !p.ax) out.push('<span style="color:var(--text-muted);font-size:12px;">-</span>');
     return '<div class="roster-flags">'+out.join('')+'</div>';
   }
+  var visibleDetailIds = {};
+  function isLinkable(p){ return p.linked && visibleDetailIds[p.detailId]; }
   function orgRosterPanelHtml(org){
     if(org.roster.length===0){
       return '<div class="roster-panel"><span style="color:var(--text-muted);font-size:13px;">누적 퇴직자가 없습니다.</span></div>';
     }
     var rows = org.roster.map(function(p){
-      var nameCls = p.linked ? 'roster-name linked' : 'roster-name';
-      var nameAttr = p.linked ? ' onclick="scrollToDetail(\''+p.detailId+'\')" title="상세 리스트에서 보기"' : '';
+      var linkable = isLinkable(p);
+      var nameCls = linkable ? 'roster-name linked' : 'roster-name';
+      var nameAttr = linkable ? ' onclick="scrollToDetail(\''+p.detailId+'\')" title="상세 리스트에서 보기"' : '';
       var dateLbl = p.dateLabel || '-';
-      return '<tr><td class="'+nameCls+'"'+nameAttr+'>'+esc(p.name)+(p.linked?' 🔍':'')+'</td>'+
+      return '<tr><td class="'+nameCls+'"'+nameAttr+'>'+esc(p.name)+(linkable?' 🔍':'')+'</td>'+
         '<td>'+esc(p.title)+'</td><td>'+esc(p.team)+'</td><td>'+esc(dateLbl)+'</td>'+
         '<td>'+esc(p.reason)+'</td><td>'+rosterFlags(p)+'</td></tr>';
     }).join('');
@@ -887,11 +913,12 @@
     var people = model.allPeople.filter(function(p){ return p.reason===key; });
     if(people.length===0) return '<div class="roster-panel"><span style="color:var(--text-muted);font-size:13px;">해당 유형의 퇴직자가 없습니다.</span></div>';
     var rows = people.map(function(p){
-      var nameCls = p.linked ? 'roster-name linked' : 'roster-name';
-      var nameAttr = p.linked ? ' onclick="scrollToDetail(\''+p.detailId+'\')" title="상세 리스트에서 보기"' : '';
+      var linkable = isLinkable(p);
+      var nameCls = linkable ? 'roster-name linked' : 'roster-name';
+      var nameAttr = linkable ? ' onclick="scrollToDetail(\''+p.detailId+'\')" title="상세 리스트에서 보기"' : '';
       var dateLbl = p.dateLabel || '-';
       var hireLbl = p.hireYear ? (p.hireYear+'년'+(p.hireType && p.hireType!=='-' ? ' ('+p.hireType+')' : '')) : '-';
-      return '<tr><td class="'+nameCls+'"'+nameAttr+'>'+esc(p.name)+(p.linked?' 🔍':'')+'</td>'+
+      return '<tr><td class="'+nameCls+'"'+nameAttr+'>'+esc(p.name)+(linkable?' 🔍':'')+'</td>'+
         '<td>'+esc(p.org)+'</td><td>'+esc(p.title)+'</td><td>'+esc(hireLbl)+'</td>'+
         '<td>'+esc(dateLbl)+'</td><td>'+esc(p.destCompany||'-')+'</td></tr>';
     }).join('');
@@ -989,6 +1016,9 @@
 
   function renderModel(model){
     var m = model.meta, s = model.summary;
+    var visibleDetails = model.details.filter(function(d){ return d.major==='자발'; });
+    visibleDetailIds = {};
+    visibleDetails.forEach(function(d){ visibleDetailIds[d.id] = true; });
     document.getElementById('headerSub').textContent = '기준월: '+m.asOfLabel+' · 데이터: '+m.sourceLabel+' ('+m.count+'건)';
     document.getElementById('dataSourceLabel').textContent = '현재: '+m.sourceLabel;
     document.getElementById('summaryAsOf').textContent = '기준월 '+m.asOfLabel+' · 자발 퇴직자 기준 · 조직별(전체) 상세는 아래 ① 표를 확인하세요';
@@ -1131,10 +1161,10 @@
       document.getElementById('s7Footnote').textContent = ea.footnote || '';
     }
 
-    // ② detail list
+    // ② detail list (자발 퇴직자만 표시)
     document.getElementById('evalHeader').innerHTML = m.mode==='mock' ? "3개년 평가<br>('24/'23/'22)" : '재직기간';
-    document.getElementById('detailUnit').textContent = m.detailUnitLabel;
-    document.getElementById('detailBody').innerHTML = model.details.length ? model.details.map(function(d){
+    document.getElementById('detailUnit').textContent = visibleDetails.length+'건 표시 · 자발 퇴직자만 (상세 데이터 '+model.details.length+'건 중)';
+    document.getElementById('detailBody').innerHTML = visibleDetails.length ? visibleDetails.map(function(d){
       return '<tr id="'+d.id+'" data-org="'+esc(d.orgTop)+'" data-core="'+(d.core?'Y':'N')+'" data-lead="'+(d.lead?'Y':'N')+'" data-ax="'+(d.ax?'Y':'N')+'" data-reason="'+esc(d.reasonCat)+'">'+
         '<td>'+d.org+'</td>'+
         '<td class="who"><b>'+d.who+'</b><div class="meta">'+d.meta+'</div></td>'+
@@ -1145,13 +1175,13 @@
         '<td class="reason-sum">'+d.sum+'</td>'+
         '<td class="reason-detail hist">'+d.detail+'</td>'+
         '</tr>';
-    }).join('') : '<tr><td colspan="8" class="empty-note">표시할 퇴직 상세 데이터가 없습니다.</td></tr>';
+    }).join('') : '<tr><td colspan="8" class="empty-note">표시할 자발 퇴직 상세 데이터가 없습니다.</td></tr>';
 
     var fOrg = document.getElementById('fOrg'), fReason = document.getElementById('fReason');
     fOrg.innerHTML = '<option value="">조직 전체</option>';
     fReason.innerHTML = '<option value="">퇴직사유 전체</option>';
     var orgOpts = [], reasonOpts = [];
-    model.details.forEach(function(d){
+    visibleDetails.forEach(function(d){
       if(orgOpts.indexOf(d.orgTop)===-1) orgOpts.push(d.orgTop);
       if(reasonOpts.indexOf(d.reasonCat)===-1) reasonOpts.push(d.reasonCat);
     });
@@ -1205,7 +1235,7 @@
         if(rows.length < 2) throw new Error('데이터 행을 찾을 수 없습니다.');
         var idx = buildHeaderIndex(rows[0]);
         if(idx.division==null && idx.divisionRaw==null) throw new Error('헤더에서 "부문" 컬럼을 찾지 못했습니다.');
-        if(idx.lastActiveDateRaw==null) throw new Error('헤더에서 "마지막재직일" 컬럼을 찾지 못했습니다.');
+        if(idx.lastActiveDateRaw==null && idx.retireDateRaw==null) throw new Error('헤더에서 "마지막재직일" 또는 "퇴직일" 컬럼을 찾지 못했습니다.');
         if(idx.name==null) throw new Error('헤더에서 "이름" 컬럼을 찾지 못했습니다.');
         var records = rows.slice(1).map(function(arr){ return mapRow(idx, arr); });
         var model = buildModelFromRecords(records, file.name);
@@ -1213,6 +1243,12 @@
         currentModel = model;
         renderModel(model);
         document.getElementById('uploadCount').textContent = file.name + ' · ' + model.meta.count + '건 반영됨';
+        document.getElementById('hcStatus').textContent = '';
+        ['hcYear1','hcYear2','hcYear3'].forEach(function(id, i){
+          var el = document.getElementById(id);
+          if(!el.value) el.value = model.meta.curYear - i;
+        });
+        ['hcCount1','hcCount2','hcCount3'].forEach(function(id){ document.getElementById(id).value = ''; });
       } catch(err){
         errEl.textContent = '업로드 실패: ' + err.message;
         errEl.style.display = '';
@@ -1231,6 +1267,57 @@
     document.getElementById('uploadCount').textContent = '';
     document.getElementById('uploadError').style.display = 'none';
     document.getElementById('csvFile').value = '';
+    document.getElementById('hcStatus').textContent = '';
+    ['hcYear1','hcYear2','hcYear3','hcCount1','hcCount2','hcCount3'].forEach(function(id){ document.getElementById(id).value = ''; });
+  });
+
+  function computeYearlyTrendFromRaw(rawRows, pairs){
+    var years = pairs.map(function(p){ return p.year; }).sort(function(a,b){ return a-b; });
+    var headcounts = {};
+    pairs.forEach(function(p){ headcounts[p.year] = p.headcount; });
+    var byYear = {};
+    years.forEach(function(y){
+      var yrRows = rawRows.filter(function(r){ return r.lastActiveDate && r.lastActiveDate.getFullYear()===y; });
+      var vol = yrRows.filter(function(r){ return guessMajor(r)==='자발'; }).length;
+      var invol = yrRows.length - vol;
+      var total = yrRows.length;
+      var hc = headcounts[y];
+      byYear[y] = {
+        vol:vol, invol:invol, total:total,
+        volRate: hc ? Math.round(vol/hc*1000)/10 : 0,
+        involRate: hc ? Math.round(invol/hc*1000)/10 : 0,
+        totalRate: hc ? Math.round(total/hc*1000)/10 : 0
+      };
+    });
+    return {
+      years: years, headcounts: headcounts, byYear: byYear,
+      footnote: '※ 사용자가 입력한 연도별 전체 구성원 수 기준입니다: ' +
+        years.map(function(y){ return y+'년 '+headcounts[y].toLocaleString()+'명'; }).join(' · ')
+    };
+  }
+
+  document.getElementById('hcApply').addEventListener('click', function(){
+    var statusEl = document.getElementById('hcStatus');
+    if(!currentModel || currentModel.meta.mode!=='csv' || !currentModel.rawForTrend){
+      statusEl.textContent = 'CSV를 먼저 업로드해주세요.';
+      statusEl.style.color = 'var(--critical)';
+      return;
+    }
+    var pairs = [];
+    for(var i=1;i<=3;i++){
+      var yv = document.getElementById('hcYear'+i).value;
+      var cv = document.getElementById('hcCount'+i).value;
+      if(yv && cv){ pairs.push({ year: parseInt(yv,10), headcount: parseInt(cv,10) }); }
+    }
+    if(pairs.length===0){
+      statusEl.textContent = '연도와 구성원 수를 최소 1개 이상 입력해주세요.';
+      statusEl.style.color = 'var(--critical)';
+      return;
+    }
+    currentModel.yearlyTrend = computeYearlyTrendFromRaw(currentModel.rawForTrend, pairs);
+    renderTrendChart(currentModel);
+    statusEl.textContent = '트렌드가 갱신되었습니다.';
+    statusEl.style.color = 'var(--good)';
   });
 
   document.getElementById('exportHtml').addEventListener('click', function(){
