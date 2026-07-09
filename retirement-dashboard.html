@@ -39,6 +39,12 @@
   .head h1{font-size:25px;margin:0;font-weight:800;}
   .head .sub{color:var(--text-muted);font-size:14px;margin-top:4px;font-weight:500;}
 
+  .org-filter-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+  .org-filter-btn{font-size:12.5px;font-weight:700;padding:7px 14px;border-radius:999px;
+    border:1px solid var(--border);background:var(--surface);color:var(--text-secondary);cursor:pointer;}
+  .org-filter-btn:hover{border-color:var(--brand-100);color:var(--brand);}
+  .org-filter-btn.active{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);}
+
   /* card */
   .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
     padding:20px 22px 22px;margin-bottom:16px;box-shadow:0 1px 3px rgba(11,11,11,0.05);}
@@ -105,8 +111,8 @@
   #trendChart .tc-line{fill:none;stroke-width:2;}
   #trendChart .tc-line.dashed{stroke-dasharray:5 4;}
   #trendChart .tc-dot{stroke:var(--surface);stroke-width:2;}
-  #trendChart .tc-val{font-size:11px;font-weight:800;font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;}
-  #trendChart .tc-xlabel{font-size:11.5px;font-weight:700;fill:var(--text-secondary);}
+  #trendChart .tc-val{font-size:9.5px;font-weight:800;font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;}
+  #trendChart .tc-xlabel{font-size:10px;font-weight:700;fill:var(--text-secondary);}
   #trendChart .tc-bar{stroke:none;}
 
   /* org table */
@@ -118,6 +124,9 @@
   table.org td:not(:last-child){border-right:1px solid var(--gridline);}
   table.org td.name{font-weight:700;white-space:nowrap;}
   table.org td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  table.org th.ref{color:var(--text-muted);font-weight:700;}
+  table.org td.ref{color:var(--text-muted);font-weight:600;}
+  table.org td.bigo{font-size:12.5px;color:var(--text-secondary);font-weight:600;}
   tr.org-row{cursor:pointer;}
   tr.org-row td{background:var(--surface);}
   tr.org-row:hover td{background:var(--zebra);}
@@ -228,6 +237,8 @@
     <div class="sub" id="headerSub">기준월: 2026-07 · 데이터: 샘플(Mock) (176건)</div>
   </div>
 
+  <div class="org-filter-row" id="orgFilterRow"></div>
+
   <!-- 데이터 업로드 -->
   <div class="card" id="uploadPanel">
     <div class="card-head"><h2>데이터 업로드</h2><span class="unit" id="dataSourceLabel">현재: 샘플(Mock) 데이터</span></div>
@@ -259,20 +270,22 @@
     <div class="stat-grid">
       <div class="stat-tile">
         <div class="stat-label" id="sumThisMonthLabel">이번달(7월) 퇴직 인원</div>
-        <div class="stat-value" id="sumThisMonth">32<span class="u">명</span></div>
+        <div class="stat-value" id="sumThisMonth" style="cursor:pointer;" onclick="toggleVolPeopleCard('month')" title="클릭하면 명단이 표시됩니다">32<span class="u">명</span> <span style="font-size:11px;color:var(--brand);font-weight:700;">명단보기</span></div>
         <div class="stat-delta good" id="sumThisMonthDelta">▼ 22.0% <span class="stat-vs">전년동월 41명</span></div>
       </div>
       <div class="stat-tile">
         <div class="stat-label" id="sumYtdLabel">누적(1~7월) 퇴직 인원</div>
-        <div class="stat-value" id="sumYtd">176<span class="u">명</span></div>
-        <div class="stat-delta good" id="sumYtdDelta">▼ 13.3% <span class="stat-vs">전년누적 203명</span></div>
+        <div class="stat-value" id="sumYtd" style="cursor:pointer;" onclick="toggleVolPeopleCard('ytd')" title="클릭하면 명단이 표시됩니다">176<span class="u">명</span> <span style="font-size:11px;color:var(--brand);font-weight:700;">명단보기</span></div>
+        <div class="stat-delta good" id="sumYtdDelta">▼ 13.3% <span class="stat-vs">전년 동기 누적 203명</span></div>
       </div>
       <div class="stat-tile">
-        <div class="stat-label">자발 vs 비자발 <span style="font-weight:600;color:var(--text-muted);">(당월/당해누적)</span></div>
+        <div class="stat-label">퇴사 유형 <span style="font-weight:600;color:var(--text-muted);">(당월/당해누적)</span></div>
         <div id="sumVolCompare" class="vol-compare"></div>
       </div>
     </div>
-    <div class="risk-row" style="margin-top:14px;">
+    <div id="volPeopleCard" style="display:none;margin-top:14px;"></div>
+    <div style="font-size:11.5px;color:var(--text-muted);font-weight:700;margin-top:14px;">주요 인원 퇴직 현황 <span style="font-weight:600;">(자발퇴직자, 올해 누적 기준)</span></div>
+    <div class="risk-row" style="margin-top:6px;">
       <div class="risk-chip"><span class="dot" style="background:var(--critical);"></span><span class="lbl">핵심인재</span><div class="val" id="riskCoreVal">9명</div><div class="pct" id="riskCorePct">전체의 5.1%</div></div>
       <div class="risk-chip"><span class="dot" style="background:var(--warning);"></span><span class="lbl">직책자</span><div class="val" id="riskLeadVal">14명</div><div class="pct" id="riskLeadPct">전체의 8.0%</div></div>
       <div class="risk-chip"><span class="dot" style="background:var(--navy);"></span><span class="lbl">AX역량보유</span><div class="val" id="riskAxVal">21명</div><div class="pct" id="riskAxPct">전체의 11.9%</div></div>
@@ -283,8 +296,8 @@
         <div class="stat-label" style="margin-bottom:0;">3개년 퇴직율 트렌드 <span style="font-weight:600;color:var(--text-muted);">(전체 구성원 수 대비)</span></div>
         <div class="legend" style="margin-bottom:0;" id="trendLegend">
           <div class="item"><span class="sw" style="background:var(--brand);"></span>자발</div>
-          <div class="item"><span class="sw" style="background:var(--navy);"></span>비자발</div>
-          <div class="item"><span class="sw" style="background:var(--text-muted);border-radius:0;height:2px;width:14px;"></span>합계</div>
+          <div class="item"><span class="sw" style="background:var(--text-muted);"></span>비자발</div>
+          <div class="item"><span class="sw" style="background:var(--text-secondary);border-radius:0;height:2px;width:14px;"></span>합계</div>
         </div>
       </div>
       <div id="trendChart"></div>
@@ -296,10 +309,20 @@
   <div class="card" id="s1">
     <div class="card-head"><h2><span class="num">1</span>조직별 퇴직 현황</h2><span class="unit">단위: 명 · 부문을 클릭하면 퇴직자 명단이 표시됩니다</span></div>
     <table class="org" id="orgTable">
-      <thead><tr>
-        <th>부문</th><th style="text-align:right;">이번달</th><th style="text-align:right;">전년동월</th><th style="text-align:right;">증감</th>
-        <th style="text-align:right;">누적(올해)</th><th style="text-align:right;">누적(전년)</th><th style="text-align:right;">증감</th>
-      </tr></thead>
+      <thead>
+        <tr>
+          <th rowspan="2">부문</th>
+          <th colspan="2" style="text-align:center;" id="orgThMonthGroup">당월 퇴직자</th>
+          <th colspan="2" style="text-align:center;" id="orgThYtdGroup">동기 누적 퇴직현황</th>
+          <th rowspan="2">비고</th>
+        </tr>
+        <tr>
+          <th style="text-align:right;" id="orgThCurMonth">당월</th>
+          <th style="text-align:right;" class="ref" id="orgThPrevMonth">참고.전년동월</th>
+          <th style="text-align:right;" id="orgThCurYtd">누적</th>
+          <th style="text-align:right;" class="ref" id="orgThPrevYtd">참고.전년동기누적</th>
+        </tr>
+      </thead>
       <tbody id="orgTableBody"></tbody>
     </table>
   </div>
@@ -651,7 +674,8 @@
         {label:'2025년 입사', newHireRate:7.1, expRate:12.6}
       ], footnote:'※ 경력사원 조기퇴직율이 신입사원 대비 지속적으로 높게(약 1.6~1.8배) 나타나고 있습니다.' },
       details: details.map(function(d){ return { id:d.id, orgTop:d.orgTop, org:d.org, who:d.who, meta:d.meta,
-        hist:d.hist, eval:d.eval, edu:d.edu, core:d.core, lead:d.lead, ax:d.ax, reasonCat:d.reasonCat, major:d.major, sum:d.sum, detail:d.detail }; })
+        hist:d.hist, eval:d.eval, edu:d.edu, core:d.core, lead:d.lead, ax:d.ax, reasonCat:d.reasonCat, major:d.major, sum:d.sum, detail:d.detail,
+        dateLabel: dateLabelByDetailId[d.id], hireDateLabel: (d.hireYear?d.hireYear+'-01':'-'), retireDateLabel: dateLabelByDetailId[d.id] }; })
     };
   }
 
@@ -727,7 +751,7 @@
     if(tenureMonths!=null && isNaN(tenureMonths)) tenureMonths = null;
     return {
       name:g('name'), empId:g('empId'),
-      division: !blankish(g('division')) ? stripNum(g('division')) : stripNum(g('divisionRaw')),
+      division: !blankish(g('divisionRaw')) ? stripNum(g('divisionRaw')) : stripNum(g('division')),
       group:g('group'), dept:g('dept'), team:g('team'), title:g('title'), titleSummary: g('titleSummary')||g('title'),
       position:g('position'), job:g('job'), jobConverted: g('jobConverted')||g('job'),
       jobFamily:g('jobFamily'), jobCategory:g('jobCategory'),
@@ -738,7 +762,7 @@
       retireTypeMajor: stripNum(g('retireTypeMajorRaw')), retireTypeMid: stripNum(g('retireTypeMidRaw')),
       retireTypeMinor: stripNum(g('retireTypeMinorRaw')), retireTypeReport: stripNum(g('retireTypeReportRaw')),
       destName:g('destName'), destMajor: stripNum(g('destMajorRaw')), destMid: stripNum(g('destMidRaw')),
-      coreTalent: truthy(g('coreTalentRaw')), axCapability: truthy(g('axRaw')),
+      coreTalent: !blankish(g('coreTalentRaw')), axCapability: !blankish(g('axRaw')),
       birthDate: parseDateLoose(g('birthDateRaw')), gender:g('gender'), education:g('education'),
       university:g('university'), major:g('major'), prevCompany:g('prevCompany'),
       voluntarySummary:g('voluntarySummary'), voluntaryDetail:g('voluntaryDetail')
@@ -853,7 +877,8 @@
         hist: histLines.join('\n'), eval: tenureLabel + '<br><span style="color:var(--text-muted);font-weight:600;">(재직기간)</span>',
         edu: eduLines.join('\n'), core:p.core, lead:p.lead, ax:p.ax, reasonCat: esc(p.reason), major:p.major,
         sum: esc(!blankish(r.retireOrderSummary) ? r.retireOrderSummary : (!blankish(r.voluntarySummary) ? r.voluntarySummary : p.reason || '-')),
-        detail: reasonDetailLines.length ? reasonDetailLines.join('\n') : '상세 사유가 입력되지 않았습니다.'
+        detail: reasonDetailLines.length ? reasonDetailLines.join('\n') : '상세 사유가 입력되지 않았습니다.',
+        dateLabel: p.dateLabel, hireDateLabel: fmtFull(r.hireDate), retireDateLabel: fmtFull(r.lastActiveDate)
       };
     });
 
@@ -894,6 +919,40 @@
     return '<div class="roster-flags">'+out.join('')+'</div>';
   }
   var visibleDetailIds = {};
+  var lastVisibleDetails = [];
+  var lastModelMeta = null;
+  function renderVolPeopleCard(scope){
+    var m = lastModelMeta;
+    if(!m) return '';
+    var list = scope==='month'
+      ? lastVisibleDetails.filter(function(d){ return d.dateLabel && d.dateLabel.slice(5,7)===pad2(m.curMonth); })
+      : lastVisibleDetails;
+    var title = scope==='month' ? '이번달('+m.curMonth+'월) 자발 퇴직 인원 명단' : '누적(1~'+m.curMonth+'월) 자발 퇴직 인원 명단';
+    var closeBtn = '<span class="unit" style="cursor:pointer;color:var(--brand);font-weight:800;" onclick="document.getElementById(\'volPeopleCard\').style.display=\'none\';">닫기 ✕</span>';
+    if(list.length===0){
+      return '<div class="card" style="background:var(--page);margin-bottom:0;"><div class="card-head"><h2 style="font-size:14px;">'+title+'</h2>'+closeBtn+'</div>'+
+        '<div class="empty-note">해당 인원이 없습니다.</div></div>';
+    }
+    var rows = list.map(function(d){
+      var name = d.who.split(' ')[0];
+      return '<tr><td>'+d.org+'</td><td><b>'+name+'</b></td><td>'+d.reasonCat+'</td>'+
+        '<td>'+(d.hireDateLabel||'-')+'</td><td>'+(d.retireDateLabel||'-')+'</td>'+
+        '<td>'+d.eval+'</td><td class="hist">'+d.hist+'</td></tr>';
+    }).join('');
+    return '<div class="card" style="background:var(--page);margin-bottom:0;">'+
+      '<div class="card-head"><h2 style="font-size:14px;">'+title+' <span style="font-weight:600;color:var(--text-muted);">· 총 '+list.length+'명</span></h2>'+closeBtn+'</div>'+
+      '<div class="table-scroll"><table class="detail" style="min-width:900px;"><thead><tr><th>조직</th><th>이름</th><th>퇴직유형</th><th>입사일</th><th>퇴사일</th><th>평가정보</th><th>발령이력</th></tr></thead>'+
+      '<tbody>'+rows+'</tbody></table></div></div>';
+  }
+  window.toggleVolPeopleCard = function(scope){
+    var el = document.getElementById('volPeopleCard');
+    var isOpenForThis = el.dataset.scope===scope && el.style.display!=='none';
+    if(isOpenForThis){ el.style.display='none'; return; }
+    el.dataset.scope = scope;
+    el.innerHTML = renderVolPeopleCard(scope);
+    el.style.display = '';
+    el.scrollIntoView({behavior:'smooth', block:'nearest'});
+  };
   function isLinkable(p){ return p.linked && visibleDetailIds[p.detailId]; }
   function orgRosterPanelHtml(org){
     if(org.roster.length===0){
@@ -994,14 +1053,22 @@
     var volVals = years.map(function(y){ return t.byYear[y].volRate; });
     var involVals = years.map(function(y){ return t.byYear[y].involRate; });
     var totalVals = years.map(function(y){ return t.byYear[y].totalRate; });
-    var domainMax = Math.max(1, Math.max.apply(null, totalVals.concat([1]))*1.3);
+    var volCounts = years.map(function(y){ return t.byYear[y].vol; });
+    var involCounts = years.map(function(y){ return t.byYear[y].invol; });
+    var totalCounts = years.map(function(y){ return t.byYear[y].total; });
+    var domainMax = Math.max(1, Math.max.apply(null, totalVals.concat([1]))*1.35);
 
-    var W=720, H=200, padL=30, padR=30, padT=30, padB=40;
+    var W=760, H=210, padL=30, padR=30, padT=38, padB=40;
     var plotW = W-padL-padR, plotH = H-padT-padB, baseY = padT+plotH;
     var groupW = plotW/years.length;
     function groupCx(i){ return padL + groupW*(i+0.5); }
     function yAt(v){ return padT + (1 - v/domainMax)*plotH; }
     var barW = Math.min(26, groupW*0.28), barGap = 5;
+    function valLabel(cx, y, pct, count){
+      return '<text class="tc-val" x="'+cx+'" y="'+y.toFixed(1)+'" text-anchor="middle">'+
+        '<tspan fill="var(--text-primary)">'+pct+'%</tspan>'+
+        '<tspan dx="2" fill="var(--text-muted)" style="font-size:8px;">('+count+')</tspan></text>';
+    }
 
     var svg = [];
     svg.push('<line x1="'+padL+'" y1="'+baseY+'" x2="'+(padL+plotW)+'" y2="'+baseY+'" stroke="var(--gridline)" stroke-width="1"/>');
@@ -1010,26 +1077,26 @@
       var isCur = (t.curYear!=null && y===t.curYear);
       svg.push('<text class="tc-xlabel" x="'+cx.toFixed(1)+'" y="'+(H-22)+'" text-anchor="middle">'+y+'</text>');
       if(isCur && t.curMonth!=null){
-        svg.push('<text class="tc-xlabel" x="'+cx.toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" style="font-size:10px;font-weight:700;fill:var(--text-muted);">(~'+t.curMonth+'월 누적)</text>');
+        svg.push('<text class="tc-xlabel" x="'+cx.toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" style="font-size:9px;font-weight:700;fill:var(--text-muted);">(~'+t.curMonth+'월 누적)</text>');
       }
       var volX = cx - barGap/2 - barW;
       var involX = cx + barGap/2;
       var volH = plotH - (yAt(volVals[i]) - padT), involH = plotH - (yAt(involVals[i]) - padT);
       svg.push('<path class="tc-bar" d="'+roundedTopBarPath(volX, yAt(volVals[i]), barW, volH, 4)+'" fill="var(--brand)"/>');
-      svg.push('<path class="tc-bar" d="'+roundedTopBarPath(involX, yAt(involVals[i]), barW, involH, 4)+'" fill="var(--navy)"/>');
-      svg.push('<text class="tc-val" x="'+(volX+barW/2).toFixed(1)+'" y="'+(yAt(volVals[i])-6).toFixed(1)+'" text-anchor="middle" fill="var(--text-primary)">'+volVals[i]+'%</text>');
-      svg.push('<text class="tc-val" x="'+(involX+barW/2).toFixed(1)+'" y="'+(yAt(involVals[i])-6).toFixed(1)+'" text-anchor="middle" fill="var(--text-primary)">'+involVals[i]+'%</text>');
+      svg.push('<path class="tc-bar" d="'+roundedTopBarPath(involX, yAt(involVals[i]), barW, involH, 4)+'" fill="var(--text-muted)"/>');
+      svg.push(valLabel((volX+barW/2).toFixed(1), yAt(volVals[i])-6, volVals[i], volCounts[i]));
+      svg.push(valLabel((involX+barW/2).toFixed(1), yAt(involVals[i])-6, involVals[i], involCounts[i]));
     });
     var linePath = totalVals.map(function(v,i){ return (i===0?'M':'L')+groupCx(i).toFixed(1)+','+yAt(v).toFixed(1); }).join(' ');
-    svg.push('<path class="tc-line dashed" d="'+linePath+'" stroke="var(--text-muted)"/>');
+    svg.push('<path class="tc-line" d="'+linePath+'" stroke="var(--text-secondary)"/>');
     totalVals.forEach(function(v,i){
       var cx = groupCx(i).toFixed(1), cy = yAt(v);
-      svg.push('<circle class="tc-dot" cx="'+cx+'" cy="'+cy.toFixed(1)+'" r="4" fill="var(--text-muted)"/>');
-      svg.push('<text class="tc-val" x="'+cx+'" y="'+(cy-11).toFixed(1)+'" text-anchor="middle" fill="var(--text-primary)" font-weight="800">'+v+'%</text>');
+      svg.push('<circle class="tc-dot" cx="'+cx+'" cy="'+cy.toFixed(1)+'" r="4" fill="var(--text-secondary)"/>');
+      svg.push(valLabel(cx, cy-11, v, totalCounts[i]));
     });
     chartEl.innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'+svg.join('')+'</svg>';
     footEl.innerHTML = (t.footnote || '※ 연도별 퇴직율 = 해당 연도 퇴직자 수 ÷ 연도별 전체 구성원 수 × 100')
-      + (t.curYear!=null && t.curMonth!=null ? '<br>※ '+t.curYear+'년은 연간 실적이 아니라 <b>당월('+t.curMonth+'월)까지의 누적 퇴직인원</b> 기준입니다. 다른 연도(연간 실적)와 절대값을 직접 비교하지 마세요.' : '');
+      + (t.curYear!=null && t.curMonth!=null ? '<br>※ '+t.curYear+'년은 연간 실적이 아니라 <b>당월('+t.curMonth+'월)까지의 누적 퇴직인원</b> 기준입니다.' : '');
   }
 
   function renderModel(model){
@@ -1037,6 +1104,9 @@
     var visibleDetails = model.details.filter(function(d){ return d.major==='자발'; });
     visibleDetailIds = {};
     visibleDetails.forEach(function(d){ visibleDetailIds[d.id] = true; });
+    lastVisibleDetails = visibleDetails;
+    lastModelMeta = m;
+    document.getElementById('volPeopleCard').style.display = 'none';
     document.getElementById('headerSub').textContent = '기준월: '+m.asOfLabel+' · 데이터: '+m.sourceLabel+' ('+m.count+'건)';
     document.getElementById('dataSourceLabel').textContent = '현재: '+m.sourceLabel;
     document.getElementById('summaryAsOf').textContent = '기준월 '+m.asOfLabel+' · 자발 퇴직자 기준 · 조직별(전체) 상세는 아래 ① 표를 확인하세요';
@@ -1056,9 +1126,9 @@
     document.getElementById('sumYtdLabel').textContent = '누적(1~'+m.curMonth+'월) 자발 퇴직 인원';
     document.getElementById('sumYtd').innerHTML = s.ytd+'<span class="u">명</span>';
     document.getElementById('sumYtdDelta').innerHTML = (function(){
-      if(s.lastYtd===0) return '<span class="stat-vs">전년누적 데이터 없음</span>';
+      if(s.lastYtd===0) return '<span class="stat-vs">전년 동기 누적 데이터 없음</span>';
       var d = Math.round((s.ytd-s.lastYtd)/s.lastYtd*1000)/10;
-      return (d<0?'▼':(d>0?'▲':'-'))+' '+Math.abs(d)+'% <span class="stat-vs">전년누적 '+s.lastYtd+'명</span>';
+      return (d<0?'▼':(d>0?'▲':'-'))+' '+Math.abs(d)+'% <span class="stat-vs">전년 동기 누적 '+s.lastYtd+'명</span>';
     })();
     document.getElementById('sumYtdDelta').className = 'stat-delta '+(s.lastYtd===0?'flat':(s.ytd<s.lastYtd?'good':'bad'));
 
@@ -1097,16 +1167,38 @@
     document.getElementById('riskEarlyPct').textContent = '자발퇴직의 '+pct1(r.early, volTotal)+'%';
 
     // ① org table
+    var prevYear = m.curYear - 1;
+    document.getElementById('orgThMonthGroup').innerHTML = '당월 퇴직자<br><span style="font-weight:600;color:var(--text-muted);font-size:10.5px;">(참고. '+prevYear+'년 동월)</span>';
+    document.getElementById('orgThYtdGroup').innerHTML = '동기 누적 퇴직현황<br><span style="font-weight:600;color:var(--text-muted);font-size:10.5px;">(참고. '+prevYear+'년 누적)</span>';
+    document.getElementById('orgThCurMonth').textContent = m.curYear+'년 '+m.curMonth+'월';
+    document.getElementById('orgThPrevMonth').textContent = '참고. '+prevYear+'년 '+m.curMonth+'월';
+    document.getElementById('orgThCurYtd').textContent = m.curYear+'년 1~'+m.curMonth+'월';
+    document.getElementById('orgThPrevYtd').textContent = '참고. '+prevYear+'년 1~'+m.curMonth+'월';
+
+    function fmtRefCount(v){ return v>0 ? v+'명' : '-'; }
+    function bigoText(o){
+      var c = {lead:0, core:0, ax:0, early:0};
+      o.roster.forEach(function(p){ if(p.lead) c.lead++; if(p.core) c.core++; if(p.ax) c.ax++; if(p.early) c.early++; });
+      var parts = [];
+      if(c.lead) parts.push('직책자 '+c.lead+'명');
+      if(c.core) parts.push('핵심인재 '+c.core+'명');
+      if(c.ax) parts.push('DX인원 '+c.ax+'명');
+      if(c.early) parts.push('조기퇴사 '+c.early+'명');
+      return parts.length ? esc(parts.join(', ')) : '-';
+    }
+
     var orgBody = document.getElementById('orgTableBody');
-    if(model.orgs.length===0){
-      orgBody.innerHTML = '<tr><td colspan="7" class="empty-note">표시할 조직 데이터가 없습니다.</td></tr>';
+    var displayOrgs = model.orgs.slice().sort(function(a,b){ return a.name.localeCompare(b.name,'ko'); });
+    if(displayOrgs.length===0){
+      orgBody.innerHTML = '<tr><td colspan="6" class="empty-note">표시할 조직 데이터가 없습니다.</td></tr>';
     } else {
-      orgBody.innerHTML = model.orgs.map(function(o, idx){
+      orgBody.innerHTML = displayOrgs.map(function(o, idx){
         var head = '<tr class="org-row" onclick="toggleRoster('+idx+')">'+
           '<td class="name"><span class="chev" id="chev-'+idx+'">▸</span>'+esc(o.name)+'</td>'+
-          '<td class="num">'+o.thisMonth+'명</td><td class="num">'+o.lastMonth+'명</td><td class="num">'+deltaTag(o.thisMonth,o.lastMonth)+'</td>'+
-          '<td class="num">'+o.ytd+'명</td><td class="num">'+o.lastYtd+'명</td><td class="num">'+deltaTag(o.ytd,o.lastYtd)+'</td></tr>';
-        var roster = '<tr class="roster-tr" id="roster-'+idx+'" style="display:none;"><td colspan="7">'+orgRosterPanelHtml(o)+'</td></tr>';
+          '<td class="num">'+o.thisMonth+'명</td><td class="num ref">'+fmtRefCount(o.lastMonth)+'</td>'+
+          '<td class="num">'+o.ytd+'명</td><td class="num ref">'+fmtRefCount(o.lastYtd)+'</td>'+
+          '<td class="bigo">'+bigoText(o)+'</td></tr>';
+        var roster = '<tr class="roster-tr" id="roster-'+idx+'" style="display:none;"><td colspan="6">'+orgRosterPanelHtml(o)+'</td></tr>';
         return head + roster;
       }).join('');
     }
@@ -1244,6 +1336,112 @@
     applyFilters();
   });
 
+  // ================= org filter buttons =================
+  var ORG_BUTTONS = [
+    {key:'전사', label:'전사', keywords:null},
+    {key:'Consumer', label:'Consumer', keywords:['Consumer']},
+    {key:'Enterprise', label:'Enterprise', keywords:['Enterprise','기업']},
+    {key:'NW', label:'NW', keywords:['NW']},
+    {key:'CTO', label:'CTO', keywords:['CTO']},
+    {key:'CSO', label:'CSO', keywords:['CSO']},
+    {key:'CFO/CRO', label:'CFO/CRO', keywords:['CFO','CRO']},
+    {key:'CHO', label:'CHO', keywords:['CHO']},
+    {key:'커뮤', label:'커뮤', keywords:['커뮤']},
+    {key:'법무', label:'법무', keywords:['법무']},
+    {key:'보안', label:'보안', keywords:['보안','CISO']},
+    {key:'품질', label:'품질', keywords:['품질','QSS']},
+    {key:'CSEO', label:'CSEO', keywords:['CSEO','CESO']},
+    {key:'CX', label:'CX', keywords:['CX']}
+  ];
+  function orgMatches(name, keywords){
+    if(!name) return false;
+    return keywords.some(function(k){ return name.indexOf(k)>=0; });
+  }
+  function buildFilteredModel(model, orgKey){
+    var btn = null;
+    for(var bi=0; bi<ORG_BUTTONS.length; bi++){ if(ORG_BUTTONS[bi].key===orgKey){ btn=ORG_BUTTONS[bi]; break; } }
+    if(!btn || !btn.keywords) return model;
+    function match(name){ return orgMatches(name, btn.keywords); }
+
+    var filteredOrgsArr = model.orgs.filter(function(o){ return match(o.name); });
+    var filteredPeople = model.allPeople.filter(function(p){ return match(p.org); });
+    var filteredDetails = model.details.filter(function(d){ return match(d.orgTop); });
+
+    var curYear = model.meta.curYear, curMonth = model.meta.curMonth;
+    var summary;
+    if(model.rawForTrend){
+      var raw = model.rawForTrend.filter(function(r){ return match(r.division); });
+      summary = {
+        thisMonth: raw.filter(function(r){ var d=r.lastActiveDate; return guessMajor(r)==='자발' && d.getFullYear()===curYear && (d.getMonth()+1)===curMonth; }).length,
+        thisMonthInvol: raw.filter(function(r){ var d=r.lastActiveDate; return guessMajor(r)==='비자발' && d.getFullYear()===curYear && (d.getMonth()+1)===curMonth; }).length,
+        lastMonth: raw.filter(function(r){ var d=r.lastActiveDate; return guessMajor(r)==='자발' && d.getFullYear()===curYear-1 && (d.getMonth()+1)===curMonth; }).length,
+        ytd: raw.filter(function(r){ var d=r.lastActiveDate; return guessMajor(r)==='자발' && d.getFullYear()===curYear && (d.getMonth()+1)<=curMonth; }).length,
+        lastYtd: raw.filter(function(r){ var d=r.lastActiveDate; return guessMajor(r)==='자발' && d.getFullYear()===curYear-1 && (d.getMonth()+1)<=curMonth; }).length
+      };
+    } else {
+      var curMonthStr = pad2(curMonth);
+      summary = {
+        thisMonth: filteredPeople.filter(function(p){ return p.major==='자발' && p.dateLabel && p.dateLabel.slice(5,7)===curMonthStr; }).length,
+        thisMonthInvol: filteredPeople.filter(function(p){ return p.major==='비자발' && p.dateLabel && p.dateLabel.slice(5,7)===curMonthStr; }).length,
+        lastMonth: 0, ytd: filteredPeople.filter(function(p){ return p.major==='자발'; }).length, lastYtd: 0
+      };
+    }
+
+    var voluntaryPeople = filteredPeople.filter(function(p){ return p.major==='자발'; });
+    var involuntaryPeople = filteredPeople.filter(function(p){ return p.major==='비자발'; });
+    var jobMap = {};
+    filteredPeople.forEach(function(p){
+      var grp = firstNonBlank(p.jobFamily, p.job) || '미기재';
+      var lbl = firstNonBlank(p.jobCategory, p.jobConverted, p.job) || '미기재';
+      var key = grp+'|'+lbl;
+      jobMap[key] = (jobMap[key]||0)+1;
+    });
+    var jobBreakdown = Object.keys(jobMap).map(function(k){
+      var parts = k.split('|'); return {group:parts[0], label:parts[1], count:jobMap[k]};
+    }).sort(function(a,b){ return b.count-a.count; });
+
+    var newMeta = {};
+    for(var mk in model.meta){ if(model.meta.hasOwnProperty(mk)) newMeta[mk] = model.meta[mk]; }
+    newMeta.count = filteredPeople.length;
+    var volDetailCount = filteredDetails.filter(function(d){ return d.major==='자발'; }).length;
+    newMeta.detailUnitLabel = volDetailCount+'건 (자발) · 조직: '+btn.label;
+    newMeta.sourceLabel = model.meta.sourceLabel + ' · 조직: ' + btn.label;
+
+    return {
+      meta: newMeta, summary: summary, orgs: filteredOrgsArr, allPeople: filteredPeople,
+      yearlyTrend: null, rawForTrend: null,
+      typeBreakdown: {
+        voluntaryTotal: voluntaryPeople.length, involuntaryTotal: involuntaryPeople.length,
+        voluntary: groupCount(voluntaryPeople, function(p){ return p.reason; }),
+        involuntary: groupCount(involuntaryPeople, function(p){ return p.reason; })
+      },
+      titleBreakdown: groupCount(filteredPeople, function(p){ return p.title; }),
+      destBreakdown: groupCount(filteredPeople.filter(function(p){ return p.destGroup||p.destCompany; }), function(p){ return p.destGroup||p.destCompany; }),
+      jobBreakdown: jobBreakdown,
+      earlyAttrition: model.earlyAttrition,
+      details: filteredDetails
+    };
+  }
+
+  var activeOrgKey = '전사';
+  function setActiveOrgButton(key){
+    document.querySelectorAll('.org-filter-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-org')===key); });
+  }
+  document.getElementById('orgFilterRow').innerHTML = ORG_BUTTONS.map(function(b){
+    return '<button type="button" class="org-filter-btn'+(b.key==='전사'?' active':'')+'" data-org="'+esc(b.key)+'">'+esc(b.label)+'</button>';
+  }).join('');
+  function rerenderWithOrgFilter(){
+    var viewModel = (activeOrgKey && activeOrgKey!=='전사' && currentModel) ? buildFilteredModel(currentModel, activeOrgKey) : currentModel;
+    if(viewModel) renderModel(viewModel);
+  }
+  document.querySelectorAll('.org-filter-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      activeOrgKey = btn.getAttribute('data-org');
+      setActiveOrgButton(activeOrgKey);
+      rerenderWithOrgFilter();
+    });
+  });
+
   // ================= upload / export wiring =================
   // In a file exported via "공유용 HTML로 저장", #uploadPanel has been
   // stripped out — skip all upload wiring and the initial mock render so
@@ -1270,7 +1468,9 @@
         var model = buildModelFromRecords(records, file.name);
         if(model.error) throw new Error(model.error);
         currentModel = model;
-        renderModel(model);
+        activeOrgKey = '전사';
+        setActiveOrgButton('전사');
+        rerenderWithOrgFilter();
         document.getElementById('uploadCount').textContent = file.name + ' · ' + model.meta.count + '건 반영됨';
         document.getElementById('hcStatus').textContent = '';
         ['hcYear1','hcYear2','hcYear3'].forEach(function(id, i){
@@ -1292,7 +1492,9 @@
 
   document.getElementById('resetSample').addEventListener('click', function(){
     currentModel = buildMockModel();
-    renderModel(currentModel);
+    activeOrgKey = '전사';
+    setActiveOrgButton('전사');
+    rerenderWithOrgFilter();
     document.getElementById('uploadCount').textContent = '';
     document.getElementById('uploadError').style.display = 'none';
     document.getElementById('csvFile').value = '';
@@ -1369,6 +1571,6 @@
   });
 
   currentModel = buildMockModel();
-  renderModel(currentModel);
+  rerenderWithOrgFilter();
 })();
 </script>
