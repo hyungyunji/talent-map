@@ -1021,13 +1021,13 @@
       return { x: cx + r*Math.cos(rad), y: cy + r*Math.sin(rad) };
     }
     function sectorPath(startAngle, endAngle){
-      var so = polarPt(rOuter, endAngle), eo = polarPt(rOuter, startAngle);
-      var si = polarPt(rInner, startAngle), ei = polarPt(rInner, endAngle);
+      var outerStart = polarPt(rOuter, startAngle), outerEnd = polarPt(rOuter, endAngle);
+      var innerEnd = polarPt(rInner, endAngle), innerStart = polarPt(rInner, startAngle);
       var largeArc = (endAngle-startAngle) > 180 ? 1 : 0;
-      return ['M', so.x.toFixed(2), so.y.toFixed(2),
-        'A', rOuter, rOuter, 0, largeArc, 0, eo.x.toFixed(2), eo.y.toFixed(2),
-        'L', ei.x.toFixed(2), ei.y.toFixed(2),
-        'A', rInner, rInner, 0, largeArc, 1, si.x.toFixed(2), si.y.toFixed(2), 'Z'].join(' ');
+      return ['M', outerStart.x.toFixed(2), outerStart.y.toFixed(2),
+        'A', rOuter, rOuter, 0, largeArc, 1, outerEnd.x.toFixed(2), outerEnd.y.toFixed(2),
+        'L', innerEnd.x.toFixed(2), innerEnd.y.toFixed(2),
+        'A', rInner, rInner, 0, largeArc, 0, innerStart.x.toFixed(2), innerStart.y.toFixed(2), 'Z'].join(' ');
     }
     var gapDeg = groups.length>1 ? 1.6 : 0;
     var angle=0;
