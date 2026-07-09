@@ -496,10 +496,11 @@
       for(var i=0;i<curY;i++){
         var title = titlesGlobal[gi];
         var hi = hireInfoFor(title);
+        var reason = reasonGlobal[gi];
         roster.push({
           name: pick(rnd, surnames)+pick(rnd, syl1)+pick(rnd, syl2), org:name, title:title,
           team: pick(rnd, teamsByOrg[name] || ["조직운영팀"]), month: monthArr[i],
-          reason: reasonGlobal[gi], core: coreGlobal[gi], lead: leadGlobal[gi], ax: axGlobal[gi], early: earlyGlobal[gi],
+          reason: reason, major: majorFor(reason), core: coreGlobal[gi], lead: leadGlobal[gi], ax: axGlobal[gi], early: earlyGlobal[gi],
           hireYear: hi.hireYear, hireType: hi.hireType
         });
         gi++;
@@ -627,6 +628,16 @@
     orgs.forEach(function(o){ o.roster.forEach(function(p){ allPeople.push(p); }); });
     allPeople.forEach(function(p){ p.major = majorFor(p.reason); });
 
+    orgs.forEach(function(o){
+      var volRoster = o.roster.filter(function(p){ return p.major==='자발'; });
+      var volRatio = o.roster.length>0 ? volRoster.length/o.roster.length : 0;
+      o.thisMonth = volRoster.filter(function(p){ return p.month===7; }).length;
+      o.ytd = volRoster.length;
+      o.lastMonth = Math.round(o.lastMonth*volRatio);
+      o.lastYtd = Math.round(o.lastYtd*volRatio);
+      o.roster = volRoster;
+    });
+
     var destPool = [];
     [['경쟁 통신사',14],['IT/플랫폼 대기업',10],['스타트업',9],['컨설팅펌',6],['금융권',6],['공공기관/공기업',5],['기타',9]]
       .forEach(function(c){ for(var i=0;i<c[1];i++) destPool.push(c[0]); });
@@ -729,7 +740,7 @@
   function cellAt(idx,key,arr){ var i=idx[key]; return (i==null || i>=arr.length) ? '' : String(arr[i]==null?'':arr[i]).trim(); }
   function blankish(v){ v = String(v==null?'':v).trim(); return !v || v==='0'; }
   function firstNonBlank(){ for(var i=0;i<arguments.length;i++){ if(!blankish(arguments[i])) return arguments[i]; } return null; }
-  function stripNum(s){ return String(s||'').replace(/^\s*\d+(-\d+)?\.\s*/,'').trim(); }
+  function stripNum(s){ return String(s||'').replace(/^\s*\d+(?:[-_.]\d+)*(?:[.\-):]|\s)\s*/,'').trim(); }
   function truthy(s){ return ['1','Y','y','예','O','o','TRUE','true','참'].indexOf(String(s==null?'':s).trim())>=0; }
   function parseDateLoose(s){
     s = String(s==null?'':s).trim();
@@ -790,6 +801,7 @@
     var orgMap = {};
     function ensureOrg(name){ if(!orgMap[name]) orgMap[name]={name:name, thisMonth:0,lastMonth:0,ytd:0,lastYtd:0, roster:[]}; return orgMap[name]; }
     valid.forEach(function(r){
+      if(guessMajor(r) !== '자발') return;
       var o = ensureOrg(r.division || '미분류');
       var d = r.lastActiveDate, yr=d.getFullYear(), mo=d.getMonth()+1;
       if(yr===curYear && mo<=curMonth) o.ytd++;
@@ -797,7 +809,7 @@
       if(yr===curYear && mo===curMonth) o.thisMonth++;
       if(yr===curYear-1 && mo===curMonth) o.lastMonth++;
     });
-    var orgs = Object.keys(orgMap).map(function(k){ return orgMap[k]; }).sort(function(a,b){ return b.ytd-a.ytd; });
+    var orgs = Object.keys(orgMap).map(function(k){ return orgMap[k]; }).filter(function(o){ return o.ytd>0; }).sort(function(a,b){ return b.ytd-a.ytd; });
 
     var ytdRows = valid.filter(function(r){ var d=r.lastActiveDate; return d.getFullYear()===curYear && (d.getMonth()+1)<=curMonth; });
 
@@ -821,7 +833,7 @@
       };
     });
     var peopleByOrg = {};
-    allPeople.forEach(function(p){ (peopleByOrg[p.org] = peopleByOrg[p.org] || []).push(p); });
+    allPeople.filter(function(p){ return p.major==='자발'; }).forEach(function(p){ (peopleByOrg[p.org] = peopleByOrg[p.org] || []).push(p); });
     orgs.forEach(function(o){ o.roster = peopleByOrg[o.name] || []; });
 
     var voluntaryPeople = allPeople.filter(function(p){ return p.major==='자발'; });
@@ -1188,13 +1200,14 @@
     }
 
     var orgBody = document.getElementById('orgTableBody');
-    var displayOrgs = model.orgs.slice().sort(function(a,b){ return a.name.localeCompare(b.name,'ko'); });
+    var displayOrgs = model.orgs.filter(function(o){ return o.ytd>0; })
+      .sort(function(a,b){ return stripNum(a.name).localeCompare(stripNum(b.name),'ko'); });
     if(displayOrgs.length===0){
       orgBody.innerHTML = '<tr><td colspan="6" class="empty-note">표시할 조직 데이터가 없습니다.</td></tr>';
     } else {
       orgBody.innerHTML = displayOrgs.map(function(o, idx){
         var head = '<tr class="org-row" onclick="toggleRoster('+idx+')">'+
-          '<td class="name"><span class="chev" id="chev-'+idx+'">▸</span>'+esc(o.name)+'</td>'+
+          '<td class="name"><span class="chev" id="chev-'+idx+'">▸</span>'+esc(stripNum(o.name))+'</td>'+
           '<td class="num">'+o.thisMonth+'명</td><td class="num ref">'+fmtRefCount(o.lastMonth)+'</td>'+
           '<td class="num">'+o.ytd+'명</td><td class="num ref">'+fmtRefCount(o.lastYtd)+'</td>'+
           '<td class="bigo">'+bigoText(o)+'</td></tr>';
